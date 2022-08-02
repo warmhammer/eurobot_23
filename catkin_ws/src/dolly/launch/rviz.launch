@@ -16,5 +16,5 @@
     name="rviz"
     pkg="rviz"
     type="rviz"
-    args="-d $(find dolly)/urdf.rviz" />
+    args="-d $(find dolly)/rviz/config.rviz" />
 </launch>
