@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 
-project(ASM_Ver_1.SLDASM)
+project(dolly)
 
 find_package(catkin REQUIRED)
 

@@ -3,22 +3,22 @@
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
-  name="ASM_Ver_1.SLDASM">
+  name="dolly">
   <link
-    name="base">
+    name="base_link">
     <inertial>
       <origin
-        xyz="0.00031852933106863 -1.41722334329578E-17 0.014039384118002"
+        xyz="0.000331307458628204 -1.13206745255336E-17 0.0146402475988973"
         rpy="0 0 0" />
       <mass
-        value="2.86887905675632" />
+        value="2.75822986493914" />
       <inertia
-        ixx="0.00701430456479313"
-        ixy="6.49057843002293E-07"
-        ixz="9.62498131468153E-21"
-        iyy="0.00708890607420914"
-        iyz="-2.44389734131054E-21"
-        izz="0.0138932762091189" />
+        ixx="0.00701026423371661"
+        ixy="4.12242135597593E-07"
+        ixz="9.11222162788415E-21"
+        iyy="0.00703854486847878"
+        iyz="-2.96461531539005E-21"
+        izz="0.0138418301358928" />
     </inertial>
     <visual>
       <origin
@@ -26,7 +26,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://ASM_Ver_1.SLDASM/meshes/base.STL" />
+          filename="package://dolly/meshes/base_link.STL" />
       </geometry>
       <material
         name="">
@@ -40,7 +40,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://ASM_Ver_1.SLDASM/meshes/base.STL" />
+          filename="package://dolly/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -48,17 +48,17 @@
     name="left_wheel">
     <inertial>
       <origin
-        xyz="0.0025901 -0.211 0"
+        xyz="0.00259014166271363 -0.211 0"
         rpy="0 0 0" />
       <mass
-        value="0.2139" />
+        value="0.21389788050971" />
       <inertia
-        ixx="7.9925E-05"
-        ixy="3.1451E-24"
-        ixz="-1.6769E-22"
-        iyy="0.00015706"
-        iyz="-1.3278E-22"
-        izz="7.9925E-05" />
+        ixx="7.9924596730356E-05"
+        ixy="3.1451024225384E-24"
+        ixz="-1.67685649879966E-22"
+        iyy="0.000157056017019794"
+        iyz="-1.32781947727186E-22"
+        izz="7.9924596730356E-05" />
     </inertial>
     <visual>
       <origin
@@ -66,12 +66,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://ASM_Ver_1.SLDASM/meshes/left_wheel.STL" />
+          filename="package://dolly/meshes/left_wheel.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.79216 0.81961 0.93333 1" />
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
       </material>
     </visual>
     <collision>
@@ -80,7 +80,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://ASM_Ver_1.SLDASM/meshes/left_wheel.STL" />
+          filename="package://dolly/meshes/left_wheel.STL" />
       </geometry>
     </collision>
   </link>
@@ -91,7 +91,7 @@
       xyz="-0.00056881 0.1055 0.024488"
       rpy="0 0 0" />
     <parent
-      link="base" />
+      link="base_link" />
     <child
       link="left_wheel" />
     <axis
@@ -101,17 +101,17 @@
     name="right_wheel">
     <inertial>
       <origin
-        xyz="-0.0025901 0.211 0"
+        xyz="-0.00259014166271363 0.211 0"
         rpy="0 0 0" />
       <mass
-        value="0.2139" />
+        value="0.21389788050971" />
       <inertia
-        ixx="7.9925E-05"
-        ixy="9.3957E-24"
-        ixz="-8.4185E-23"
-        iyy="0.00015706"
-        iyz="-5.3767E-24"
-        izz="7.9925E-05" />
+        ixx="7.9924596730356E-05"
+        ixy="9.39573778283674E-24"
+        ixz="-8.41846427878367E-23"
+        iyy="0.000157056017019794"
+        iyz="-5.37667398159315E-24"
+        izz="7.9924596730356E-05" />
     </inertial>
     <visual>
       <origin
@@ -119,12 +119,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://ASM_Ver_1.SLDASM/meshes/right_wheel.STL" />
+          filename="package://dolly/meshes/right_wheel.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.79216 0.81961 0.93333 1" />
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
       </material>
     </visual>
     <collision>
@@ -133,7 +133,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://ASM_Ver_1.SLDASM/meshes/right_wheel.STL" />
+          filename="package://dolly/meshes/right_wheel.STL" />
       </geometry>
     </collision>
   </link>
@@ -144,7 +144,7 @@
       xyz="0.0020213 -0.1055 0.024488"
       rpy="0 0 0" />
     <parent
-      link="base" />
+      link="base_link" />
     <child
       link="right_wheel" />
     <axis
