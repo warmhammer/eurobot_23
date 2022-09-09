@@ -1,5 +1,5 @@
 <package format="2">
-  <name>dolly</name>
+  <name>dolly_description</name>
   <version>1.0.0</version>
   <description>
     <p>URDF Description package for dolly</p>

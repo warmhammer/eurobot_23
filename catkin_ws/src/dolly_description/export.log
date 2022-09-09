@@ -60,25 +60,26 @@
 2022-08-02 18:36:38,652 INFO  LinkNode.cs: 35 - Building node base_link
 2022-08-02 18:36:38,653 INFO  LinkNode.cs: 35 - Building node left_wheel
 2022-08-02 18:36:38,653 INFO  LinkNode.cs: 35 - Building node right_wheel
-2022-08-02 18:36:38,656 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
-2022-08-02 18:36:38,657 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???p l a n e - 1 @ D o l l y                
-2022-08-02 18:36:38,660 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
+2022-08-02 18:36:38,656 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:36:38,657 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???
+p l a n e - 1 @ D o l l y                
+2022-08-02 18:36:38,660 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
 2022-08-02 18:36:38,660 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 2 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             g   7   
-2022-08-02 18:36:38,661 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 18:36:38,661 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 18:36:38,661 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 1 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             &   7   
-2022-08-02 18:36:38,662 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 18:36:38,662 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 18:36:38,662 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             &      
-2022-08-02 18:36:38,663 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 18:36:38,663 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 18:36:38,663 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             g      
-2022-08-02 18:36:38,664 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 18:36:38,664 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 18:36:38,664 INFO  CommonSwOperations.cs: 230 - Loaded 5 components for link base_link
-2022-08-02 18:36:38,664 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:36:38,664 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:36:38,665 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             g   =   
-2022-08-02 18:36:38,665 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 18:36:38,665 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 18:36:38,665 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link left_wheel
-2022-08-02 18:36:38,666 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:36:38,666 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:36:38,666 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             &   =   
-2022-08-02 18:36:38,667 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 18:36:38,667 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 18:36:38,667 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link right_wheel
 2022-08-02 18:36:38,768 INFO  SwAddin.cs: 344 - Showing property manager
 2022-08-02 18:36:58,679 INFO  ExportPropertyManager.cs: 422 - Configuration saved
@@ -135,29 +136,30 @@
 2022-08-02 18:37:03,423 INFO  LinkNode.cs: 35 - Building node base_link
 2022-08-02 18:37:03,423 INFO  LinkNode.cs: 35 - Building node left_wheel
 2022-08-02 18:37:03,424 INFO  LinkNode.cs: 35 - Building node right_wheel
-2022-08-02 18:37:03,424 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
-2022-08-02 18:37:03,424 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???p l a n e - 1 @ D o l l y                
-2022-08-02 18:37:03,425 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
+2022-08-02 18:37:03,424 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:37:03,424 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???
+p l a n e - 1 @ D o l l y                
+2022-08-02 18:37:03,425 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
 2022-08-02 18:37:03,425 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 2 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             g   7   
-2022-08-02 18:37:03,425 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 18:37:03,425 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 18:37:03,426 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 1 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             &   7   
-2022-08-02 18:37:03,426 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 18:37:03,426 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 18:37:03,426 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             &      
-2022-08-02 18:37:03,427 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 18:37:03,427 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 18:37:03,427 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             g      
-2022-08-02 18:37:03,428 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 18:37:03,428 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 18:37:03,428 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 2 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 18:37:03,430 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 18:37:03,430 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 18:37:03,430 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 1 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 18:37:03,430 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 18:37:03,430 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 18:37:03,431 INFO  CommonSwOperations.cs: 230 - Loaded 7 components for link base_link
-2022-08-02 18:37:03,431 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:37:03,431 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:37:03,431 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             g   =   
-2022-08-02 18:37:03,432 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 18:37:03,432 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 18:37:03,432 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link left_wheel
-2022-08-02 18:37:03,433 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:37:03,433 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:37:03,433 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             &   =   
-2022-08-02 18:37:03,433 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 18:37:03,433 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 18:37:03,434 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link right_wheel
 2022-08-02 18:37:03,539 INFO  SwAddin.cs: 344 - Showing property manager
 2022-08-02 18:47:56,104 INFO  ExportPropertyManager.cs: 422 - Configuration saved
@@ -214,29 +216,30 @@
 2022-08-02 18:51:52,451 INFO  LinkNode.cs: 35 - Building node base_link
 2022-08-02 18:51:52,452 INFO  LinkNode.cs: 35 - Building node left_wheel
 2022-08-02 18:51:52,452 INFO  LinkNode.cs: 35 - Building node right_wheel
-2022-08-02 18:51:52,453 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
-2022-08-02 18:51:52,453 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???p l a n e - 1 @ D o l l y                
-2022-08-02 18:51:52,453 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
+2022-08-02 18:51:52,453 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:51:52,453 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???
+p l a n e - 1 @ D o l l y                
+2022-08-02 18:51:52,453 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
 2022-08-02 18:51:52,453 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 2 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             g   7   
-2022-08-02 18:51:52,453 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 18:51:52,453 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 18:51:52,453 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 1 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             &   7   
-2022-08-02 18:51:52,454 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 18:51:52,454 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 18:51:52,454 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             &      
-2022-08-02 18:51:52,455 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 18:51:52,455 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 18:51:52,455 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             g      
-2022-08-02 18:51:52,455 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 18:51:52,455 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 18:51:52,456 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 2 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 18:51:52,456 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 18:51:52,456 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 18:51:52,456 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 1 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 18:51:52,457 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 18:51:52,457 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 18:51:52,457 INFO  CommonSwOperations.cs: 230 - Loaded 7 components for link base_link
-2022-08-02 18:51:52,458 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:51:52,458 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:51:52,459 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             g   =   
-2022-08-02 18:51:52,460 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 18:51:52,460 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 18:51:52,460 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link left_wheel
-2022-08-02 18:51:52,461 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:51:52,461 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:51:52,462 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             &   =   
-2022-08-02 18:51:52,462 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 18:51:52,462 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 18:51:52,463 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link right_wheel
 2022-08-02 18:51:52,611 INFO  SwAddin.cs: 344 - Showing property manager
 2022-08-02 18:52:08,938 INFO  ExportPropertyManager.cs: 1136 - OnNumberBoxTrackingCompleted called. This method no longer throws an Exception. It just silently does nothing. Ok, except for this logging message
@@ -299,35 +302,36 @@
 2022-08-02 18:55:20,229 INFO  LinkNode.cs: 35 - Building node right_wheel
 2022-08-02 18:55:20,230 INFO  LinkNode.cs: 35 - Building node front_caster
 2022-08-02 18:55:20,230 INFO  LinkNode.cs: 35 - Building node Empty_Link
-2022-08-02 18:55:20,230 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
-2022-08-02 18:55:20,231 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???p l a n e - 1 @ D o l l y                
-2022-08-02 18:55:20,231 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
+2022-08-02 18:55:20,230 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:55:20,231 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???
+p l a n e - 1 @ D o l l y                
+2022-08-02 18:55:20,231 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
 2022-08-02 18:55:20,232 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 2 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             g   7   
-2022-08-02 18:55:20,232 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 18:55:20,232 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 18:55:20,233 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 1 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             &   7   
-2022-08-02 18:55:20,233 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 18:55:20,233 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 18:55:20,234 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             &      
-2022-08-02 18:55:20,234 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 18:55:20,234 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 18:55:20,235 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             g      
-2022-08-02 18:55:20,236 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 18:55:20,236 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 18:55:20,236 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 2 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 18:55:20,237 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 18:55:20,237 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 18:55:20,237 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 1 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 18:55:20,238 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 18:55:20,238 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 18:55:20,238 INFO  CommonSwOperations.cs: 230 - Loaded 7 components for link base_link
-2022-08-02 18:55:20,239 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:55:20,239 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:55:20,239 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             g   =   
-2022-08-02 18:55:20,240 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 18:55:20,240 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 18:55:20,240 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link left_wheel
-2022-08-02 18:55:20,241 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:55:20,241 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:55:20,242 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             &   =   
-2022-08-02 18:55:20,242 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 18:55:20,242 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 18:55:20,243 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link right_wheel
-2022-08-02 18:55:20,243 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for front_caster from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:55:20,243 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for front_caster from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:55:20,243 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???&B a l l _ c a s t e r - 2 @ D o l l y / b a l l - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 18:55:20,244 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
+2022-08-02 18:55:20,244 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
 2022-08-02 18:55:20,245 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link front_caster
-2022-08-02 18:55:20,245 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for Empty_Link from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:55:20,245 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for Empty_Link from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:55:20,245 INFO  CommonSwOperations.cs: 230 - Loaded 0 components for link Empty_Link
 2022-08-02 18:55:20,352 INFO  SwAddin.cs: 344 - Showing property manager
 2022-08-02 18:55:44,864 INFO  ExportPropertyManager.cs: 422 - Configuration saved
@@ -386,35 +390,36 @@
 2022-08-02 18:58:37,029 INFO  LinkNode.cs: 35 - Building node right_wheel
 2022-08-02 18:58:37,030 INFO  LinkNode.cs: 35 - Building node front_caster
 2022-08-02 18:58:37,030 INFO  LinkNode.cs: 35 - Building node Empty_Link
-2022-08-02 18:58:37,030 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
-2022-08-02 18:58:37,031 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???p l a n e - 1 @ D o l l y                
-2022-08-02 18:58:37,227 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
+2022-08-02 18:58:37,030 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:58:37,031 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???
+p l a n e - 1 @ D o l l y                
+2022-08-02 18:58:37,227 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
 2022-08-02 18:58:37,228 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 2 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             g   7   
-2022-08-02 18:58:37,229 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 18:58:37,229 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 18:58:37,229 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 1 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             &   7   
-2022-08-02 18:58:37,230 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 18:58:37,230 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 18:58:37,231 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             &      
-2022-08-02 18:58:37,231 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 18:58:37,231 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 18:58:37,231 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             g      
-2022-08-02 18:58:37,232 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 18:58:37,232 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 18:58:37,232 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 2 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 18:58:37,232 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 18:58:37,232 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 18:58:37,234 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 1 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 18:58:37,234 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 18:58:37,234 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 18:58:37,234 INFO  CommonSwOperations.cs: 230 - Loaded 7 components for link base_link
-2022-08-02 18:58:37,235 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:58:37,235 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:58:37,235 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             g   =   
-2022-08-02 18:58:37,235 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 18:58:37,235 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 18:58:37,236 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link left_wheel
-2022-08-02 18:58:37,236 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:58:37,236 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:58:37,236 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             &   =   
-2022-08-02 18:58:37,237 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 18:58:37,237 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 18:58:37,237 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link right_wheel
-2022-08-02 18:58:37,238 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for front_caster from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:58:37,238 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for front_caster from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:58:37,238 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???&B a l l _ c a s t e r - 2 @ D o l l y / b a l l - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 18:58:37,239 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
+2022-08-02 18:58:37,239 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
 2022-08-02 18:58:37,239 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link front_caster
-2022-08-02 18:58:37,239 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for Empty_Link from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 18:58:37,239 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for Empty_Link from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 18:58:37,240 INFO  CommonSwOperations.cs: 230 - Loaded 0 components for link Empty_Link
 2022-08-02 18:58:37,364 INFO  SwAddin.cs: 344 - Showing property manager
 2022-08-02 18:58:47,534 INFO  ExportPropertyManager.cs: 1036 - OnListboxSelectionChanged called. This method no longer throws an Exception. It just silently does nothing. Ok, except for this logging message
@@ -476,37 +481,38 @@
 2022-08-02 19:00:03,070 INFO  LinkNode.cs: 35 - Building node right_wheel
 2022-08-02 19:00:03,070 INFO  LinkNode.cs: 35 - Building node front_caster
 2022-08-02 19:00:03,070 INFO  LinkNode.cs: 35 - Building node back_caster
-2022-08-02 19:00:03,071 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
-2022-08-02 19:00:03,071 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???p l a n e - 1 @ D o l l y                
-2022-08-02 19:00:03,072 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
+2022-08-02 19:00:03,071 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:00:03,071 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???
+p l a n e - 1 @ D o l l y                
+2022-08-02 19:00:03,072 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
 2022-08-02 19:00:03,072 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 2 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             g   7   
-2022-08-02 19:00:03,073 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 19:00:03,073 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 19:00:03,073 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 1 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             &   7   
-2022-08-02 19:00:03,073 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 19:00:03,073 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 19:00:03,074 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             &      
-2022-08-02 19:00:03,074 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 19:00:03,074 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 19:00:03,075 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             g      
-2022-08-02 19:00:03,075 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 19:00:03,075 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 19:00:03,076 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 2 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:00:03,076 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 19:00:03,076 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 19:00:03,077 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 1 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:00:03,077 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 19:00:03,077 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 19:00:03,078 INFO  CommonSwOperations.cs: 230 - Loaded 7 components for link base_link
-2022-08-02 19:00:03,078 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:00:03,078 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:00:03,078 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             &   =   
-2022-08-02 19:00:03,078 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 19:00:03,078 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 19:00:03,079 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link left_wheel
-2022-08-02 19:00:03,079 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:00:03,079 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:00:03,080 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             g   =   
-2022-08-02 19:00:03,080 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 19:00:03,080 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 19:00:03,081 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link right_wheel
-2022-08-02 19:00:03,081 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for front_caster from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:00:03,081 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for front_caster from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:00:03,081 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???&B a l l _ c a s t e r - 2 @ D o l l y / b a l l - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:00:03,082 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
+2022-08-02 19:00:03,082 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
 2022-08-02 19:00:03,082 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link front_caster
-2022-08-02 19:00:03,083 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for back_caster from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:00:03,083 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for back_caster from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:00:03,083 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???&B a l l _ c a s t e r - 1 @ D o l l y / b a l l - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:00:03,084 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
+2022-08-02 19:00:03,084 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
 2022-08-02 19:00:03,084 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link back_caster
 2022-08-02 19:00:03,216 INFO  SwAddin.cs: 344 - Showing property manager
 2022-08-02 19:00:08,965 INFO  ExportPropertyManager.cs: 422 - Configuration saved
@@ -694,37 +700,38 @@
 2022-08-02 19:02:42,388 INFO  LinkNode.cs: 35 - Building node right_wheel
 2022-08-02 19:02:42,388 INFO  LinkNode.cs: 35 - Building node front_caster
 2022-08-02 19:02:42,389 INFO  LinkNode.cs: 35 - Building node back_caster
-2022-08-02 19:02:42,389 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
-2022-08-02 19:02:42,390 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???p l a n e - 1 @ D o l l y                
-2022-08-02 19:02:42,392 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
+2022-08-02 19:02:42,389 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:02:42,390 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???
+p l a n e - 1 @ D o l l y                
+2022-08-02 19:02:42,392 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
 2022-08-02 19:02:42,392 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 2 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             g   7   
-2022-08-02 19:02:42,393 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 19:02:42,393 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 19:02:42,394 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 1 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             &   7   
-2022-08-02 19:02:42,394 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 19:02:42,394 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 19:02:42,395 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             &      
-2022-08-02 19:02:42,395 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 19:02:42,395 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 19:02:42,396 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             g      
-2022-08-02 19:02:42,396 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 19:02:42,396 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 19:02:42,397 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 2 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:02:42,398 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 19:02:42,398 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 19:02:42,398 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 1 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:02:42,399 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 19:02:42,399 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 19:02:42,400 INFO  CommonSwOperations.cs: 230 - Loaded 7 components for link base_link
-2022-08-02 19:02:42,400 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:02:42,400 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:02:42,401 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             &   =   
-2022-08-02 19:02:42,402 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 19:02:42,402 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 19:02:42,402 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link left_wheel
-2022-08-02 19:02:42,403 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:02:42,403 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:02:42,403 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             g   =   
-2022-08-02 19:02:42,404 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 19:02:42,404 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 19:02:42,404 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link right_wheel
-2022-08-02 19:02:42,405 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for front_caster from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:02:42,405 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for front_caster from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:02:42,405 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???&B a l l _ c a s t e r - 2 @ D o l l y / b a l l - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:02:42,406 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
+2022-08-02 19:02:42,406 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
 2022-08-02 19:02:42,407 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link front_caster
-2022-08-02 19:02:42,407 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for back_caster from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:02:42,407 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for back_caster from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:02:42,407 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???&B a l l _ c a s t e r - 1 @ D o l l y / b a l l - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:02:42,408 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
+2022-08-02 19:02:42,408 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
 2022-08-02 19:02:42,408 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link back_caster
 2022-08-02 19:02:42,564 INFO  SwAddin.cs: 344 - Showing property manager
 2022-08-02 19:02:53,260 INFO  ExportPropertyManager.cs: 422 - Configuration saved
@@ -783,37 +790,38 @@
 2022-08-02 19:02:57,815 INFO  LinkNode.cs: 35 - Building node right_wheel
 2022-08-02 19:02:57,815 INFO  LinkNode.cs: 35 - Building node front_caster
 2022-08-02 19:02:57,815 INFO  LinkNode.cs: 35 - Building node back_caster
-2022-08-02 19:02:57,816 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
-2022-08-02 19:02:57,816 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???p l a n e - 1 @ D o l l y                
-2022-08-02 19:02:57,817 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
+2022-08-02 19:02:57,816 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for base_link from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:02:57,816 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???
+p l a n e - 1 @ D o l l y                
+2022-08-02 19:02:57,817 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\plane.SLDPRT
 2022-08-02 19:02:57,817 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 2 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             g   7   
-2022-08-02 19:02:57,817 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 19:02:57,817 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 19:02:57,818 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???*M o t o r _ A S M - 1 @ D o l l y / m o t o r _ f l a n g e - 2 @ M o t o r _ A S M             &   7   
-2022-08-02 19:02:57,819 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
+2022-08-02 19:02:57,819 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\shared_modules\motor_flange.SLDPRT
 2022-08-02 19:02:57,819 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             &      
-2022-08-02 19:02:57,820 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 19:02:57,820 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 19:02:57,820 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / m o t o r - 3 @ M o t o r _ A S M             g      
-2022-08-02 19:02:57,821 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
+2022-08-02 19:02:57,821 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\motor.SLDPRT
 2022-08-02 19:02:57,821 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 2 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:02:57,821 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 19:02:57,821 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 19:02:57,822 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???.B a l l _ c a s t e r - 1 @ D o l l y / c a s t e r _ h o u s e - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:02:57,822 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
+2022-08-02 19:02:57,822 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\caster_house.SLDPRT
 2022-08-02 19:02:57,823 INFO  CommonSwOperations.cs: 230 - Loaded 7 components for link base_link
-2022-08-02 19:02:57,823 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:02:57,823 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for left_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:02:57,823 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 1 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             &   =   
-2022-08-02 19:02:57,824 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 19:02:57,824 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 19:02:57,824 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link left_wheel
-2022-08-02 19:02:57,824 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:02:57,824 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for right_wheel from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:02:57,825 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???#M o t o r _ A S M - 2 @ D o l l y / w h e e l - 1 @ M o t o r _ A S M             g   =   
-2022-08-02 19:02:57,825 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
+2022-08-02 19:02:57,825 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\wheel.SLDPRT
 2022-08-02 19:02:57,826 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link right_wheel
-2022-08-02 19:02:57,826 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for front_caster from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:02:57,826 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for front_caster from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:02:57,826 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???&B a l l _ c a s t e r - 2 @ D o l l y / b a l l - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:02:57,827 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
+2022-08-02 19:02:57,827 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
 2022-08-02 19:02:57,827 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link front_caster
-2022-08-02 19:02:57,827 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for back_caster from G:\Мой диск\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
+2022-08-02 19:02:57,827 INFO  CommonSwOperations.cs: 221 - Loading SolidWorks components for back_caster from G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\dolly_platform\ver_1\Dolly.SLDASM
 2022-08-02 19:02:57,828 INFO  CommonSwOperations.cs: 245 - Loading component with PID ?6     ???&B a l l _ c a s t e r - 1 @ D o l l y / b a l l - 1 @ B a l l _ c a s t e r             ?      
-2022-08-02 19:02:57,828 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\Мой диск\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
+2022-08-02 19:02:57,828 INFO  CommonSwOperations.cs: 254 - Successfully loaded component G:\пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ\Eurobot 22 23\3d_models\component_library\Ball_caster_components\ball.SLDPRT
 2022-08-02 19:02:57,828 INFO  CommonSwOperations.cs: 230 - Loaded 1 components for link back_caster
 2022-08-02 19:02:57,965 INFO  SwAddin.cs: 344 - Showing property manager
 2022-08-02 19:03:00,383 INFO  ExportPropertyManager.cs: 422 - Configuration saved
