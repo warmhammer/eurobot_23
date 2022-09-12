@@ -4,6 +4,37 @@
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
   name="dolly">
+  <!-- Start of my code -->
+  <link
+    name="base_footprint">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.001" radius="0.1"/>
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0 0 1 1" />
+      </material>
+    </visual>
+  </link>
+  <joint
+    name="base_link_to_footprint"
+    type="continuous">
+    <origin
+      xyz="0 0 0.016"
+      rpy="0 0 0" />
+    <parent
+      link="base_footprint" />
+    <child
+      link="base_link" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <!-- End of my code -->
   <link
     name="base_link">
     <inertial>
