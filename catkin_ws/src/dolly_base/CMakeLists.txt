@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   roscpp
   trajectory_msgs
+  pid
 )
 
 ## System dependencies are found with CMake's conventions
@@ -142,6 +143,11 @@ include_directories(
 
 add_executable(${PROJECT_NAME}_node  
   src/dolly_base.cpp
+  include/dolly_base/dolly_hardware_interface.hpp
+)
+
+add_executable(hardware_emulator_node  
+  src/hw_emulator.cpp
 )
 
 ## Rename C++ executable without prefix
@@ -156,6 +162,10 @@ add_executable(${PROJECT_NAME}_node
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(hardware_emulator_node
   ${catkin_LIBRARIES}
 )
 
