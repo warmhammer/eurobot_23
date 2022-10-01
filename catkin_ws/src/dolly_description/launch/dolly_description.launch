@@ -8,10 +8,9 @@
     name="joint_state_publisher"
     pkg="joint_state_publisher"
     type="joint_state_publisher" /> -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+  <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
       <param name="robot_description" textfile="$(find dolly_description)/urdf/dolly.urdf" />
-      <!-- <remap from="/joint_states" to="/dolly/joint_states" /> -->
-  </node>
+  </node> -->
   <node
     name="rviz"
     pkg="rviz"

@@ -9,8 +9,7 @@
         type="spawner" 
         respawn="false" 
         output="screen" 
-        args="joint_state_controller mobile_base_controller" > 
-    </node>
+        args="joint_state_controller mobile_base_controller" /> 
 
     <!-- joint_state_controller -->
 </launch>
