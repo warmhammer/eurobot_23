@@ -1,0 +1,3 @@
+../Core/Src/motors.cpp:9:10:uint16_t speed_convert(float)	16	static
+../Core/Src/motors.cpp:21:6:void EncoderMotor::update_params(float, bool)	24	static
+../Core/Src/motors.cpp:53:6:void EncoderMotor::set_params()	16	static

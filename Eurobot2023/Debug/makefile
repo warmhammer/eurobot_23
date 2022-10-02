@@ -50,34 +50,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := stm32f407_controller
+BUILD_ARTIFACT_NAME := Eurobot2023
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-stm32f407_controller.elf \
+Eurobot2023.elf \
 
 MAP_FILES += \
-stm32f407_controller.map \
+Eurobot2023.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-stm32f407_controller.list \
+Eurobot2023.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: stm32f407_controller.elf secondary-outputs
+main-build: Eurobot2023.elf secondary-outputs
 
 # Tool invocations
-stm32f407_controller.elf stm32f407_controller.map: $(OBJS) $(USER_OBJS) /home/valery/STM32CubeIDE/workspace/Eurobot2023/STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "stm32f407_controller.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/valery/STM32CubeIDE/workspace/Eurobot2023/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f407_controller.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Eurobot2023.elf Eurobot2023.map: $(OBJS) $(USER_OBJS) /home/valery/gitworkspace/eurobot_23/Eurobot2023/STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-g++ -o "Eurobot2023.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/valery/gitworkspace/eurobot_23/Eurobot2023/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Eurobot2023.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -86,14 +86,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-stm32f407_controller.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "stm32f407_controller.list"
+Eurobot2023.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Eurobot2023.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) default.size.stdout stm32f407_controller.elf stm32f407_controller.list stm32f407_controller.map
+	-$(RM) Eurobot2023.elf Eurobot2023.list Eurobot2023.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
