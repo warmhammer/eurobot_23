@@ -25,23 +25,13 @@ void EncoderMotor::update_params(float w, bool ena)
 		ENA = 1;
 		DIR = 0;
 		setted_vel = speed_convert(w);
-		//calc c_vel from DMA
-		if ( speed_data_register2 > speed_data_register1 ) c_vel = speed_data_register2 - speed_data_register1;
-
-		if ( c_vel < 0 ){
-
-		}
+		c_vel = speed_data_register2;
 	}else if (ena)
 	{
 		ENA = 1;
 		DIR = 1;
 		setted_vel = speed_convert(w);
-		//calc c_vel from DMA
-		if ( speed_data_register2 > speed_data_register1 ) c_vel = speed_data_register2 - speed_data_register1;
-
-		if ( c_vel < 0 ){
-
-		}
+		c_vel = speed_data_register2;
 	}else
 	{
 		ENA = 0;
@@ -56,21 +46,31 @@ void EncoderMotor::set_params()
 	{
 		if (DIR){
 			HAL_GPIO_WritePin(DIR_Port, DIR_Pin, GPIO_PIN_SET);
+			Encoder_Timer->Instance->CR1|= (1UL << 4); 			//set DIR counting down in Encoder timer
 		}else
 		{
 			HAL_GPIO_WritePin(DIR_Port, DIR_Pin, GPIO_PIN_RESET);
+			Encoder_Timer->Instance->CR1&= ~(1UL << 4);			//set DIR counting up in Encoder timer
 		}
 		//---set PWM----
-		sConfig.Pulse = setted_vel;
-		HAL_TIM_PWM_ConfigChannel(Pwm_Timer, &sConfig, Pwm_Timer_Chanel1);
+		Pulse = (setted_vel* Pwm_Timer->Instance->ARR/0xFFFF);
+		__HAL_TIM_SET_COMPARE(Pwm_Timer, Pwm_Timer_Chanel1, Pulse);
+
+		if (!(Pwm_Timer->Instance->CR1 & (1<<0)))
+		{
+			HAL_TIM_PWM_Start(Pwm_Timer, Pwm_Timer_Chanel1);
+		}
 		//--------------
-		HAL_TIM_PWM_Start(Pwm_Timer, Pwm_Timer_Chanel1);
+
 		HAL_GPIO_WritePin(ENA_Port, ENA1_Pin, GPIO_PIN_SET);
 	}else
 	{
 		HAL_GPIO_WritePin(ENA_Port, ENA1_Pin, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(DIR_Port, DIR_Pin, GPIO_PIN_RESET);
 		HAL_TIM_PWM_Stop(Pwm_Timer, Pwm_Timer_Chanel1);
+
+		speed_data_register2=0;
+		c_vel = 0;
 
 	}
 }

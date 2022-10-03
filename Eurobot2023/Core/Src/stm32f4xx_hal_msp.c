@@ -23,13 +23,9 @@
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
-extern DMA_HandleTypeDef hdma_tim3_ch2;
-
 extern DMA_HandleTypeDef hdma_tim3_ch3;
 
 extern DMA_HandleTypeDef hdma_tim4_ch1;
-
-extern DMA_HandleTypeDef hdma_tim4_ch2;
 
 extern DMA_HandleTypeDef hdma_uart4_rx;
 
@@ -297,21 +293,12 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     /* Peripheral clock enable */
     __HAL_RCC_TIM3_CLK_ENABLE();
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOD_CLK_ENABLE();
     /**TIM3 GPIO Configuration
-    PA7     ------> TIM3_CH2
     PB0     ------> TIM3_CH3
     PD2     ------> TIM3_ETR
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_7;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
     GPIO_InitStruct.Pin = GPIO_PIN_0;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -327,24 +314,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* TIM3 DMA Init */
-    /* TIM3_CH2 Init */
-    hdma_tim3_ch2.Instance = DMA1_Stream5;
-    hdma_tim3_ch2.Init.Channel = DMA_CHANNEL_5;
-    hdma_tim3_ch2.Init.Direction = DMA_PERIPH_TO_MEMORY;
-    hdma_tim3_ch2.Init.PeriphInc = DMA_PINC_DISABLE;
-    hdma_tim3_ch2.Init.MemInc = DMA_MINC_ENABLE;
-    hdma_tim3_ch2.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-    hdma_tim3_ch2.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_tim3_ch2.Init.Mode = DMA_NORMAL;
-    hdma_tim3_ch2.Init.Priority = DMA_PRIORITY_HIGH;
-    hdma_tim3_ch2.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
-    if (HAL_DMA_Init(&hdma_tim3_ch2) != HAL_OK)
-    {
-      Error_Handler();
-    }
-
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC2],hdma_tim3_ch2);
-
     /* TIM3_CH3 Init */
     hdma_tim3_ch3.Instance = DMA1_Stream7;
     hdma_tim3_ch3.Init.Channel = DMA_CHANNEL_5;
@@ -353,7 +322,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     hdma_tim3_ch3.Init.MemInc = DMA_MINC_ENABLE;
     hdma_tim3_ch3.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_tim3_ch3.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_tim3_ch3.Init.Mode = DMA_NORMAL;
+    hdma_tim3_ch3.Init.Mode = DMA_CIRCULAR;
     hdma_tim3_ch3.Init.Priority = DMA_PRIORITY_HIGH;
     hdma_tim3_ch3.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_tim3_ch3) != HAL_OK)
@@ -379,10 +348,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     __HAL_RCC_GPIOE_CLK_ENABLE();
     /**TIM4 GPIO Configuration
     PD12     ------> TIM4_CH1
-    PD13     ------> TIM4_CH2
     PE0     ------> TIM4_ETR
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13;
+    GPIO_InitStruct.Pin = GPIO_PIN_12;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -405,7 +373,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     hdma_tim4_ch1.Init.MemInc = DMA_MINC_ENABLE;
     hdma_tim4_ch1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_tim4_ch1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_tim4_ch1.Init.Mode = DMA_NORMAL;
+    hdma_tim4_ch1.Init.Mode = DMA_CIRCULAR;
     hdma_tim4_ch1.Init.Priority = DMA_PRIORITY_HIGH;
     hdma_tim4_ch1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_tim4_ch1) != HAL_OK)
@@ -414,24 +382,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     }
 
     __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC1],hdma_tim4_ch1);
-
-    /* TIM4_CH2 Init */
-    hdma_tim4_ch2.Instance = DMA1_Stream3;
-    hdma_tim4_ch2.Init.Channel = DMA_CHANNEL_2;
-    hdma_tim4_ch2.Init.Direction = DMA_PERIPH_TO_MEMORY;
-    hdma_tim4_ch2.Init.PeriphInc = DMA_PINC_DISABLE;
-    hdma_tim4_ch2.Init.MemInc = DMA_MINC_ENABLE;
-    hdma_tim4_ch2.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-    hdma_tim4_ch2.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_tim4_ch2.Init.Mode = DMA_NORMAL;
-    hdma_tim4_ch2.Init.Priority = DMA_PRIORITY_HIGH;
-    hdma_tim4_ch2.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
-    if (HAL_DMA_Init(&hdma_tim4_ch2) != HAL_OK)
-    {
-      Error_Handler();
-    }
-
-    __HAL_LINKDMA(htim_base,hdma[TIM_DMA_ID_CC2],hdma_tim4_ch2);
 
   /* USER CODE BEGIN TIM4_MspInit 1 */
 
@@ -460,7 +410,18 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 
   /* USER CODE END TIM5_MspInit 1 */
   }
-  else if(htim_base->Instance==TIM9)
+
+}
+
+/**
+* @brief TIM_PWM MSP Initialization
+* This function configures the hardware resources used in this example
+* @param htim_pwm: TIM_PWM handle pointer
+* @retval None
+*/
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim_pwm)
+{
+  if(htim_pwm->Instance==TIM9)
   {
   /* USER CODE BEGIN TIM9_MspInit 0 */
 
@@ -471,7 +432,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 
   /* USER CODE END TIM9_MspInit 1 */
   }
-  else if(htim_base->Instance==TIM12)
+  else if(htim_pwm->Instance==TIM12)
   {
   /* USER CODE BEGIN TIM12_MspInit 0 */
 
@@ -565,18 +526,14 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
     __HAL_RCC_TIM3_CLK_DISABLE();
 
     /**TIM3 GPIO Configuration
-    PA7     ------> TIM3_CH2
     PB0     ------> TIM3_CH3
     PD2     ------> TIM3_ETR
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_7);
-
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0);
 
     HAL_GPIO_DeInit(GPIOD, GPIO_PIN_2);
 
     /* TIM3 DMA DeInit */
-    HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_CC2]);
     HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_CC3]);
   /* USER CODE BEGIN TIM3_MspDeInit 1 */
 
@@ -592,16 +549,14 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
 
     /**TIM4 GPIO Configuration
     PD12     ------> TIM4_CH1
-    PD13     ------> TIM4_CH2
     PE0     ------> TIM4_ETR
     */
-    HAL_GPIO_DeInit(GPIOD, GPIO_PIN_12|GPIO_PIN_13);
+    HAL_GPIO_DeInit(GPIOD, GPIO_PIN_12);
 
     HAL_GPIO_DeInit(GPIOE, GPIO_PIN_0);
 
     /* TIM4 DMA DeInit */
     HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_CC1]);
-    HAL_DMA_DeInit(htim_base->hdma[TIM_DMA_ID_CC2]);
   /* USER CODE BEGIN TIM4_MspDeInit 1 */
 
   /* USER CODE END TIM4_MspDeInit 1 */
@@ -623,7 +578,18 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
 
   /* USER CODE END TIM5_MspDeInit 1 */
   }
-  else if(htim_base->Instance==TIM9)
+
+}
+
+/**
+* @brief TIM_PWM MSP De-Initialization
+* This function freeze the hardware resources used in this example
+* @param htim_pwm: TIM_PWM handle pointer
+* @retval None
+*/
+void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim_pwm)
+{
+  if(htim_pwm->Instance==TIM9)
   {
   /* USER CODE BEGIN TIM9_MspDeInit 0 */
 
@@ -634,7 +600,7 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
 
   /* USER CODE END TIM9_MspDeInit 1 */
   }
-  else if(htim_base->Instance==TIM12)
+  else if(htim_pwm->Instance==TIM12)
   {
   /* USER CODE BEGIN TIM12_MspDeInit 0 */
 

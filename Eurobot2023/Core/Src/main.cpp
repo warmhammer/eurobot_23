@@ -54,10 +54,8 @@ TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim5;
 TIM_HandleTypeDef htim9;
 TIM_HandleTypeDef htim12;
-DMA_HandleTypeDef hdma_tim3_ch2;
 DMA_HandleTypeDef hdma_tim3_ch3;
 DMA_HandleTypeDef hdma_tim4_ch1;
-DMA_HandleTypeDef hdma_tim4_ch2;
 
 UART_HandleTypeDef huart4;
 DMA_HandleTypeDef hdma_uart4_rx;
@@ -65,17 +63,16 @@ DMA_HandleTypeDef hdma_uart4_tx;
 
 /* USER CODE BEGIN PV */
 
-#define dir_port_l 				((GPIO_TypeDef *)GPIOA)
-#define dir_pin_l 				8
+#define dir_port_l 				GPIOA
+#define dir_pin_l 				GPIO_PIN_8
 
-#define ena_port  				((GPIO_TypeDef *)GPIOA)
-#define ena_pin 				10
+#define ena_port  				GPIOA
+#define ena_pin 				GPIO_PIN_10
 
 #define	encoder_timer_l 		&htim2
 #define encoder_timer_chanel1_l TIM_CHANNEL_1
 
 #define speed_timer_l 			&htim3
-#define speed_timer_chanel1_l  	TIM_CHANNEL_2
 #define speed_timer_chanel2_l  	TIM_CHANNEL_3
 
 #define pwm_timer_l				&htim9
@@ -122,8 +119,6 @@ int main(void)
 
 	const char * hello = "Hello World!!";
 
-	int chatter_interval = 1000.0 / 2;
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -133,10 +128,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  EncoderMotor EMotor_L(dir_port_l,ena_port,dir_pin_l,ena_pin,
-      			  	  	encoder_timer_l,encoder_timer_chanel1_l,
-    					speed_timer_l,speed_timer_chanel1_l,speed_timer_chanel2_l,
-  						pwm_timer_l, pwm_timer_chanel1_l);
+
 
   /* USER CODE END Init */
 
@@ -165,6 +157,11 @@ int main(void)
     nh.initNode();
     nh.advertise(chatter);
 
+    EncoderMotor EMotor_L(dir_port_l,ena_port,dir_pin_l,ena_pin,
+        			  	  	encoder_timer_l,encoder_timer_chanel1_l,
+      					speed_timer_l,speed_timer_chanel2_l,
+    						pwm_timer_l, pwm_timer_chanel1_l);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -173,7 +170,6 @@ int main(void)
   {
 	  EMotor_L.update_params(3, 1);
 	  EMotor_L.set_params();
-
 	  if (nh.connected())
 		        {
 
@@ -401,7 +397,6 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 0 */
 
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_SlaveConfigTypeDef sSlaveConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_IC_InitTypeDef sConfigIC = {0};
@@ -410,7 +405,7 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 0;
+  htim3.Init.Prescaler = 10;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 65535;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -419,20 +414,15 @@ static void MX_TIM3_Init(void)
   {
     Error_Handler();
   }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
   if (HAL_TIM_IC_Init(&htim3) != HAL_OK)
   {
     Error_Handler();
   }
-  sSlaveConfig.SlaveMode = TIM_SLAVEMODE_GATED;
+  sSlaveConfig.SlaveMode = TIM_SLAVEMODE_RESET;
   sSlaveConfig.InputTrigger = TIM_TS_ETRF;
   sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_NONINVERTED;
   sSlaveConfig.TriggerPrescaler = TIM_TRIGGERPRESCALER_DIV1;
-  sSlaveConfig.TriggerFilter = 0;
+  sSlaveConfig.TriggerFilter = 8;
   if (HAL_TIM_SlaveConfigSynchro(&htim3, &sSlaveConfig) != HAL_OK)
   {
     Error_Handler();
@@ -443,20 +433,17 @@ static void MX_TIM3_Init(void)
   {
     Error_Handler();
   }
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 0;
-  if (HAL_TIM_IC_ConfigChannel(&htim3, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
+  sConfigIC.ICFilter = 8;
   if (HAL_TIM_IC_ConfigChannel(&htim3, &sConfigIC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
   }
   /* USER CODE BEGIN TIM3_Init 2 */
+  //htim3.Instance->CR1|=  1UL << 0; //enable timer
+  //htim3.Instance->CCER|= 1UL << 0; //enable capture
 
   /* USER CODE END TIM3_Init 2 */
 
@@ -474,7 +461,6 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 0 */
 
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_SlaveConfigTypeDef sSlaveConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_IC_InitTypeDef sConfigIC = {0};
@@ -483,7 +469,7 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 0;
+  htim4.Init.Prescaler = 10;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim4.Init.Period = 65535;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -492,20 +478,15 @@ static void MX_TIM4_Init(void)
   {
     Error_Handler();
   }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
   if (HAL_TIM_IC_Init(&htim4) != HAL_OK)
   {
     Error_Handler();
   }
-  sSlaveConfig.SlaveMode = TIM_SLAVEMODE_GATED;
+  sSlaveConfig.SlaveMode = TIM_SLAVEMODE_RESET;
   sSlaveConfig.InputTrigger = TIM_TS_ETRF;
   sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_NONINVERTED;
   sSlaveConfig.TriggerPrescaler = TIM_TRIGGERPRESCALER_DIV1;
-  sSlaveConfig.TriggerFilter = 0;
+  sSlaveConfig.TriggerFilter = 8;
   if (HAL_TIM_SlaveConfigSynchro(&htim4, &sSlaveConfig) != HAL_OK)
   {
     Error_Handler();
@@ -516,20 +497,17 @@ static void MX_TIM4_Init(void)
   {
     Error_Handler();
   }
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 0;
+  sConfigIC.ICFilter = 8;
   if (HAL_TIM_IC_ConfigChannel(&htim4, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
-  if (HAL_TIM_IC_ConfigChannel(&htim4, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE BEGIN TIM4_Init 2 */
+  //htim4.Instance->CR1|=  1UL << 0; //enable timer
+  //htim4.Instance->CCER|= 1UL << 0; //enable capture
 
   /* USER CODE END TIM4_Init 2 */
 
@@ -598,7 +576,6 @@ static void MX_TIM9_Init(void)
 
   /* USER CODE END TIM9_Init 0 */
 
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM9_Init 1 */
@@ -607,18 +584,9 @@ static void MX_TIM9_Init(void)
   htim9.Instance = TIM9;
   htim9.Init.Prescaler = 0;
   htim9.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim9.Init.Period = 65535;
+  htim9.Init.Period = 3000;
   htim9.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim9.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim9) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim9, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  htim9.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_PWM_Init(&htim9) != HAL_OK)
   {
     Error_Handler();
@@ -650,7 +618,6 @@ static void MX_TIM12_Init(void)
 
   /* USER CODE END TIM12_Init 0 */
 
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM12_Init 1 */
@@ -659,18 +626,9 @@ static void MX_TIM12_Init(void)
   htim12.Instance = TIM12;
   htim12.Init.Prescaler = 0;
   htim12.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim12.Init.Period = 65535;
+  htim12.Init.Period = 3000;
   htim12.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim12.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim12) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim12, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  htim12.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_PWM_Init(&htim12) != HAL_OK)
   {
     Error_Handler();
@@ -739,15 +697,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
-  /* DMA1_Stream3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
   /* DMA1_Stream4_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
-  /* DMA1_Stream5_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
   /* DMA1_Stream7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
@@ -774,12 +726,19 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, DIR_L_Pin|DIR_R_Pin|ENA_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : DIR_L_Pin DIR_R_Pin ENA_Pin */
-  GPIO_InitStruct.Pin = DIR_L_Pin|DIR_R_Pin|ENA_Pin;
+  /*Configure GPIO pins : DIR_L_Pin DIR_R_Pin */
+  GPIO_InitStruct.Pin = DIR_L_Pin|DIR_R_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : ENA_Pin */
+  GPIO_InitStruct.Pin = ENA_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(ENA_GPIO_Port, &GPIO_InitStruct);
 
 }
 

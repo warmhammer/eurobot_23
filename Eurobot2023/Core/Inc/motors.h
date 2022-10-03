@@ -26,11 +26,14 @@ public:
 	EncoderMotor(GPIO_TypeDef* dir_port, GPIO_TypeDef* ena_port,
 				uint16_t dir_pin, uint16_t ena_pin,
 				TIM_HandleTypeDef* encoder_timer,uint16_t encoder_timer_chanel1,
-				TIM_HandleTypeDef* speed_timer,uint16_t speed_timer_chanel1,uint16_t speed_timer_chanel2,
+				TIM_HandleTypeDef* speed_timer, uint16_t speed_timer_chanel2,
 				TIM_HandleTypeDef* pwm_timer,uint16_t pwm_timer_chanel1)
 	{
-		c_vel,setted_vel,DIR,ENA = 0;
-		speed_data_register1 = 0;
+		c_vel = 0;
+		setted_vel = 0;
+		DIR = 0;
+		ENA = 0;
+		Pulse = 0;
 		speed_data_register2 = 0;
 
 		DIR_Port = dir_port;
@@ -42,19 +45,15 @@ public:
 		Encoder_Timer_Chanel1 = encoder_timer_chanel1;
 
 		Speed_Timer = speed_timer;
-		Speed_Timer_Chanel1 = speed_timer_chanel1;
 		Speed_Timer_Chanel2 = speed_timer_chanel2;
 
 		Pwm_Timer = pwm_timer;
 		Pwm_Timer_Chanel1 = pwm_timer_chanel1;
 		//------------------for use HAL config function
-		sConfig.OCMode = TIM_OCMODE_PWM2;
-		sConfig.Pulse = 0;
-		sConfig.OCPolarity = TIM_OCPOLARITY_HIGH;
-		sConfig.OCFastMode = TIM_OCFAST_DISABLE;
+
 		//------------------
-		HAL_TIM_IC_Start_DMA(Speed_Timer, Speed_Timer_Chanel1, &speed_data_register1,65535);
-		HAL_TIM_IC_Start_DMA(Speed_Timer, Speed_Timer_Chanel2, &speed_data_register2,65535);
+		//HAL_TIM_IC_Start_DMA(Speed_Timer, Speed_Timer_Chanel1, &speed_data_register1, 1);
+		HAL_TIM_IC_Start_DMA(Speed_Timer, Speed_Timer_Chanel2,&speed_data_register2, 1);
 	}
 
 	uint16_t c_vel; 	// current angular velocity
@@ -79,7 +78,8 @@ public:
 
 	TIM_HandleTypeDef* Pwm_Timer;
 	uint16_t Pwm_Timer_Chanel1;
-	TIM_OC_InitTypeDef sConfig;
+	uint16_t Pulse;
+
 
 //-------methods EncoderMotor-------------------------------
 	void update_params(float w, bool ena);
