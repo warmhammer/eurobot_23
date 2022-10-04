@@ -25,6 +25,7 @@
 #include <std_msgs/String.h>
 #include <std_msgs/UInt16.h>
 #include <motors.h>
+#include <std_msgs/UInt32.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,7 +63,7 @@ DMA_HandleTypeDef hdma_uart4_rx;
 DMA_HandleTypeDef hdma_uart4_tx;
 
 /* USER CODE BEGIN PV */
-
+//------------------------------------------------define EncoderMotors perif BEGIN--------------------
 #define dir_port_l 				GPIOA
 #define dir_pin_l 				GPIO_PIN_8
 
@@ -78,6 +79,18 @@ DMA_HandleTypeDef hdma_uart4_tx;
 #define pwm_timer_l				&htim9
 #define pwm_timer_chanel1_l  	TIM_CHANNEL_1
 
+#define dir_port_r 				GPIOA
+#define dir_pin_r				GPIO_PIN_9
+
+#define	encoder_timer_r 		&htim5
+#define encoder_timer_chanel1_r TIM_CHANNEL_1
+
+#define speed_timer_r 			&htim4
+#define speed_timer_chanel2_r  	TIM_CHANNEL_1
+
+#define pwm_timer_r				&htim12
+#define pwm_timer_chanel1_r  	TIM_CHANNEL_1
+//------------------------------------------------define EncoderMotors perif END--------------------
 
 /* USER CODE END PV */
 
@@ -101,10 +114,27 @@ static void MX_TIM9_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+//----------------------------------------------------------------ROS------------------------------------
 ros::NodeHandle nh;
-std_msgs::String str_msg;
-ros::Publisher chatter("chatter", &str_msg);
+
+std_msgs::UInt16 wheel_speed_l;
+std_msgs::UInt16 wheel_speed_r;
+
+ros::Publisher Wheel_Speed_l("wheel_speed_l", &wheel_speed_l);
+ros::Publisher Wheel_Speed_r("wheel_speed_r", &wheel_speed_r);
+
+std_msgs::UInt32 wheel_pos_l;
+std_msgs::UInt32 wheel_pos_r;
+
+ros::Publisher Wheel_Pos_l("wheels_pos_l", &wheel_pos_l);
+ros::Publisher Wheel_Pos_r("wheels_pos_r", &wheel_pos_r);
+
+/*std_msgs::UInt16 wheels_speed[2];
+ros::Publisher Wheels_Speed("wheels_speed", wheels_speed);
+
+std_msgs::UInt32 wheels_position[2];
+ros::Publisher Wheels_Position("wheels_position", wheels_position);*/
+//-------------------------------------------------------------------------------------------------------
 
 
 /* USER CODE END 0 */
@@ -154,27 +184,39 @@ int main(void)
   MX_TIM9_Init();
   /* USER CODE BEGIN 2 */
 
-    nh.initNode();
-    nh.advertise(chatter);
+
 
     EncoderMotor EMotor_L(dir_port_l,ena_port,dir_pin_l,ena_pin,
         			  	  	encoder_timer_l,encoder_timer_chanel1_l,
       					speed_timer_l,speed_timer_chanel2_l,
     						pwm_timer_l, pwm_timer_chanel1_l);
 
+    EncoderMotor EMotor_R(dir_port_r,ena_port,dir_pin_r,ena_pin,
+        			  	  	encoder_timer_r,encoder_timer_chanel1_r,
+      					speed_timer_r,speed_timer_chanel2_r,
+    						pwm_timer_r, pwm_timer_chanel1_r);
+    //-------------------------------------------------------------ROS----------------------
+    nh.initNode();
+    nh.advertise(Wheel_Speed_l);
+    nh.advertise(Wheel_Speed_r);
+    nh.advertise(Wheel_Pos_l);
+    nh.advertise(Wheel_Pos_r);
+    //nh.advertise(chatter);
+    //--------------------------------------------------------------------------------------
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  EMotor_L.update_params(3, 1);
-	  EMotor_L.set_params();
+
 	  if (nh.connected())
 		        {
+		  	  	  	  	EMotor_L.update_params(3, 1);
+		  	  	  	  	EMotor_L.set_params();
 
-		                str_msg.data = hello;
-		                chatter.publish(&str_msg);
+		                //str_msg.data = hello;
+		               // chatter.publish(&str_msg);
 		        }
 
 		  nh.spinOnce();

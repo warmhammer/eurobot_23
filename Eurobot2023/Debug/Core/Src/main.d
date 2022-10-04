@@ -39,7 +39,8 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../Core/Inc/ros/node_handle.h ../Core/Inc/ros/subscriber.h \
  ../Core/Inc/ros/service_server.h ../Core/Inc/ros/service_client.h \
  ../Core/Inc/STM32Hardware.h ../Core/Inc/std_msgs/String.h \
- ../Core/Inc/std_msgs/UInt16.h ../Core/Inc/motors.h
+ ../Core/Inc/std_msgs/UInt16.h ../Core/Inc/motors.h \
+ ../Core/Inc/std_msgs/UInt32.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -91,3 +92,4 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../Core/Inc/std_msgs/String.h:
 ../Core/Inc/std_msgs/UInt16.h:
 ../Core/Inc/motors.h:
+../Core/Inc/std_msgs/UInt32.h:

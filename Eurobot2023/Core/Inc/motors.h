@@ -49,10 +49,7 @@ public:
 
 		Pwm_Timer = pwm_timer;
 		Pwm_Timer_Chanel1 = pwm_timer_chanel1;
-		//------------------for use HAL config function
 
-		//------------------
-		//HAL_TIM_IC_Start_DMA(Speed_Timer, Speed_Timer_Chanel1, &speed_data_register1, 1);
 		HAL_TIM_IC_Start_DMA(Speed_Timer, Speed_Timer_Chanel2,&speed_data_register2, 1);
 	}
 
@@ -73,8 +70,7 @@ public:
 	TIM_HandleTypeDef* Speed_Timer;
 	uint16_t Speed_Timer_Chanel1;
 	uint16_t Speed_Timer_Chanel2;
-	uint32_t speed_data_register1;
-	uint32_t speed_data_register2;
+	uint32_t speed_data_register2; // current angular velocity 2
 
 	TIM_HandleTypeDef* Pwm_Timer;
 	uint16_t Pwm_Timer_Chanel1;
