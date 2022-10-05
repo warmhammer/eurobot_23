@@ -35,7 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-	#define Timer_Encoder_init_value        80000
+#define Timer_Encoder_init_value    80000
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -145,56 +145,70 @@ ros::Publisher Wheels_Position("wheels_position", wheels_position);*/
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
+    /* USER CODE BEGIN 1 */
 
-	const char * hello = "Hello World!!";
+//    const char * hello = "Hello World!!";
 
-  /* USER CODE END 1 */
+    /* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+    /* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+    HAL_Init();
 
-  /* USER CODE BEGIN Init */
-
-
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
-  SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_UART4_Init();
-  MX_RTC_Init();
-  MX_I2C1_Init();
-  MX_I2C2_Init();
-  MX_TIM2_Init();
-  MX_TIM5_Init();
-  MX_TIM12_Init();
-  MX_TIM3_Init();
-  MX_TIM4_Init();
-  MX_TIM9_Init();
-  /* USER CODE BEGIN 2 */
+    /* USER CODE BEGIN Init */
 
 
 
-    EncoderMotor EMotor_L(dir_port_l,ena_port,dir_pin_l,ena_pin,
-        			  	  	encoder_timer_l,encoder_timer_chanel1_l,
-      					speed_timer_l,speed_timer_chanel2_l,
-    						pwm_timer_l, pwm_timer_chanel1_l);
+    /* USER CODE END Init */
 
-    EncoderMotor EMotor_R(dir_port_r,ena_port,dir_pin_r,ena_pin,
-        			  	  	encoder_timer_r,encoder_timer_chanel1_r,
-      					speed_timer_r,speed_timer_chanel2_r,
-    						pwm_timer_r, pwm_timer_chanel1_r);
+    /* Configure the system clock */
+    SystemClock_Config();
+
+    /* USER CODE BEGIN SysInit */
+
+    /* USER CODE END SysInit */
+
+    /* Initialize all configured peripherals */
+    MX_GPIO_Init();
+    MX_DMA_Init();
+    MX_UART4_Init();
+    MX_RTC_Init();
+    MX_I2C1_Init();
+    MX_I2C2_Init();
+    MX_TIM2_Init();
+    MX_TIM5_Init();
+    MX_TIM12_Init();
+    MX_TIM3_Init();
+    MX_TIM4_Init();
+    MX_TIM9_Init();
+    /* USER CODE BEGIN 2 */
+
+    EncoderMotor EMotor_L (
+        dir_port_l,
+        ena_port,
+        dir_pin_l,
+        ena_pin,
+        encoder_timer_l,
+        encoder_timer_chanel1_l,
+        speed_timer_l,
+        speed_timer_chanel2_l,
+        pwm_timer_l,
+        pwm_timer_chanel1_l
+    );
+
+    EncoderMotor EMotor_R (
+        dir_port_r,
+        ena_port,
+        dir_pin_r,
+        ena_pin,
+        encoder_timer_r,
+        encoder_timer_chanel1_r,
+        speed_timer_r,
+        speed_timer_chanel2_r,
+        pwm_timer_r,
+        pwm_timer_chanel1_r
+    );
     //-------------------------------------------------------------ROS----------------------
     nh.initNode();
     nh.advertise(Wheel_Speed_l);
@@ -203,28 +217,27 @@ int main(void)
     nh.advertise(Wheel_Pos_r);
     //nh.advertise(chatter);
     //--------------------------------------------------------------------------------------
-  /* USER CODE END 2 */
+    /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
+    /* Infinite loop */
+    /* USER CODE BEGIN WHILE */
+    while (1)
+    {
+        if (nh.connected())
+        {
+            EMotor_L.update_params(3, 1);
+            EMotor_L.set_params();
 
-	  if (nh.connected())
-		        {
-		  	  	  	  	EMotor_L.update_params(3, 1);
-		  	  	  	  	EMotor_L.set_params();
+//            str_msg.data = hello;
+//            chatter.publish(&str_msg);
+        }
 
-		                //str_msg.data = hello;
-		               // chatter.publish(&str_msg);
-		        }
-
-		  nh.spinOnce();
+        nh.spinOnce();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+    }
+    /* USER CODE END 3 */
 }
 
 /**
