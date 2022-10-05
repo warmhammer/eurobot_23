@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="dolly">
+
+  <!-- Start of my code -->
+  <link
+    name="base_footprint">
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.001" radius="0.1"/>
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0 0 1 1" />
+      </material>
+    </visual>
+  </link>
+  <!-- End of my code -->
+
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.000320698542465374 -1.38466755889852E-17 0.0141650754567844"
+        rpy="0 0 0" />
+      <mass
+        value="2.84947390106727" />
+      <inertia
+        ixx="0.0070164839699455"
+        ixy="4.12242135597668E-07"
+        ixz="9.01373820260187E-21"
+        iyy="0.00704427689076199"
+        iyz="-2.58578100881081E-21"
+        izz="0.0138516125887678" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dolly_description/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dolly_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Start of my code -->
+  <joint
+    name="base_footprint_to_base_link"
+    type="fixed">
+    <origin
+      xyz="0 0 0.016"
+      rpy="0 0 0" />
+    <parent
+      link="base_footprint" />
+    <child
+      link="base_link" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <!-- End of my code -->
+  
+  <link
+    name="left_wheel">
+    <inertial>
+      <origin
+        xyz="1.0842021724855E-19 -1.38777878078145E-17 -3.46944695195361E-18"
+        rpy="0 0 0" />
+      <mass
+        value="0.21389788050971" />
+      <inertia
+        ixx="7.9924596730356E-05"
+        ixy="9.39573778283677E-24"
+        ixz="-8.41846427878367E-23"
+        iyy="0.000157056017019794"
+        iyz="-5.37667398159315E-24"
+        izz="7.9924596730356E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dolly_description/meshes/left_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dolly_description/meshes/left_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_wheel_to_base"
+    type="continuous">
+    <origin
+      xyz="-0.000568807268986191 0.1055 0.0244882756394961"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="left_wheel" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="right_wheel">
+    <inertial>
+      <origin
+        xyz="0 -1.38777878078145E-17 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.21389788050971" />
+      <inertia
+        ixx="7.9924596730356E-05"
+        ixy="3.14510242253844E-24"
+        ixz="-1.67685649879966E-22"
+        iyy="0.000157056017019794"
+        iyz="-1.32781947727186E-22"
+        izz="7.9924596730356E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dolly_description/meshes/right_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dolly_description/meshes/right_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_wheel_to_base"
+    type="continuous">
+    <origin
+      xyz="0.00202133439372744 -0.1055 0.0244882756394961"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_wheel" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="front_caster">
+    <inertial>
+      <origin
+        xyz="0 -3.3881317890172E-20 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.000904778684233861" />
+      <inertia
+        ixx="1.30288130529676E-08"
+        ixy="-1.40607345541878E-25"
+        ixz="6.33674757152668E-25"
+        iyy="1.30288130529676E-08"
+        iyz="-6.30195762572967E-26"
+        izz="1.30288130529676E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dolly_description/meshes/front_caster.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dolly_description/meshes/front_caster.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="front_caster_to_base"
+    type="fixed">
+    <origin
+      xyz="0.102 0 -0.004"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="front_caster" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="back_caster">
+    <inertial>
+      <origin
+        xyz="1.38777878078145E-17 3.3881317890172E-20 8.67361737988404E-19"
+        rpy="0 0 0" />
+      <mass
+        value="0.000904778684233861" />
+      <inertia
+        ixx="1.30288130529676E-08"
+        ixy="-1.40607345541878E-25"
+        ixz="1.10340452920869E-24"
+        iyy="1.30288130529676E-08"
+        iyz="-1.85134607508612E-25"
+        izz="1.30288130529676E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dolly_description/meshes/back_caster.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dolly_description/meshes/back_caster.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_caster_to_base"
+    type="fixed">
+    <origin
+      xyz="-0.102 0 -0.004"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="back_caster" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>
