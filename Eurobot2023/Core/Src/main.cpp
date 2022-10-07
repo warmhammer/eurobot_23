@@ -214,7 +214,8 @@ int main(void)
         speed_timer_l,
         speed_timer_chanel2_l,
         pwm_timer_l,
-        pwm_timer_chanel1_l
+        pwm_timer_chanel1_l,
+		"/dolly/left_wheel/cmd_vel"
     );
 
     EncoderMotor EMotor_R (
@@ -227,7 +228,8 @@ int main(void)
         speed_timer_r,
         speed_timer_chanel2_r,
         pwm_timer_r,
-        pwm_timer_chanel1_r
+        pwm_timer_chanel1_r,
+		"/dolly/right_wheel/cmd_vel"
     );
 
     /* USER CODE END 2 */

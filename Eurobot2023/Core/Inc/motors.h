@@ -36,15 +36,17 @@ class EncoderMotor {
 			uint16_t speed_timer_chanel2,
 			TIM_HandleTypeDef* pwm_timer,
 			uint16_t pwm_timer_chanel1,
-			void (*wheel_f)(const std_msgs::Float64&)
+			const char* topic_name
 	    );
 
 	    //-------methods EncoderMotor-------------------------------
         void update_params(float w, bool ena);
         void set_params();
-        //void Wheel_Callback(const std_msgs::Float64&){}
 
     private:
+        // TODO: Any private variable or method should starts with _ like _velocity_callback(...) or _velocity_subcriber
+        void _velocity_callback(const std_msgs::Float64&);
+
         uint16_t c_vel; 	// current angular velocity
         uint16_t setted_vel;
         bool DIR; 					//direction of rotation 0 -is CW, 1 -is CCW
@@ -68,8 +70,7 @@ class EncoderMotor {
         uint16_t Pwm_Timer_Chanel1;
         uint16_t Pulse;
 
-        //ros::Subscriber<std_msgs::Float64> left_wheel_sub;
-        //ros::Subscriber sub;
+        ros::Subscriber<std_msgs::Float64> _velocity_subcriber;
 };
 
 
