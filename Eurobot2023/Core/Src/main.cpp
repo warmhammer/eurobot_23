@@ -24,8 +24,9 @@
 #include <ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/UInt16.h>
-#include <motors.h>
 #include <std_msgs/UInt32.h>
+#include <std_msgs/Float64.h>
+#include <motors.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -129,6 +130,11 @@ std_msgs::UInt32 wheel_pos_r;
 ros::Publisher Wheel_Pos_l("wheels_pos_l", &wheel_pos_l);
 ros::Publisher Wheel_Pos_r("wheels_pos_r", &wheel_pos_r);
 
+
+//ros::Subscriber<std_msgs::Float64> cmd_vel_wheel_r;                                       // /dolly/right_wheel/cmd_vel
+                                    // /dolly/left_wheel/cur_vel .... /dolly/left_wheel/angle
+
+
 /*std_msgs::UInt16 wheels_speed[2];
 ros::Publisher Wheels_Speed("wheels_speed", wheels_speed);
 
@@ -184,6 +190,20 @@ int main(void)
     MX_TIM9_Init();
     /* USER CODE BEGIN 2 */
 
+
+    //-------------------------------------------------------------ROS----------------------
+    nh.initNode();
+
+    //ros::Subscriber<std_msgs::Float64> cmd_vel_wheel_l("/dolly/left_wheel/cmd_vel",EMotor_L.Wheel_Callback,1);       // /dolly/left_wheel/cmd_vel
+
+    //ros::Subscriber sub = nh.subscribe("/dolly/left_wheel/cmd_vel", 1000, EncoderMotor::Wheel_Callback);
+    nh.advertise(Wheel_Speed_l);
+    nh.advertise(Wheel_Speed_r);
+    nh.advertise(Wheel_Pos_l);
+    nh.advertise(Wheel_Pos_r);
+
+
+    //--------------------------------------------------------------------------------------
     EncoderMotor EMotor_L (
         dir_port_l,
         ena_port,
@@ -209,14 +229,7 @@ int main(void)
         pwm_timer_r,
         pwm_timer_chanel1_r
     );
-    //-------------------------------------------------------------ROS----------------------
-    nh.initNode();
-    nh.advertise(Wheel_Speed_l);
-    nh.advertise(Wheel_Speed_r);
-    nh.advertise(Wheel_Pos_l);
-    nh.advertise(Wheel_Pos_r);
-    //nh.advertise(chatter);
-    //--------------------------------------------------------------------------------------
+
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -225,7 +238,7 @@ int main(void)
     {
         if (nh.connected())
         {
-            EMotor_L.update_params(3, 1);
+            EMotor_L.update_params(0, 1);
             EMotor_L.set_params();
 
 //            str_msg.data = hello;

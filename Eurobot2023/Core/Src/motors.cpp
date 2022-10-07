@@ -6,6 +6,7 @@
  */
 #include "motors.h"
 
+
 uint16_t speed_convert(float fval) { // float to uint16_t convert
     if (fval < -MAX_EMotor_Speed || MAX_EMotor_Speed < fval) {
         return(UINT16_MAX);
@@ -18,6 +19,11 @@ uint16_t speed_convert(float fval) { // float to uint16_t convert
     }
 }
 
+void Wheel_Callback(const std_msgs::Float64& wheel_cmd){
+
+   //update_params(wheel_cmd_l, )
+}
+
 EncoderMotor::EncoderMotor (
     GPIO_TypeDef* dir_port,
     GPIO_TypeDef* ena_port,
@@ -28,8 +34,13 @@ EncoderMotor::EncoderMotor (
     TIM_HandleTypeDef* speed_timer,
     uint16_t speed_timer_chanel2,
     TIM_HandleTypeDef* pwm_timer,
-    uint16_t pwm_timer_chanel1
-) {
+    uint16_t pwm_timer_chanel1,
+    void (*wheel_f)(const std_msgs::Float64&)
+)  {
+    //: sub("/dolly/left_wheel/cmd_vel", [this](const std_msgs::Float64& msg){this->Wheel_Callback(msg); })
+    //void Wheel_Callback(const std_msgs::Float64&);
+    //ros::Subscriber<std_msgs::Float64> wheel_speed_sub =
+
     c_vel = 0;
     setted_vel = 0;
     DIR = 0;
@@ -52,6 +63,8 @@ EncoderMotor::EncoderMotor (
     Pwm_Timer_Chanel1 = pwm_timer_chanel1;
 
     HAL_TIM_IC_Start_DMA(Speed_Timer, Speed_Timer_Chanel2,&speed_data_register2, 1);
+
+    wheel_f = &Wheel_Callback;
 }
 
 void EncoderMotor::update_params(float w, bool ena) {
@@ -102,3 +115,4 @@ void EncoderMotor::set_params() {
 		c_vel = 0;
 	}
 }
+

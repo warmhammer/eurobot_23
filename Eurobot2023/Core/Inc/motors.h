@@ -10,6 +10,8 @@
 
 #include "stdint.h"
 #include "stm32f4xx_hal.h"
+#include "ros.h"
+#include <std_msgs/Float64.h>
 
 //!!!!!!!!-----------USER DEFINED PARAMS BEGIN------------!!!!!!!!!!!!!!!!!!!
 
@@ -18,6 +20,8 @@
 //!!!!!!!!-----------USER DEFINED PARAMS END------------!!!!!!!!!!!!!!!!!!!
 
 uint16_t speed_convert(float fval); // float to uint16_t convert
+
+void Wheel_Callback(const std_msgs::Float64&); //wheel CallBack
 
 class EncoderMotor {
     public:
@@ -31,13 +35,14 @@ class EncoderMotor {
 			TIM_HandleTypeDef* speed_timer,
 			uint16_t speed_timer_chanel2,
 			TIM_HandleTypeDef* pwm_timer,
-			uint16_t pwm_timer_chanel1
+			uint16_t pwm_timer_chanel1,
+			void (*wheel_f)(const std_msgs::Float64&)
 	    );
 
 	    //-------methods EncoderMotor-------------------------------
         void update_params(float w, bool ena);
         void set_params();
-
+        //void Wheel_Callback(const std_msgs::Float64&){}
 
     private:
         uint16_t c_vel; 	// current angular velocity
@@ -62,6 +67,11 @@ class EncoderMotor {
         TIM_HandleTypeDef* Pwm_Timer;
         uint16_t Pwm_Timer_Chanel1;
         uint16_t Pulse;
+
+        //ros::Subscriber<std_msgs::Float64> left_wheel_sub;
+        //ros::Subscriber sub;
 };
+
+
 
 #endif /* INC_MOTORS_H_ */
