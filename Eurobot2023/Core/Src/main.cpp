@@ -215,7 +215,8 @@ int main(void)
         speed_timer_chanel2_l,
         pwm_timer_l,
         pwm_timer_chanel1_l,
-		"/dolly/left_wheel/cmd_vel"
+		"/dolly/left_wheel/cmd_vel",
+        "/dolly/left_wheel/cur_vel"
     );
 
     EncoderMotor EMotor_R (
@@ -229,8 +230,17 @@ int main(void)
         speed_timer_chanel2_r,
         pwm_timer_r,
         pwm_timer_chanel1_r,
-		"/dolly/right_wheel/cmd_vel"
+		"/dolly/right_wheel/cmd_vel",
+        "/dolly/right_wheel/cur_vel"
     );
+    //-------------------------------------------------------------ROS----------------------
+    nh.subscribe(EMotor_L.velocity_subcriber);
+    nh.subscribe(EMotor_R.velocity_subcriber);
+
+    //std_msgs::UInt32 c;
+    //ros::Publisher chatter("chatter", &c);
+    //--------------------------------------------------------------------------------------
+
 
     /* USER CODE END 2 */
 
@@ -240,8 +250,8 @@ int main(void)
     {
         if (nh.connected())
         {
-            EMotor_L.update_params(0, 1);
-            EMotor_L.set_params();
+            //EMotor_L.update_params(0, 1);
+            //EMotor_L.set_params();
 
 //            str_msg.data = hello;
 //            chatter.publish(&str_msg);

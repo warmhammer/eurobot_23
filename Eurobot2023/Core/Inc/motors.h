@@ -12,14 +12,17 @@
 #include "stm32f4xx_hal.h"
 #include "ros.h"
 #include <std_msgs/Float64.h>
+#include <std_msgs/UInt32.h>
+#include <std_msgs/UInt16.h>
+
+
 
 //!!!!!!!!-----------USER DEFINED PARAMS BEGIN------------!!!!!!!!!!!!!!!!!!!
 
-#define MAX_EMotor_Speed 6 //define max speed of EncoderMotor
+#define MAX_EMotor_Speed 10 //define max speed of EncoderMotor
 
 //!!!!!!!!-----------USER DEFINED PARAMS END------------!!!!!!!!!!!!!!!!!!!
 
-uint16_t speed_convert(float fval); // float to uint16_t convert
 
 void Wheel_Callback(const std_msgs::Float64&); //wheel CallBack
 
@@ -36,18 +39,23 @@ class EncoderMotor {
 			uint16_t speed_timer_chanel2,
 			TIM_HandleTypeDef* pwm_timer,
 			uint16_t pwm_timer_chanel1,
-			const char* topic_name
+			const char* cmd_vel_topic,
+			const char* cur_vel_topic
 	    );
 
 	    //-------methods EncoderMotor-------------------------------
-        void update_params(float w, bool ena);
+	    uint16_t speed_convert(float fval); // float to uint16_t convert
+        void update_params(float angular_vel, bool ena);
         void set_params();
+        void velocity_callback(const std_msgs::Float64&);
+
+        ros::Subscriber<std_msgs::Float64> velocity_subcriber;
+        ros::Publisher Cur_Vel;
 
     private:
         // TODO: Any private variable or method should starts with _ like _velocity_callback(...) or _velocity_subcriber
-        void _velocity_callback(const std_msgs::Float64&);
 
-        uint16_t c_vel; 	// current angular velocity
+        std_msgs::UInt32 C_Vel; // current angular velocity
         uint16_t setted_vel;
         bool DIR; 					//direction of rotation 0 -is CW, 1 -is CCW
         bool ENA; 					//Motor enable (1 - is enable, 0 - is disable)
@@ -70,7 +78,6 @@ class EncoderMotor {
         uint16_t Pwm_Timer_Chanel1;
         uint16_t Pulse;
 
-        ros::Subscriber<std_msgs::Float64> _velocity_subcriber;
 };
 
 

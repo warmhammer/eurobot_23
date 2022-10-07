@@ -6,8 +6,7 @@
  */
 #include "motors.h"
 
-// TODO: Should be a part of EncoderMotor class
-uint16_t speed_convert(float fval) { // float to uint16_t convert
+uint16_t EncoderMotor::speed_convert(float fval) { // float to uint16_t convert
     if (fval < -MAX_EMotor_Speed || MAX_EMotor_Speed < fval) {
         return(UINT16_MAX);
     }
@@ -19,8 +18,10 @@ uint16_t speed_convert(float fval) { // float to uint16_t convert
     }
 }
 
-void EncoderMotor::_velocity_callback(const std_msgs::Float64&) {
+void EncoderMotor::velocity_callback(const std_msgs::Float64& cmd_vel) {
 	/*implementation*/
+    update_params( cmd_vel.data, 1);
+    set_params();
 }
 
 EncoderMotor::EncoderMotor (
@@ -34,9 +35,11 @@ EncoderMotor::EncoderMotor (
     uint16_t speed_timer_chanel2,
     TIM_HandleTypeDef* pwm_timer,
     uint16_t pwm_timer_chanel1,
-	const char* topic_name
-) : _velocity_subcriber(topic_name, [&](const std_msgs::Float64& msg){_velocity_callback(msg);}) {
-    c_vel = 0;
+	const char* cmd_vel_topic,
+	const char* cur_vel_topic
+) : velocity_subcriber(cmd_vel_topic, [&](const std_msgs::Float64& msg){velocity_callback(msg);}) {
+
+    C_Vel.data = 0;
     setted_vel = 0;
     DIR = 0;
     ENA = 0;
@@ -57,20 +60,20 @@ EncoderMotor::EncoderMotor (
     Pwm_Timer = pwm_timer;
     Pwm_Timer_Chanel1 = pwm_timer_chanel1;
 
-    HAL_TIM_IC_Start_DMA(Speed_Timer, Speed_Timer_Chanel2, &speed_data_register2, 1);
+    HAL_TIM_IC_Start_DMA(Speed_Timer, Speed_Timer_Chanel2, &C_Vel.data, 1);
+
+    Cur_Vel(cur_vel_topic, &C_Vel);
 }
 
-void EncoderMotor::update_params(float w, bool ena) { // TODO: change unclear variable names like w
-	if (w > 0 && ena) {
+void EncoderMotor::update_params(float angular_vel, bool ena) {
+	if (angular_vel > 0 && ena) {
 		ENA = 1;
 		DIR = 0;
-		setted_vel = speed_convert(w);
-		c_vel = speed_data_register2;
+		setted_vel = speed_convert(angular_vel);
 	} else if (ena) {
 		ENA = 1;
 		DIR = 1;
-		setted_vel = speed_convert(w);
-		c_vel = speed_data_register2;
+		setted_vel = speed_convert(angular_vel);
 	} else {
 		ENA = 0;
 		setted_vel = 0;
@@ -105,7 +108,6 @@ void EncoderMotor::set_params() {
 		HAL_TIM_PWM_Stop(Pwm_Timer, Pwm_Timer_Chanel1);
 
 		speed_data_register2=0;
-		c_vel = 0;
 	}
 }
 
