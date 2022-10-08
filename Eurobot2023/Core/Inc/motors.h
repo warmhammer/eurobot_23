@@ -21,7 +21,12 @@
 
 //!!!!!!!!-----------USER DEFINED PARAMS BEGIN------------!!!!!!!!!!!!!!!!!!!
 
-#define MAX_EMotor_Speed 10 //define max speed of EncoderMotor
+#define MAX_EMotor_Speed                10      //define max speed of EncoderMotor
+#define TRANS_RATIO                     112   //pulse per revel
+
+//--------------------SYSTEM PARAMS BEGIN-------------------------------------
+#define Speed_Timer_Period                  1/25000000
+//--------------------SYSTEM PARAMS END---------------------------------------
 
 //!!!!!!!!-----------USER DEFINED PARAMS END------------!!!!!!!!!!!!!!!!!!!
 
@@ -49,14 +54,17 @@ class EncoderMotor {
 
 	    //-------methods EncoderMotor-------------------------------
 	    uint16_t speed_convert(float fval); // float to uint16_t convert
-        void update_params(float angular_vel, bool ena);
-        void set_params();
+
 
     private:
         // TODO: Any private variable or method should starts with _ like _velocity_callback(...) or _velocity_subcriber
         void _pwd_callback(const std_msgs::Float64&);
+        void _update_params(float angular_vel, bool ena);
+        void _set_params();
+        void _uint_to_float64_speed_converter(uint32_t* uint_value, bool* dir);
 
-        std_msgs::UInt32 C_Vel; // current angular velocity
+        float _delta_fi_min_shaft = (2*3.14)/TRANS_RATIO; //radian
+        std_msgs::UInt32 C_Vel;     // current angular velocity
         uint16_t setted_vel;
         bool DIR; 					//direction of rotation 0 -is CW, 1 -is CCW
         bool ENA; 					//Motor enable (1 - is enable, 0 - is disable)
@@ -85,7 +93,7 @@ class EncoderMotor {
         ros::Publisher _velocity_publisher;
 
         std_msgs::Float64 _angle;
-        std_msgs::Float64 _velocity;
+        std_msgs::Float64 _cur_velocity;
 };
 
 

@@ -92,6 +92,13 @@ DMA_HandleTypeDef hdma_uart4_tx;
 #define pwm_timer_r				&htim12
 #define pwm_timer_chanel1_r  	TIM_CHANNEL_1
 //------------------------------------------------define EncoderMotors perif END--------------------
+//------------------------------------------------define ROS Topic NAMES----------------------------
+#define current_vel_topic_name_left         "/dolly/left_wheel/cur_vel"
+#define current_angle_topic_name_left       "/dolly/left_wheel/angle"
+#define pwd_topic_name_left                 "/dolly/left_wheel/pwd"
+#define current_vel_topic_name_left         "/dolly/left_wheel/cur_vel"
+//------------------------------------------------define ROS Topic NAMES----------------------------
+
 
 /* USER CODE END PV */
 

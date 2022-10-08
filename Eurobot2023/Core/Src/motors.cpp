@@ -21,9 +21,9 @@ uint16_t EncoderMotor::speed_convert(float fval) { // float to uint16_t convert
 void EncoderMotor::_pwd_callback(const std_msgs::Float64& pwd) {
 	/*implementation*/
 	// TODO: having there PWD in Float64(!). Should cast to UINT16 and write PWD to motor
-    update_params(pwd.data, 1); // TODO: is it necessary to be public method?
-    set_params(); // TODO: same public
-
+    _update_params(pwd.data, 1);
+    _set_params();
+    _velocity_publisher.publish(&C_Vel);
 //    _angle.data = ...;
 //    _angle_publisher.publish(_angle);
 }
@@ -46,7 +46,7 @@ EncoderMotor::EncoderMotor (
 )
 	: _pwd_subcriber(pwd_topic, [&](const std_msgs::Float64& msg){_pwd_callback(msg);})
 	, _angle_publisher(angle_topic, &_angle)
-	, _velocity_publisher(cur_vel_topic, &_velocity)
+	, _velocity_publisher(cur_vel_topic, &_cur_velocity)
 {
     C_Vel.data = 0;
     setted_vel = 0;
@@ -76,7 +76,17 @@ EncoderMotor::EncoderMotor (
     node.subscribe(_pwd_subcriber);
 }
 
-void EncoderMotor::update_params(float angular_vel, bool ena) {
+void EncoderMotor::_uint_to_float64_speed_converter(uint32_t* uint_value, bool* dir){
+
+        _cur_velocity.data = _delta_fi_min_shaft /( (*uint_value) * Speed_Timer_Period );
+
+        if ( (*dir) ){
+            _cur_velocity.data *= -1;
+        }
+}
+
+
+void EncoderMotor::_update_params(float angular_vel, bool ena) {
 	if (angular_vel > 0 && ena) {
 		ENA = 1;
 		DIR = 0;
@@ -93,7 +103,7 @@ void EncoderMotor::update_params(float angular_vel, bool ena) {
 	}
 }
 
-void EncoderMotor::set_params() {
+void EncoderMotor::_set_params() {
 	if (ENA) {
 		if (DIR) {
 			HAL_GPIO_WritePin(DIR_Port, DIR_Pin, GPIO_PIN_SET);
@@ -110,15 +120,18 @@ void EncoderMotor::set_params() {
 		if (!(Pwm_Timer->Instance->CR1 & (1<<0))) {
 			HAL_TIM_PWM_Start(Pwm_Timer, Pwm_Timer_Chanel1);
 		}
-		//--------------
+		HAL_GPIO_WritePin(ENA_Port, ENA1_Pin, GPIO_PIN_SET);    // -------------------------------MOTOR START
+		_uint_to_float64_speed_converter(&C_Vel.data, &DIR);    //add converter tim registers to float64 for speed and angle
+        //--------------
 
-		HAL_GPIO_WritePin(ENA_Port, ENA1_Pin, GPIO_PIN_SET);
 	} else {
-		HAL_GPIO_WritePin(ENA_Port, ENA1_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(ENA_Port, ENA1_Pin, GPIO_PIN_RESET); // -----------------------------MOTOR STOP
 		HAL_GPIO_WritePin(DIR_Port, DIR_Pin, GPIO_PIN_RESET);
 		HAL_TIM_PWM_Stop(Pwm_Timer, Pwm_Timer_Chanel1);
 
 		speed_data_register2=0;
+		C_Vel.data = 0;
 	}
+
 }
 
