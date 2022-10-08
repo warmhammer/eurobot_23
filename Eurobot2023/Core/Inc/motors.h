@@ -8,6 +8,8 @@
 #ifndef INC_MOTORS_H_
 #define INC_MOTORS_H_
 
+// TODO: <...> for libraries and "..." for user's .h files
+
 #include "stdint.h"
 #include "stm32f4xx_hal.h"
 #include "ros.h"
@@ -39,7 +41,9 @@ class EncoderMotor {
 			uint16_t speed_timer_chanel2,
 			TIM_HandleTypeDef* pwm_timer,
 			uint16_t pwm_timer_chanel1,
-			const char* cmd_vel_topic,
+			ros::NodeHandle& node,
+			const char* pwd_topic,
+			const char* angle_topic,
 			const char* cur_vel_topic
 	    );
 
@@ -47,13 +51,10 @@ class EncoderMotor {
 	    uint16_t speed_convert(float fval); // float to uint16_t convert
         void update_params(float angular_vel, bool ena);
         void set_params();
-        void velocity_callback(const std_msgs::Float64&);
-
-        ros::Subscriber<std_msgs::Float64> velocity_subcriber;
-        ros::Publisher Cur_Vel;
 
     private:
         // TODO: Any private variable or method should starts with _ like _velocity_callback(...) or _velocity_subcriber
+        void _pwd_callback(const std_msgs::Float64&);
 
         std_msgs::UInt32 C_Vel; // current angular velocity
         uint16_t setted_vel;
@@ -78,6 +79,13 @@ class EncoderMotor {
         uint16_t Pwm_Timer_Chanel1;
         uint16_t Pulse;
 
+        ros::Subscriber<std_msgs::Float64> _pwd_subcriber;
+
+        ros::Publisher _angle_publisher;
+        ros::Publisher _velocity_publisher;
+
+        std_msgs::Float64 _angle;
+        std_msgs::Float64 _velocity;
 };
 
 

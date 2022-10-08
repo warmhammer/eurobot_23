@@ -18,10 +18,14 @@ uint16_t EncoderMotor::speed_convert(float fval) { // float to uint16_t convert
     }
 }
 
-void EncoderMotor::velocity_callback(const std_msgs::Float64& cmd_vel) {
+void EncoderMotor::_pwd_callback(const std_msgs::Float64& pwd) {
 	/*implementation*/
-    update_params( cmd_vel.data, 1);
-    set_params();
+	// TODO: having there PWD in Float64(!). Should cast to UINT16 and write PWD to motor
+    update_params(pwd.data, 1); // TODO: is it necessary to be public method?
+    set_params(); // TODO: same public
+
+//    _angle.data = ...;
+//    _angle_publisher.publish(_angle);
 }
 
 EncoderMotor::EncoderMotor (
@@ -35,10 +39,15 @@ EncoderMotor::EncoderMotor (
     uint16_t speed_timer_chanel2,
     TIM_HandleTypeDef* pwm_timer,
     uint16_t pwm_timer_chanel1,
-	const char* cmd_vel_topic,
+	ros::NodeHandle& node,
+	const char* pwd_topic,
+	const char* angle_topic,
 	const char* cur_vel_topic
-) : velocity_subcriber(cmd_vel_topic, [&](const std_msgs::Float64& msg){velocity_callback(msg);}) {
-
+)
+	: _pwd_subcriber(pwd_topic, [&](const std_msgs::Float64& msg){_pwd_callback(msg);})
+	, _angle_publisher(angle_topic, &_angle)
+	, _velocity_publisher(cur_vel_topic, &_velocity)
+{
     C_Vel.data = 0;
     setted_vel = 0;
     DIR = 0;
@@ -62,7 +71,9 @@ EncoderMotor::EncoderMotor (
 
     HAL_TIM_IC_Start_DMA(Speed_Timer, Speed_Timer_Chanel2, &C_Vel.data, 1);
 
-    Cur_Vel(cur_vel_topic, &C_Vel);
+    node.advertise(_angle_publisher);
+    node.advertise(_velocity_publisher);
+    node.subscribe(_pwd_subcriber);
 }
 
 void EncoderMotor::update_params(float angular_vel, bool ena) {

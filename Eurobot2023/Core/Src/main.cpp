@@ -116,30 +116,6 @@ static void MX_TIM9_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 //----------------------------------------------------------------ROS------------------------------------
-ros::NodeHandle nh;
-
-std_msgs::UInt16 wheel_speed_l;
-std_msgs::UInt16 wheel_speed_r;
-
-ros::Publisher Wheel_Speed_l("wheel_speed_l", &wheel_speed_l);
-ros::Publisher Wheel_Speed_r("wheel_speed_r", &wheel_speed_r);
-
-std_msgs::UInt32 wheel_pos_l;
-std_msgs::UInt32 wheel_pos_r;
-
-ros::Publisher Wheel_Pos_l("wheels_pos_l", &wheel_pos_l);
-ros::Publisher Wheel_Pos_r("wheels_pos_r", &wheel_pos_r);
-
-
-//ros::Subscriber<std_msgs::Float64> cmd_vel_wheel_r;                                       // /dolly/right_wheel/cmd_vel
-                                    // /dolly/left_wheel/cur_vel .... /dolly/left_wheel/angle
-
-
-/*std_msgs::UInt16 wheels_speed[2];
-ros::Publisher Wheels_Speed("wheels_speed", wheels_speed);
-
-std_msgs::UInt32 wheels_position[2];
-ros::Publisher Wheels_Position("wheels_position", wheels_position);*/
 //-------------------------------------------------------------------------------------------------------
 
 
@@ -192,18 +168,11 @@ int main(void)
 
 
     //-------------------------------------------------------------ROS----------------------
-    nh.initNode();
-
-    //ros::Subscriber<std_msgs::Float64> cmd_vel_wheel_l("/dolly/left_wheel/cmd_vel",EMotor_L.Wheel_Callback,1);       // /dolly/left_wheel/cmd_vel
-
-    //ros::Subscriber sub = nh.subscribe("/dolly/left_wheel/cmd_vel", 1000, EncoderMotor::Wheel_Callback);
-    nh.advertise(Wheel_Speed_l);
-    nh.advertise(Wheel_Speed_r);
-    nh.advertise(Wheel_Pos_l);
-    nh.advertise(Wheel_Pos_r);
-
+    ros::NodeHandle node;
+    node.initNode();
 
     //--------------------------------------------------------------------------------------
+
     EncoderMotor EMotor_L (
         dir_port_l,
         ena_port,
@@ -215,8 +184,10 @@ int main(void)
         speed_timer_chanel2_l,
         pwm_timer_l,
         pwm_timer_chanel1_l,
-		"/dolly/left_wheel/cmd_vel",
-        "/dolly/left_wheel/cur_vel"
+		node,
+		"/dolly/left_wheel/pwd",
+        "/dolly/left_wheel/angle",
+		"/dolly/left_wheel/cur_vel"
     );
 
     EncoderMotor EMotor_R (
@@ -230,17 +201,11 @@ int main(void)
         speed_timer_chanel2_r,
         pwm_timer_r,
         pwm_timer_chanel1_r,
-		"/dolly/right_wheel/cmd_vel",
-        "/dolly/right_wheel/cur_vel"
+		node,
+		"/dolly/right_wheel/pwd",
+        "/dolly/right_wheel/angle",
+		"/dolly/right_wheel/cur_vel"
     );
-    //-------------------------------------------------------------ROS----------------------
-    nh.subscribe(EMotor_L.velocity_subcriber);
-    nh.subscribe(EMotor_R.velocity_subcriber);
-
-    //std_msgs::UInt32 c;
-    //ros::Publisher chatter("chatter", &c);
-    //--------------------------------------------------------------------------------------
-
 
     /* USER CODE END 2 */
 
@@ -248,7 +213,7 @@ int main(void)
     /* USER CODE BEGIN WHILE */
     while (1)
     {
-        if (nh.connected())
+        if (node.connected())
         {
             //EMotor_L.update_params(0, 1);
             //EMotor_L.set_params();
@@ -257,7 +222,7 @@ int main(void)
 //            chatter.publish(&str_msg);
         }
 
-        nh.spinOnce();
+        node.spinOnce();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
