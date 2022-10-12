@@ -32,15 +32,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-//Changed by Maxim Popov 7.10.2022
-//Using std::function for lambda expression.
-//Maybe it's to much with stm32, but...
-
 #ifndef ROS_SUBSCRIBER_H_
 #define ROS_SUBSCRIBER_H_
 
 #include "rosserial_msgs/TopicInfo.h"
-#include <functional> // my
 
 namespace ros
 {
@@ -65,8 +60,7 @@ template<typename MsgT, typename ObjT = void>
 class Subscriber: public Subscriber_
 {
 public:
-//  typedef void(ObjT::*CallbackT)(const MsgT&);
-  typedef std::function<void(const MsgT&)> CallbackT; // my
+  typedef void(ObjT::*CallbackT)(const MsgT&);
   MsgT msg;
 
   Subscriber(const char * topic_name, CallbackT cb, ObjT* obj, int endpoint = rosserial_msgs::TopicInfo::ID_SUBSCRIBER) :
@@ -107,8 +101,7 @@ template<typename MsgT>
 class Subscriber<MsgT, void>: public Subscriber_
 {
 public:
-//  typedef void(*CallbackT)(const MsgT&);
-  typedef std::function<void(const MsgT&)> CallbackT; // my
+  typedef void(*CallbackT)(const MsgT&);
   MsgT msg;
 
   Subscriber(const char * topic_name, CallbackT cb, int endpoint = rosserial_msgs::TopicInfo::ID_SUBSCRIBER) :

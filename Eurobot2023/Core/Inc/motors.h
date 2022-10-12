@@ -25,13 +25,10 @@
 #define TRANS_RATIO                     112   //pulse per revel
 
 //--------------------SYSTEM PARAMS BEGIN-------------------------------------
-#define Speed_Timer_Period                  1/25000000
+#define Speed_Timer_Fr                  25000000
 //--------------------SYSTEM PARAMS END---------------------------------------
 
 //!!!!!!!!-----------USER DEFINED PARAMS END------------!!!!!!!!!!!!!!!!!!!
-
-
-void Wheel_Callback(const std_msgs::Float64&); //wheel CallBack
 
 class EncoderMotor {
     public:
@@ -47,20 +44,26 @@ class EncoderMotor {
 			TIM_HandleTypeDef* pwm_timer,
 			uint16_t pwm_timer_chanel1,
 			ros::NodeHandle& node,
+			void (*callback_func)(const std_msgs::Float64&),
 			const char* pwd_topic,
 			const char* angle_topic,
 			const char* cur_vel_topic
 	    );
 
 	    //-------methods EncoderMotor-------------------------------
-	    uint16_t speed_convert(float fval); // float to uint16_t convert
+        void update_params(float angular_vel, bool ena);
+        void set_params();
 
+        //ros::Publisher _angle_publisher;
+        //ros::Publisher _velocity_publisher;
+       // ros::Subscriber<std_msgs::Float64> _pwd_subcriber;
+        std_msgs::Float64 _angle;
+        std_msgs::Float64 _cur_velocity;
 
     private:
         // TODO: Any private variable or method should starts with _ like _velocity_callback(...) or _velocity_subcriber
-        void _pwd_callback(const std_msgs::Float64&);
-        void _update_params(float angular_vel, bool ena);
-        void _set_params();
+
+        uint16_t _speed_convert(float fval); // float to uint16_t convert
         void _uint_to_float64_speed_converter(uint32_t* uint_value, bool* dir);
 
         float _delta_fi_min_shaft = (2*3.14)/TRANS_RATIO; //radian
@@ -87,13 +90,10 @@ class EncoderMotor {
         uint16_t Pwm_Timer_Chanel1;
         uint16_t Pulse;
 
-        ros::Subscriber<std_msgs::Float64> _pwd_subcriber;
 
-        ros::Publisher _angle_publisher;
-        ros::Publisher _velocity_publisher;
 
-        std_msgs::Float64 _angle;
-        std_msgs::Float64 _cur_velocity;
+        //ros::NodeHandle& Node;
+
 };
 
 

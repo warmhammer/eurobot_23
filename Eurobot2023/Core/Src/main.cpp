@@ -27,6 +27,7 @@
 #include <std_msgs/UInt32.h>
 #include <std_msgs/Float64.h>
 #include <motors.h>
+#include <callbacks.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,8 +48,6 @@
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
-
-RTC_HandleTypeDef hrtc;
 
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
@@ -93,10 +92,10 @@ DMA_HandleTypeDef hdma_uart4_tx;
 #define pwm_timer_chanel1_r  	TIM_CHANNEL_1
 //------------------------------------------------define EncoderMotors perif END--------------------
 //------------------------------------------------define ROS Topic NAMES----------------------------
-#define current_vel_topic_name_left         "/dolly/left_wheel/cur_vel"
-#define current_angle_topic_name_left       "/dolly/left_wheel/angle"
-#define pwd_topic_name_left                 "/dolly/left_wheel/pwd"
-#define current_vel_topic_name_left         "/dolly/left_wheel/cur_vel"
+//#define current_vel_topic_name_left         "/dolly/left_wheel/cur_vel"
+//#define current_angle_topic_name_left       "/dolly/left_wheel/angle"
+//#define pwd_topic_name_left                 "/dolly/left_wheel/pwd"
+//#define current_vel_topic_name_left         "/dolly/left_wheel/cur_vel"
 //------------------------------------------------define ROS Topic NAMES----------------------------
 
 
@@ -107,7 +106,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_UART4_Init(void);
-static void MX_RTC_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_TIM2_Init(void);
@@ -123,63 +121,15 @@ static void MX_TIM9_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 //----------------------------------------------------------------ROS------------------------------------
+
+    ros::NodeHandle node;
+    ros::Subscriber<std_msgs::Float64> _pwd_subcriber_l("/dolly/left_wheel/cmd_vel", encoder_motor_left_callback);
+    ros::Subscriber<std_msgs::Float64> _pwd_subcriber_r("/dolly/right_wheel/cmd_vel", encoder_motor_right_callback);
+
+
 //-------------------------------------------------------------------------------------------------------
 
-
-/* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
-int main(void)
-{
-    /* USER CODE BEGIN 1 */
-
-//    const char * hello = "Hello World!!";
-
-    /* USER CODE END 1 */
-
-    /* MCU Configuration--------------------------------------------------------*/
-
-    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-    HAL_Init();
-
-    /* USER CODE BEGIN Init */
-
-
-
-    /* USER CODE END Init */
-
-    /* Configure the system clock */
-    SystemClock_Config();
-
-    /* USER CODE BEGIN SysInit */
-
-    /* USER CODE END SysInit */
-
-    /* Initialize all configured peripherals */
-    MX_GPIO_Init();
-    MX_DMA_Init();
-    MX_UART4_Init();
-    MX_RTC_Init();
-    MX_I2C1_Init();
-    MX_I2C2_Init();
-    MX_TIM2_Init();
-    MX_TIM5_Init();
-    MX_TIM12_Init();
-    MX_TIM3_Init();
-    MX_TIM4_Init();
-    MX_TIM9_Init();
-    /* USER CODE BEGIN 2 */
-
-
-    //-------------------------------------------------------------ROS----------------------
-    ros::NodeHandle node;
-    node.initNode();
-
-    //--------------------------------------------------------------------------------------
-
+//------------------------------------------------------------GLOBAL OBJ---------------------------------
     EncoderMotor EMotor_L (
         dir_port_l,
         ena_port,
@@ -191,10 +141,11 @@ int main(void)
         speed_timer_chanel2_l,
         pwm_timer_l,
         pwm_timer_chanel1_l,
-		node,
-		"/dolly/left_wheel/pwd",
+        node,
+        encoder_motor_left_callback,
+        "/dolly/left_wheel/cmd_vel",
         "/dolly/left_wheel/angle",
-		"/dolly/left_wheel/cur_vel"
+        "/dolly/left_wheel/cur_vel"
     );
 
     EncoderMotor EMotor_R (
@@ -208,18 +159,105 @@ int main(void)
         speed_timer_chanel2_r,
         pwm_timer_r,
         pwm_timer_chanel1_r,
-		node,
-		"/dolly/right_wheel/pwd",
+        node,
+        encoder_motor_right_callback,
+        "/dolly/right_wheel/cmd_vel",
         "/dolly/right_wheel/angle",
-		"/dolly/right_wheel/cur_vel"
+        "/dolly/right_wheel/cur_vel"
     );
+    ros::Publisher _angle_publisher("/dolly/left_wheel/angle", &EMotor_L._angle);
+    //ros::Publisher _velocity_publisher;
+//-------------------------------------------------------------------------------------------------------
 
-    /* USER CODE END 2 */
+    //-----------------------------------------------------------ROS CallBack's--------------------------
+    void encoder_motor_left_callback(const std_msgs::Float64& msg){
+        EMotor_L.update_params(msg.data, 1);
+        EMotor_L.set_params();
+    }
+    void encoder_motor_right_callback(const std_msgs::Float64& msg){
+        EMotor_R.update_params(msg.data, 1);
+        EMotor_R.set_params();
+    }
 
-    /* Infinite loop */
-    /* USER CODE BEGIN WHILE */
+
+    //---------------------------------------------------------------------------------------------------
+//------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
+    void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
+      node.getHardware()->flush();
+    }
+
+    void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+      node.getHardware()->reset_rbuf();
+    }
+    void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+    {
+
+    }
+//-------------------------------------------------------------------------------------------------------
+
+
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
+  /* USER CODE BEGIN 1 */
+
+//    const char * hello = "Hello World!!";
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_UART4_Init();
+  MX_I2C1_Init();
+  MX_I2C2_Init();
+  MX_TIM2_Init();
+  MX_TIM5_Init();
+  MX_TIM12_Init();
+  MX_TIM3_Init();
+  MX_TIM4_Init();
+  MX_TIM9_Init();
+  /* USER CODE BEGIN 2 */
+
+
+    //-------------------------------------------------------------ROS----------------------
+      node.initNode();
+      node.subscribe(_pwd_subcriber_l);
+      node.subscribe(_pwd_subcriber_r);
+      node.advertise(_angle_publisher);
+    //--------------------------------------------------------------------------------------
+
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
     while (1)
     {
+        HAL_Delay(5);
         if (node.connected())
         {
             //EMotor_L.update_params(0, 1);
@@ -234,7 +272,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     }
-    /* USER CODE END 3 */
+  /* USER CODE END 3 */
 }
 
 /**
@@ -254,11 +292,11 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 8;
   RCC_OscInitStruct.PLL.PLLN = 100;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
@@ -274,10 +312,10 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -348,41 +386,6 @@ static void MX_I2C2_Init(void)
   /* USER CODE BEGIN I2C2_Init 2 */
 
   /* USER CODE END I2C2_Init 2 */
-
-}
-
-/**
-  * @brief RTC Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_RTC_Init(void)
-{
-
-  /* USER CODE BEGIN RTC_Init 0 */
-
-  /* USER CODE END RTC_Init 0 */
-
-  /* USER CODE BEGIN RTC_Init 1 */
-
-  /* USER CODE END RTC_Init 1 */
-
-  /** Initialize RTC Only
-  */
-  hrtc.Instance = RTC;
-  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
-  hrtc.Init.AsynchPrediv = 127;
-  hrtc.Init.SynchPrediv = 255;
-  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
-  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-  if (HAL_RTC_Init(&hrtc) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN RTC_Init 2 */
-
-  /* USER CODE END RTC_Init 2 */
 
 }
 
@@ -722,7 +725,7 @@ static void MX_UART4_Init(void)
   huart4.Init.Parity = UART_PARITY_NONE;
   huart4.Init.Mode = UART_MODE_TX_RX;
   huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart4.Init.OverSampling = UART_OVERSAMPLING_8;
   if (HAL_UART_Init(&huart4) != HAL_OK)
   {
     Error_Handler();
@@ -769,7 +772,6 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
