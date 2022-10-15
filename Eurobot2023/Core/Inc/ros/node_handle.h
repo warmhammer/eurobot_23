@@ -67,8 +67,6 @@ namespace ros
 const int SPIN_OK = 0;
 const int SPIN_ERR = -1;
 const int SPIN_TIMEOUT = -2;
-const int SPIN_TX_STOP_REQUESTED = -3;
-const int SPIN_TIME_RECV = -4;
 
 const uint8_t SYNC_SECONDS  = 5;
 const uint8_t MODE_FIRST_FF = 0;
@@ -83,7 +81,8 @@ const uint8_t MODE_FIRST_FF = 0;
 const uint8_t MODE_PROTOCOL_VER   = 1;
 const uint8_t PROTOCOL_VER1       = 0xff; // through groovy
 const uint8_t PROTOCOL_VER2       = 0xfe; // in hydro
-const uint8_t PROTOCOL_VER        = PROTOCOL_VER2;
+const uint8_t PROTOCOL_VER6       = 0xfd; // in noetic
+const uint8_t PROTOCOL_VER        = PROTOCOL_VER6;
 const uint8_t MODE_SIZE_L         = 2;
 const uint8_t MODE_SIZE_H         = 3;
 const uint8_t MODE_SIZE_CHECKSUM  = 4;    // checksum for msg size received from size L and H
@@ -93,7 +92,7 @@ const uint8_t MODE_MESSAGE        = 7;
 const uint8_t MODE_MSG_CHECKSUM   = 8;    // checksum for msg and topic id
 
 
-const uint8_t SERIAL_MSG_TIMEOUT  = 20;   // 20 milliseconds to recieve all of message data
+const uint8_t SERIAL_MSG_TIMEOUT  = 30;   // 20 milliseconds to recieve all of message data
 
 using rosserial_msgs::TopicInfo;
 
@@ -204,9 +203,6 @@ public:
       }
     }
 
-    bool tx_stop_requested = false;
-    bool saw_time_msg = false;
-
     /* while available buffer, read data */
     while (true)
     {
@@ -308,7 +304,6 @@ public:
           }
           else if (topic_ == TopicInfo::ID_TIME)
           {
-            saw_time_msg = true;
             syncTime(message_in);
           }
           else if (topic_ == TopicInfo::ID_PARAMETER_REQUEST)
@@ -319,7 +314,6 @@ public:
           else if (topic_ == TopicInfo::ID_TX_STOP)
           {
             configured_ = false;
-            tx_stop_requested = true;
           }
           else
           {
@@ -337,7 +331,7 @@ public:
       last_sync_time = c_time;
     }
 
-    return saw_time_msg ? SPIN_TIME_RECV : (tx_stop_requested ? SPIN_TX_STOP_REQUESTED : SPIN_OK);
+    return SPIN_OK;
   }
 
 
@@ -456,6 +450,7 @@ public:
         ti.md5sum = (char *) publishers[i]->msg_->getMD5();
         ti.buffer_size = OUTPUT_SIZE;
         publish(publishers[i]->getEndpointType(), &ti);
+        HAL_Delay(1);
       }
     }
     for (i = 0; i < MAX_SUBSCRIBERS; i++)

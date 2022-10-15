@@ -26,6 +26,9 @@
 #include <std_msgs/UInt16.h>
 #include <std_msgs/UInt32.h>
 #include <std_msgs/Float64.h>
+//#include <std_msgs/.h>
+
+#include <std_msgs/Bool.h>
 #include <motors.h>
 #include <callbacks.h>
 /* USER CODE END Includes */
@@ -37,7 +40,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define Timer_Encoder_init_value    80000
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -58,9 +60,9 @@ TIM_HandleTypeDef htim12;
 DMA_HandleTypeDef hdma_tim3_ch3;
 DMA_HandleTypeDef hdma_tim4_ch1;
 
-UART_HandleTypeDef huart4;
-DMA_HandleTypeDef hdma_uart4_rx;
-DMA_HandleTypeDef hdma_uart4_tx;
+UART_HandleTypeDef huart2;
+DMA_HandleTypeDef hdma_usart2_rx;
+DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 //------------------------------------------------define EncoderMotors perif BEGIN--------------------
@@ -105,7 +107,6 @@ DMA_HandleTypeDef hdma_uart4_tx;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
-static void MX_UART4_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_TIM2_Init(void);
@@ -114,87 +115,128 @@ static void MX_TIM12_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM9_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 //----------------------------------------------------------------ROS------------------------------------
 
     ros::NodeHandle node;
-    ros::Subscriber<std_msgs::Float64> _pwd_subcriber_l("/dolly/left_wheel/cmd_vel", encoder_motor_left_callback);
-    ros::Subscriber<std_msgs::Float64> _pwd_subcriber_r("/dolly/right_wheel/cmd_vel", encoder_motor_right_callback);
-
 
 //-------------------------------------------------------------------------------------------------------
+
+    //------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
+        void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
+          node.getHardware()->flush();
+        }
+
+        void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+          node.getHardware()->reset_rbuf();
+        }
+    //-------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------------GLOBAL OBJ---------------------------------
-    EncoderMotor EMotor_L (
-        dir_port_l,
-        ena_port,
-        dir_pin_l,
-        ena_pin,
-        encoder_timer_l,
-        encoder_timer_chanel1_l,
-        speed_timer_l,
-        speed_timer_chanel2_l,
-        pwm_timer_l,
-        pwm_timer_chanel1_l,
-        node,
-        encoder_motor_left_callback,
-        "/dolly/left_wheel/cmd_vel",
-        "/dolly/left_wheel/angle",
-        "/dolly/left_wheel/cur_vel"
-    );
+EncoderMotor EMotor_L (
+    dir_port_l,
+    ena_port,
+    dir_pin_l,
+    ena_pin,
+    encoder_timer_l,
+    encoder_timer_chanel1_l,
+    speed_timer_l,
+    speed_timer_chanel2_l,
+    pwm_timer_l,
+    pwm_timer_chanel1_l,
+    encoder_motor_left_callback
 
-    EncoderMotor EMotor_R (
-        dir_port_r,
-        ena_port,
-        dir_pin_r,
-        ena_pin,
-        encoder_timer_r,
-        encoder_timer_chanel1_r,
-        speed_timer_r,
-        speed_timer_chanel2_r,
-        pwm_timer_r,
-        pwm_timer_chanel1_r,
-        node,
-        encoder_motor_right_callback,
-        "/dolly/right_wheel/cmd_vel",
-        "/dolly/right_wheel/angle",
-        "/dolly/right_wheel/cur_vel"
-    );
-    ros::Publisher _angle_publisher("/dolly/left_wheel/angle", &EMotor_L._angle);
-    //ros::Publisher _velocity_publisher;
+);
+
+EncoderMotor EMotor_R (
+    dir_port_r,
+    ena_port,
+    dir_pin_r,
+    ena_pin,
+    encoder_timer_r,
+    encoder_timer_chanel1_r,
+    speed_timer_r,
+    speed_timer_chanel2_r,
+    pwm_timer_r,
+    pwm_timer_chanel1_r,
+    encoder_motor_right_callback
+);
+
+EncoderMotor Test_Motor (
+    dir_port_r,
+    ena_port,
+    dir_pin_r,
+    ena_pin,
+    encoder_timer_r,
+    encoder_timer_chanel1_r,
+    speed_timer_r,
+    speed_timer_chanel2_r,
+    pwm_timer_r,
+    pwm_timer_chanel1_r,
+    encoder_motor_right_callback
+);
+
 //-------------------------------------------------------------------------------------------------------
+ros::Subscriber<std_msgs::Float64> pwd_subcriber_l("/dolly/left_wheel/cmd_vel", encoder_motor_left_callback);
+//ros::Subscriber<std_msgs::Float64> pwd_subcriber_r("/dolly/right_wheel/cmd_vel", encoder_motor_right_callback);
 
-    //-----------------------------------------------------------ROS CallBack's--------------------------
-    void encoder_motor_left_callback(const std_msgs::Float64& msg){
-        EMotor_L.update_params(msg.data, 1);
-        EMotor_L.set_params();
-    }
-    void encoder_motor_right_callback(const std_msgs::Float64& msg){
-        EMotor_R.update_params(msg.data, 1);
-        EMotor_R.set_params();
-    }
+std_msgs::UInt16 cur_velocity;
+
+ros::Publisher angle_publisher_l("/dolly/aL", &cur_velocity);
+ros::Publisher angle_publisher_r("/dolly/aR", &cur_velocity);
+
+ros::Publisher vel_publisher_l("/dolly/left_wheel/cur_vel1", &cur_velocity);
+ros::Publisher vel_publisher_r("/dolly/right_wheel/cur_vel2", &cur_velocity);
+
+ros::Publisher vel_publisher_fe("/dolly/left_wheel/cur_vel4", &cur_velocity);
+ros::Publisher vel_publisher_hrty("/dolly/right_wheel/cur_vel3", &cur_velocity);
+
+ros::Publisher vel_publisher_fety("/dolly/left_wheel/cur_vel4ty", &cur_velocity);
+ros::Publisher vel_publisher_hrtyty("/dolly/right_wheel/cur_vel3ty", &cur_velocity);
+
+//ros::Publisher angle_publisher_l("/dolly/aL", &EMotor_L.angle);
+//ros::Publisher angle_publisher_r("/dolly/aR", &EMotor_R.angle);
+//
+//ros::Publisher vel_publisher_l("/dolly/left_wheel/cur_vel1", &EMotor_L.cur_velocity);
+//ros::Publisher vel_publisher_r("/dolly/right_wheel/cur_vel2", &EMotor_R.cur_velocity);
+//
+//ros::Publisher vel_publisher_fe("/dolly/left_wheel/cur_vel4", &Test_Motor.angle);
+//ros::Publisher vel_publisher_hrty("/dolly/right_wheel/cur_vel3", &Test_Motor.cur_velocity);
+//
+//ros::Publisher vel_publisher_fety("/dolly/left_wheel/cur_vel4ty", &Test_Motor.angle);
+//ros::Publisher vel_publisher_hrtyty("/dolly/right_wheel/cur_vel3ty", &Test_Motor.cur_velocity);
 
 
-    //---------------------------------------------------------------------------------------------------
-//------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
-    void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
-      node.getHardware()->flush();
-    }
+//-----------------------------------------------------------ROS CallBack's--------------------------
+void encoder_motor_left_callback(const std_msgs::Float64& msg){
+    EMotor_L.update_params(msg.data, 1);
+    //angle_publisher_l.publish(&EMotor_L.angle);
+    //angle_publisher_l.publish(&abc);
 
-    void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-      node.getHardware()->reset_rbuf();
-    }
-    void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
-    {
 
-    }
-//-------------------------------------------------------------------------------------------------------
+    //check ena in if() for optimal transmission-----
+    EMotor_L.set_params();
+    //vel_publisher_l.publish(&EMotor_L.cur_velocity);
+    //---------------------------------------------
+}
+void encoder_motor_right_callback(const std_msgs::Float64& msg){
+    EMotor_R.update_params(msg.data, 1);
+    //angle_publisher_r.publish(&EMotor_R.angle);
 
+    //check ena in if() for optimal transmission-----
+    EMotor_R.set_params();
+    //vel_publisher_r.publish(&EMotor_R.cur_velocity);
+   //------------------------------------------------
+}
+
+//---------------------------------------------------------------------------------------------------
 
 /* USER CODE END 0 */
 
@@ -205,6 +247,9 @@ static void MX_TIM9_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
+    //abc.data = 4.3;
+    //cba.data = 5.3;
 
 //    const char * hello = "Hello World!!";
 
@@ -231,7 +276,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_UART4_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
   MX_TIM2_Init();
@@ -240,34 +284,68 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   MX_TIM9_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  EMotor_L.Init();
+  EMotor_R.Init();
 
     //-------------------------------------------------------------ROS----------------------
       node.initNode();
-      node.subscribe(_pwd_subcriber_l);
-      node.subscribe(_pwd_subcriber_r);
-      node.advertise(_angle_publisher);
-    //--------------------------------------------------------------------------------------
 
+      node.advertise(vel_publisher_l);
+      node.advertise(angle_publisher_r);
+
+
+      node.advertise(angle_publisher_l);
+      node.advertise(vel_publisher_r);
+
+      node.advertise(vel_publisher_fe);
+      node.advertise(vel_publisher_hrty);
+
+      node.subscribe(pwd_subcriber_l);
+
+     // node.requestSyncTime();
+      //node.negotiateTopics();
+
+    //--------------------------------------------------------------------------------------
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+//    while(!node.connected()) {
+////        node.getHardware()->flush();
+////        node.getHardware()->reset_rbuf();
+//        node.spinOnce();
+//    }
+
+    auto prev = HAL_GetTick();
+
     while (1)
     {
-        HAL_Delay(5);
-        if (node.connected())
-        {
-            //EMotor_L.update_params(0, 1);
-            //EMotor_L.set_params();
+        auto now = HAL_GetTick();
 
-//            str_msg.data = hello;
-//            chatter.publish(&str_msg);
+        if (now - prev >= 200) {
+//
+            prev = now;
+//
+//            cur_velocity.data = now%1000;
+//
+              //vel_publisher_l.publish(&cur_velocity);
+            //angle_publisher_r.publish(&cur_velocity);
+//
+//
+//            angle_publisher_l.publish(&cur_velocity);
+//            vel_publisher_r.publish(&cur_velocity);
+//
+//            vel_publisher_fe.publish(&cur_velocity);
+//            vel_publisher_hrty.publish(&cur_velocity);
         }
 
         node.spinOnce();
+        HAL_Delay(1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -295,12 +373,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 100;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
-  RCC_OscInitStruct.PLL.PLLQ = 7;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -310,12 +383,12 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
@@ -433,8 +506,8 @@ static void MX_TIM2_Init(void)
   }
   /* USER CODE BEGIN TIM2_Init 2 */
 
-  htim2.Instance->CNT=Timer_Encoder_init_value; // установка начального значения таймера, чтобы избежать underflow
-  htim2.Instance->CR1|=  1UL << 0; //enable timer
+  //htim2.Instance->CNT=Timer_Encoder_init_value; // установка начального значения таймера, чтобы избежать underflow
+ // htim2.Instance->CR1|=  1UL << 0; //enable timer
 
   /* USER CODE END TIM2_Init 2 */
 
@@ -612,8 +685,8 @@ static void MX_TIM5_Init(void)
   }
   /* USER CODE BEGIN TIM5_Init 2 */
 
-  htim5.Instance->CNT=Timer_Encoder_init_value; // установка начального значения таймера, чтобы избежать underflow
-  htim5.Instance->CR1|=  1UL << 0; //enable timer
+  //htim5.Instance->CNT=Timer_Encoder_init_value; // установка начального значения таймера, чтобы избежать underflow
+  //htim5.Instance->CR1|=  1UL << 0; //enable timer
 
   /* USER CODE END TIM5_Init 2 */
 
@@ -704,35 +777,35 @@ static void MX_TIM12_Init(void)
 }
 
 /**
-  * @brief UART4 Initialization Function
+  * @brief USART2 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_UART4_Init(void)
+static void MX_USART2_UART_Init(void)
 {
 
-  /* USER CODE BEGIN UART4_Init 0 */
+  /* USER CODE BEGIN USART2_Init 0 */
 
-  /* USER CODE END UART4_Init 0 */
+  /* USER CODE END USART2_Init 0 */
 
-  /* USER CODE BEGIN UART4_Init 1 */
+  /* USER CODE BEGIN USART2_Init 1 */
 
-  /* USER CODE END UART4_Init 1 */
-  huart4.Instance = UART4;
-  huart4.Init.BaudRate = 115200;
-  huart4.Init.WordLength = UART_WORDLENGTH_8B;
-  huart4.Init.StopBits = UART_STOPBITS_1;
-  huart4.Init.Parity = UART_PARITY_NONE;
-  huart4.Init.Mode = UART_MODE_TX_RX;
-  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart4.Init.OverSampling = UART_OVERSAMPLING_8;
-  if (HAL_UART_Init(&huart4) != HAL_OK)
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 230400;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_8;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN UART4_Init 2 */
+  /* USER CODE BEGIN USART2_Init 2 */
 
-  /* USER CODE END UART4_Init 2 */
+  /* USER CODE END USART2_Init 2 */
 
 }
 
@@ -749,12 +822,12 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
-  /* DMA1_Stream2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
-  /* DMA1_Stream4_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
+  /* DMA1_Stream5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
+  /* DMA1_Stream6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
   /* DMA1_Stream7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
@@ -775,7 +848,6 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, DIR_L_Pin|DIR_R_Pin|ENA_Pin, GPIO_PIN_RESET);
