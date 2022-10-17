@@ -4,6 +4,11 @@
 		<param name="max_wheel_angular_speed" type="double" value="18.0" /> -->
 	</node>
 
+	<node name="stm_topic_converter" pkg="dolly_base" type="stm_topic_converter_node" output="screen" >
+		<!-- <param name="control_frequency" type="int" value="100" />
+		<param name="max_wheel_angular_speed" type="double" value="18.0" /> -->
+	</node>
+
 	<!--<node name="hardware_emulator_node" pkg="dolly_base" type="hardware_emulator_node" output="screen" /> -->
 
 	<node name="pid_controller" pkg="pid" ns="/dolly/left_wheel" type="controller" >
@@ -15,7 +20,7 @@
 		<param name="windup_limit" value="10" />
 		<param name="max_loop_frequency" value="100.0" />
 		<param name="min_loop_frequency" value="100.0" />
-		<remap from="setpoint" to="/dolly/left_wheel/cmd_vel" />
+		<remap from="setpoint" to="/dolly/left_wheel/cmd_vel64" />
 		<remap from="state" to="/dolly/left_wheel/cur_vel" />
 		<remap from="control_effort" to="/dolly/left_wheel/pwd" />
     </node>
@@ -29,7 +34,7 @@
 		<param name="windup_limit" value="10" />
 		<param name="max_loop_frequency" value="100.0" />
 		<param name="min_loop_frequency" value="100.0" />
-		<remap from="setpoint" to="/dolly/right_wheel/cmd_vel" />
+		<remap from="setpoint" to="/dolly/right_wheel/cmd_vel64" />
 		<remap from="state" to="/dolly/right_wheel/cur_vel" />
 		<remap from="control_effort" to="/dolly/right_wheel/pwd" />
     </node>

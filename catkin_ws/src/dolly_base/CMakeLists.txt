@@ -150,6 +150,8 @@ add_executable(hardware_emulator_node
   src/hw_emulator.cpp
 )
 
+add_executable(stm_topic_converter_node src/stm_topic_converter.cpp)
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -166,6 +168,10 @@ target_link_libraries(${PROJECT_NAME}_node
 )
 
 target_link_libraries(hardware_emulator_node
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(stm_topic_converter_node
   ${catkin_LIBRARIES}
 )
 
