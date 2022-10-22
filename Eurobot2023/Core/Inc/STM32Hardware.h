@@ -93,7 +93,7 @@ class STM32Hardware {
     void flush(void){
       static bool mutex = false;
 
-      if((huart->gState == HAL_UART_STATE_READY) && !mutex){
+      if((huart->gState == HAL_UART_STATE_READY) && !mutex){ //----------------------CHANGED
         mutex = true;
 
         if(twind != tfind){

@@ -13,21 +13,19 @@
 #include "stdint.h"
 #include "stm32f4xx_hal.h"
 #include "ros.h"
-#include <std_msgs/Float64.h>
 #include <std_msgs/Float32.h>
 #include <std_msgs/UInt32.h>
 #include <std_msgs/UInt16.h>
 
-
-
 //!!!!!!!!-----------USER DEFINED PARAMS BEGIN------------!!!!!!!!!!!!!!!!!!!
 
-#define MAX_EMotor_Speed                44      //define max speed of EncoderMotor (rad/s) or 425 rpm
-#define TRANS_RATIO                     112     //pulse per revel
+constexpr float MAX_MOTOR_ANGULAR_VEL = 44;             // define max speed of EncoderMotor (rad/s) or 425 rpm
+constexpr float ENCODER_TICKS_PER_REVOLUTION = 112.4;   // pulse per revel
+constexpr uint32_t SPEED_TIMER_PRESCALER = 50;
 
 //--------------------SYSTEM PARAMS BEGIN-------------------------------------
-#define Speed_Timer_Fr                  50000000 // !!!!CAUTION!!!! ALL OF THE MOTOR TIMERS HAVE INCOMMON CLOCK BUS (APB1)
-#define Timer_Encoder_init_value        200000
+constexpr uint32_t VELOCITY_TIMER_FREQUENCY = 50000000;    // !!!!CAUTION!!!! ALL OF THE MOTOR TIMERS HAVE INCOMMON CLOCK BUS (APB1)
+//constexpr uint32_t Timer_Encoder_init_value       =  200000;
 
 //--------------------SYSTEM PARAMS END---------------------------------------
 
@@ -41,58 +39,61 @@ class EncoderMotor {
 	        uint16_t dir_pin,
 	        uint16_t ena_pin,
 	        TIM_HandleTypeDef* encoder_timer,
-	        uint16_t encoder_timer_chanel1,
+	        uint16_t encoder_timer_channel, // ????
 			TIM_HandleTypeDef* speed_timer,
-			uint16_t speed_timer_chanel2,
+			uint16_t speed_timer_channel,
 			TIM_HandleTypeDef* pwm_timer,
-			uint16_t pwm_timer_chanel1,
-			void (*callback_func)(const std_msgs::Float64&)
-
+			uint16_t pwm_timer_channel,
+			void (*callback_func)(const std_msgs::Float32&)
 	    );
 
     public:
 	    //-------methods EncoderMotor-------------------------------
-	    void Init();
+	    void init();
+
+        void update_angle();
+        void update_velocity();
+
         void update_params(float angular_vel, bool ena);
         void set_params();
 
-    public:
-        std_msgs::UInt16 angle; //!!
-        std_msgs::UInt16 cur_velocity; //!!
+        std_msgs::Float32 angle;
+        std_msgs::Float32 cur_velocity;
 
 
     private:
         // TODO: Any private variable or method should starts with _ like _velocity_callback(...) or _velocity_subcriber
 
-        uint16_t _speed_convert(float fval);                                    // float to uint16_t convert
-        void _uint_to_float64_speed_converter(uint32_t* uint_value, bool* dir);
-        void _uint_to_float64_encoder_converter();
+        uint16_t _angular_velocity_to_pwm(float cmd_vel);
 
-        std_msgs::UInt32 C_Vel;                                                 // current angular velocity
-        const float _delta_fi_min_shaft = (2*3.1415)/TRANS_RATIO;                 //radian
+        float _tick_duration_to_angular_velocity(const uint32_t tick_duration, bool direction);
+
+        uint32_t _encoder_tick_duration;                                               // current angular velocity
+        uint32_t _encoder_init_value = UINT32_MAX / 2;
+
+        const float _rads_per_encoder_tick = (2 * 3.1415) / ENCODER_TICKS_PER_REVOLUTION;   //radian
         uint16_t setted_vel;
 
-        bool DIR; 					                                            //direction of rotation 0 -is CW, 1 -is CCW
-        bool ENA; 					                                            //Motor enable (1 - is enable, 0 - is disable)
+        // TODO: direction to enum
+        bool DIR; 					                                            // direction of rotation 0 -is CW, 1 -is CCW
+        bool _enable; 					                                            //Motor enable (1 - is enable, 0 - is disable)
 
         GPIO_TypeDef* DIR_Port;
         uint16_t DIR_Pin;
 
-        GPIO_TypeDef* ENA_Port;
+        GPIO_TypeDef* ENA_Port;                                                 // TODO: struct for pins
         uint16_t ENA1_Pin;
 
-        TIM_HandleTypeDef* Encoder_Timer;
-        uint16_t Encoder_Timer_Chanel1;
+        TIM_HandleTypeDef* _encoder_timer;                                      // TODO: struct for timer
+        uint16_t _encoder_timer_channel;
 
-        TIM_HandleTypeDef* Pwm_Timer;
-        uint16_t Pwm_Timer_Chanel1;
-        uint16_t Pulse;
+        TIM_HandleTypeDef* _pwm_timer;
+        uint16_t _pwm_timer_channel;                                           //TODO: const
+        uint16_t _pulse;
 
-        TIM_HandleTypeDef* Speed_Timer;
-        uint16_t Speed_Timer_Chanel1;
-        uint16_t Speed_Timer_Chanel2;
-        uint32_t speed_data_register2; // current angular velocity 2
-
+        TIM_HandleTypeDef* _speed_timer;                                       // TODO: velocity not speed
+        uint16_t _speed_timer_channel;
+        uint32_t _speed_data_register;                                          // current angular velocity 2
 };
 
 

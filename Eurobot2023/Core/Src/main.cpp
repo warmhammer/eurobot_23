@@ -25,8 +25,6 @@
 #include <std_msgs/String.h>
 #include <std_msgs/UInt16.h>
 #include <std_msgs/UInt32.h>
-#include <std_msgs/Float64.h>
-//#include <std_msgs/.h>
 
 #include <std_msgs/Bool.h>
 #include <motors.h>
@@ -85,7 +83,7 @@ DMA_HandleTypeDef hdma_usart2_tx;
 #define dir_pin_r				GPIO_PIN_9
 
 #define	encoder_timer_r 		&htim5
-#define encoder_timer_chanel1_r TIM_CHANNEL_1
+#define encoder_timer_chanel1_r TIM_CHANNEL_2
 
 #define speed_timer_r 			&htim4
 #define speed_timer_chanel2_r  	TIM_CHANNEL_1
@@ -125,22 +123,29 @@ static void MX_USART2_UART_Init(void);
 
 //----------------------------------------------------------------ROS------------------------------------
 
-    ros::NodeHandle node;
+ros::NodeHandle node;
 
 //-------------------------------------------------------------------------------------------------------
 
-    //------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
-        void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
-          node.getHardware()->flush();
-        }
+//------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
+    node.getHardware()->flush();
+}
 
-        void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-          node.getHardware()->reset_rbuf();
-        }
-    //-------------------------------------------------------------------------------------------------------
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+    node.getHardware()->reset_rbuf();
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
+
+    //HAL_UART_DMAResume(&huart2);
+
+}
+
+//-------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------------GLOBAL OBJ---------------------------------
-EncoderMotor EMotor_L (
+EncoderMotor left_encoder_motor (
     dir_port_l,
     ena_port,
     dir_pin_l,
@@ -151,11 +156,10 @@ EncoderMotor EMotor_L (
     speed_timer_chanel2_l,
     pwm_timer_l,
     pwm_timer_chanel1_l,
-    encoder_motor_left_callback
-
+    left_encoder_motor_callback
 );
 
-EncoderMotor EMotor_R (
+EncoderMotor right_encoder_motor (
     dir_port_r,
     ena_port,
     dir_pin_r,
@@ -166,74 +170,33 @@ EncoderMotor EMotor_R (
     speed_timer_chanel2_r,
     pwm_timer_r,
     pwm_timer_chanel1_r,
-    encoder_motor_right_callback
+    right_encoder_motor_callback
 );
 
-EncoderMotor Test_Motor (
-    dir_port_r,
-    ena_port,
-    dir_pin_r,
-    ena_pin,
-    encoder_timer_r,
-    encoder_timer_chanel1_r,
-    speed_timer_r,
-    speed_timer_chanel2_r,
-    pwm_timer_r,
-    pwm_timer_chanel1_r,
-    encoder_motor_right_callback
-);
 
 //-------------------------------------------------------------------------------------------------------
-ros::Subscriber<std_msgs::Float64> pwd_subcriber_l("/dolly/left_wheel/cmd_vel", encoder_motor_left_callback);
-//ros::Subscriber<std_msgs::Float64> pwd_subcriber_r("/dolly/right_wheel/cmd_vel", encoder_motor_right_callback);
+ros::Subscriber<std_msgs::Float32> pwd_subcriber_left("/dolly/left_wheel/cmd_vel", left_encoder_motor_callback);
+ros::Subscriber<std_msgs::Float32> pwd_subcriber_right("/dolly/right_wheel/cmd_vel", right_encoder_motor_callback);
 
-std_msgs::UInt16 cur_velocity;
+ros::Publisher angle_publisher_left("/dolly/left_wheel/angle32", &left_encoder_motor.angle);
+ros::Publisher angle_publisher_right("/dolly/right_wheel/angle32", &right_encoder_motor.angle);
 
-ros::Publisher angle_publisher_l("/dolly/aL", &cur_velocity);
-ros::Publisher angle_publisher_r("/dolly/aR", &cur_velocity);
-
-ros::Publisher vel_publisher_l("/dolly/left_wheel/cur_vel1", &cur_velocity);
-ros::Publisher vel_publisher_r("/dolly/right_wheel/cur_vel2", &cur_velocity);
-
-ros::Publisher vel_publisher_fe("/dolly/left_wheel/cur_vel4", &cur_velocity);
-ros::Publisher vel_publisher_hrty("/dolly/right_wheel/cur_vel3", &cur_velocity);
-
-ros::Publisher vel_publisher_fety("/dolly/left_wheel/cur_vel4ty", &cur_velocity);
-ros::Publisher vel_publisher_hrtyty("/dolly/right_wheel/cur_vel3ty", &cur_velocity);
-
-//ros::Publisher angle_publisher_l("/dolly/aL", &EMotor_L.angle);
-//ros::Publisher angle_publisher_r("/dolly/aR", &EMotor_R.angle);
-//
-//ros::Publisher vel_publisher_l("/dolly/left_wheel/cur_vel1", &EMotor_L.cur_velocity);
-//ros::Publisher vel_publisher_r("/dolly/right_wheel/cur_vel2", &EMotor_R.cur_velocity);
-//
-//ros::Publisher vel_publisher_fe("/dolly/left_wheel/cur_vel4", &Test_Motor.angle);
-//ros::Publisher vel_publisher_hrty("/dolly/right_wheel/cur_vel3", &Test_Motor.cur_velocity);
-//
-//ros::Publisher vel_publisher_fety("/dolly/left_wheel/cur_vel4ty", &Test_Motor.angle);
-//ros::Publisher vel_publisher_hrtyty("/dolly/right_wheel/cur_vel3ty", &Test_Motor.cur_velocity);
+ros::Publisher vel_publisher_left("/dolly/left_wheel/cur_vel32", &left_encoder_motor.cur_velocity);
+ros::Publisher vel_publisher_right("/dolly/right_wheel/cur_vel32", &right_encoder_motor.cur_velocity);
 
 
 //-----------------------------------------------------------ROS CallBack's--------------------------
-void encoder_motor_left_callback(const std_msgs::Float64& msg){
-    EMotor_L.update_params(msg.data, 1);
-    //angle_publisher_l.publish(&EMotor_L.angle);
-    //angle_publisher_l.publish(&abc);
+void left_encoder_motor_callback(const std_msgs::Float32& msg){
+    left_encoder_motor.update_params(-msg.data, 1);  // TODO: minus msg.data
+    //left_encoder_motor.update_params(1, 1);  // TODO: minus msg.data
 
-
-    //check ena in if() for optimal transmission-----
-    EMotor_L.set_params();
-    //vel_publisher_l.publish(&EMotor_L.cur_velocity);
-    //---------------------------------------------
+    left_encoder_motor.set_params();
 }
-void encoder_motor_right_callback(const std_msgs::Float64& msg){
-    EMotor_R.update_params(msg.data, 1);
-    //angle_publisher_r.publish(&EMotor_R.angle);
+void right_encoder_motor_callback(const std_msgs::Float32& msg){
+    right_encoder_motor.update_params(msg.data, 1);
+    //right_encoder_motor.update_params(1, 1);
 
-    //check ena in if() for optimal transmission-----
-    EMotor_R.set_params();
-    //vel_publisher_r.publish(&EMotor_R.cur_velocity);
-   //------------------------------------------------
+    right_encoder_motor.set_params();
 }
 
 //---------------------------------------------------------------------------------------------------
@@ -247,12 +210,6 @@ void encoder_motor_right_callback(const std_msgs::Float64& msg){
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
-    //abc.data = 4.3;
-    //cba.data = 5.3;
-
-//    const char * hello = "Hello World!!";
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -287,26 +244,24 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  EMotor_L.Init();
-  EMotor_R.Init();
+    //EMotor_L.Init();
+    //EMotor_R.Init();
+
+    left_encoder_motor.init();
+    right_encoder_motor.init();
 
     //-------------------------------------------------------------ROS----------------------
-      node.initNode();
+    node.initNode();
 
-      node.advertise(vel_publisher_l);
-      node.advertise(angle_publisher_r);
+    node.advertise(vel_publisher_left);
+    node.advertise(angle_publisher_right);
 
 
-      node.advertise(angle_publisher_l);
-      node.advertise(vel_publisher_r);
+    node.advertise(angle_publisher_left);
+    node.advertise(vel_publisher_right);
 
-      node.advertise(vel_publisher_fe);
-      node.advertise(vel_publisher_hrty);
-
-      node.subscribe(pwd_subcriber_l);
-
-     // node.requestSyncTime();
-      //node.negotiateTopics();
+    node.subscribe(pwd_subcriber_left);
+    node.subscribe(pwd_subcriber_right);
 
     //--------------------------------------------------------------------------------------
 
@@ -315,37 +270,44 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-//    while(!node.connected()) {
-////        node.getHardware()->flush();
-////        node.getHardware()->reset_rbuf();
-//        node.spinOnce();
-//    }
-
     auto prev = HAL_GetTick();
 
-    while (1)
-    {
-        auto now = HAL_GetTick();
+    while (1) {
 
-        if (now - prev >= 200) {
+//        left_encoder_motor.update_params(20, 1);
+//        right_encoder_motor.update_params(20, 1);
 //
-            prev = now;
+//        left_encoder_motor.set_params();
+//        right_encoder_motor.set_params();
 //
-//            cur_velocity.data = now%1000;
-//
-              //vel_publisher_l.publish(&cur_velocity);
-            //angle_publisher_r.publish(&cur_velocity);
-//
-//
-//            angle_publisher_l.publish(&cur_velocity);
-//            vel_publisher_r.publish(&cur_velocity);
-//
-//            vel_publisher_fe.publish(&cur_velocity);
-//            vel_publisher_hrty.publish(&cur_velocity);
+//        left_encoder_motor.update_velocity();
+//        right_encoder_motor.update_velocity();
+
+        if (node.connected() == true) {
+            auto now = HAL_GetTick();
+
+            if (now - prev >= 20) {
+                prev = now;
+
+
+
+                left_encoder_motor.update_angle();
+                right_encoder_motor.update_angle();
+
+                left_encoder_motor.update_velocity();
+                right_encoder_motor.update_velocity();
+
+                angle_publisher_left.publish(&left_encoder_motor.angle);
+                angle_publisher_right.publish(&right_encoder_motor.angle);
+                vel_publisher_left.publish(&left_encoder_motor.cur_velocity);
+                vel_publisher_right.publish(&right_encoder_motor.cur_velocity);
+            }
+        } else {
+            HAL_Delay(1);
         }
 
         node.spinOnce();
-        HAL_Delay(1);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -373,7 +335,12 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 100;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -383,12 +350,12 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
   {
     Error_Handler();
   }
@@ -498,7 +465,7 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_OC1REF;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
@@ -533,7 +500,7 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 10;
+  htim3.Init.Prescaler = 50;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 65535;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -547,10 +514,9 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   sSlaveConfig.SlaveMode = TIM_SLAVEMODE_RESET;
-  sSlaveConfig.InputTrigger = TIM_TS_ETRF;
-  sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_NONINVERTED;
-  sSlaveConfig.TriggerPrescaler = TIM_TRIGGERPRESCALER_DIV1;
-  sSlaveConfig.TriggerFilter = 8;
+  sSlaveConfig.InputTrigger = TIM_TS_TI1FP1;
+  sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_RISING;
+  sSlaveConfig.TriggerFilter = 15;
   if (HAL_TIM_SlaveConfigSynchro(&htim3, &sSlaveConfig) != HAL_OK)
   {
     Error_Handler();
@@ -564,7 +530,7 @@ static void MX_TIM3_Init(void)
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 8;
+  sConfigIC.ICFilter = 15;
   if (HAL_TIM_IC_ConfigChannel(&htim3, &sConfigIC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
@@ -597,7 +563,7 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 10;
+  htim4.Init.Prescaler = 50;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim4.Init.Period = 65535;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -611,10 +577,9 @@ static void MX_TIM4_Init(void)
     Error_Handler();
   }
   sSlaveConfig.SlaveMode = TIM_SLAVEMODE_RESET;
-  sSlaveConfig.InputTrigger = TIM_TS_ETRF;
-  sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_NONINVERTED;
-  sSlaveConfig.TriggerPrescaler = TIM_TRIGGERPRESCALER_DIV1;
-  sSlaveConfig.TriggerFilter = 8;
+  sSlaveConfig.InputTrigger = TIM_TS_TI2FP2;
+  sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_RISING;
+  sSlaveConfig.TriggerFilter = 15;
   if (HAL_TIM_SlaveConfigSynchro(&htim4, &sSlaveConfig) != HAL_OK)
   {
     Error_Handler();
@@ -628,7 +593,7 @@ static void MX_TIM4_Init(void)
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 8;
+  sConfigIC.ICFilter = 15;
   if (HAL_TIM_IC_ConfigChannel(&htim4, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
@@ -670,7 +635,7 @@ static void MX_TIM5_Init(void)
     Error_Handler();
   }
   sSlaveConfig.SlaveMode = TIM_SLAVEMODE_EXTERNAL1;
-  sSlaveConfig.InputTrigger = TIM_TS_TI1FP1;
+  sSlaveConfig.InputTrigger = TIM_TS_TI2FP2;
   sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_RISING;
   sSlaveConfig.TriggerFilter = 0;
   if (HAL_TIM_SlaveConfigSynchro(&htim5, &sSlaveConfig) != HAL_OK)
@@ -792,13 +757,13 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 230400;
+  huart2.Init.BaudRate = 921600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
   huart2.Init.Mode = UART_MODE_TX_RX;
   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_8;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart2) != HAL_OK)
   {
     Error_Handler();
@@ -845,6 +810,7 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();

@@ -8,10 +8,13 @@
 #ifndef INC_CALLBACKS_H_
 #define INC_CALLBACKS_H_
 
+#include <std_msgs/Float32.h>
 #include <std_msgs/Float64.h>
 
-    void encoder_motor_left_callback(const std_msgs::Float64& msg);
-    void encoder_motor_right_callback(const std_msgs::Float64& msg);
+
+    void left_encoder_motor_callback(const std_msgs::Float32& msg);
+    void right_encoder_motor_callback(const std_msgs::Float32& msg);
+   // void test_callback(const std_msgs::Float64& msg){}
 
 
 
