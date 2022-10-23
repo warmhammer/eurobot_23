@@ -56,7 +56,6 @@ TIM_HandleTypeDef htim5;
 TIM_HandleTypeDef htim9;
 TIM_HandleTypeDef htim12;
 DMA_HandleTypeDef hdma_tim3_ch3;
-DMA_HandleTypeDef hdma_tim4_ch1;
 
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
@@ -175,8 +174,8 @@ EncoderMotor right_encoder_motor (
 
 
 //-------------------------------------------------------------------------------------------------------
-ros::Subscriber<std_msgs::Float32> pwd_subcriber_left("/dolly/left_wheel/cmd_vel", left_encoder_motor_callback);
-ros::Subscriber<std_msgs::Float32> pwd_subcriber_right("/dolly/right_wheel/cmd_vel", right_encoder_motor_callback);
+ros::Subscriber<std_msgs::Float32> pwd_subcriber_left("/dolly/left_wheel/pwd32", left_encoder_motor_callback);
+ros::Subscriber<std_msgs::Float32> pwd_subcriber_right("/dolly/right_wheel/pwd32", right_encoder_motor_callback);
 
 ros::Publisher angle_publisher_left("/dolly/left_wheel/angle32", &left_encoder_motor.angle);
 ros::Publisher angle_publisher_right("/dolly/right_wheel/angle32", &right_encoder_motor.angle);
@@ -187,15 +186,11 @@ ros::Publisher vel_publisher_right("/dolly/right_wheel/cur_vel32", &right_encode
 
 //-----------------------------------------------------------ROS CallBack's--------------------------
 void left_encoder_motor_callback(const std_msgs::Float32& msg){
-    left_encoder_motor.update_params(-msg.data, 1);  // TODO: minus msg.data
-    //left_encoder_motor.update_params(1, 1);  // TODO: minus msg.data
-
+    left_encoder_motor.update_params(msg.data, 1);  // TODO: minus msg.data
     left_encoder_motor.set_params();
 }
 void right_encoder_motor_callback(const std_msgs::Float32& msg){
     right_encoder_motor.update_params(msg.data, 1);
-    //right_encoder_motor.update_params(1, 1);
-
     right_encoder_motor.set_params();
 }
 
@@ -289,20 +284,26 @@ int main(void)
             if (now - prev >= 20) {
                 prev = now;
 
-
+                left_encoder_motor.update_velocity();
+                right_encoder_motor.update_velocity();
 
                 left_encoder_motor.update_angle();
                 right_encoder_motor.update_angle();
 
-                left_encoder_motor.update_velocity();
-                right_encoder_motor.update_velocity();
-
-                angle_publisher_left.publish(&left_encoder_motor.angle);
-                angle_publisher_right.publish(&right_encoder_motor.angle);
                 vel_publisher_left.publish(&left_encoder_motor.cur_velocity);
                 vel_publisher_right.publish(&right_encoder_motor.cur_velocity);
+                angle_publisher_left.publish(&left_encoder_motor.angle);
+                angle_publisher_right.publish(&right_encoder_motor.angle);
+
             }
         } else {
+
+//            left_encoder_motor.update_params(0, 0);
+//            right_encoder_motor.update_params(0, 0);
+//
+//            left_encoder_motor.set_params();
+//            right_encoder_motor.set_params();
+
             HAL_Delay(1);
         }
 
@@ -460,7 +461,7 @@ static void MX_TIM2_Init(void)
   sSlaveConfig.SlaveMode = TIM_SLAVEMODE_EXTERNAL1;
   sSlaveConfig.InputTrigger = TIM_TS_TI1FP1;
   sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_RISING;
-  sSlaveConfig.TriggerFilter = 0;
+  sSlaveConfig.TriggerFilter = 15;
   if (HAL_TIM_SlaveConfigSynchro(&htim2, &sSlaveConfig) != HAL_OK)
   {
     Error_Handler();
@@ -577,9 +578,9 @@ static void MX_TIM4_Init(void)
     Error_Handler();
   }
   sSlaveConfig.SlaveMode = TIM_SLAVEMODE_RESET;
-  sSlaveConfig.InputTrigger = TIM_TS_TI2FP2;
-  sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_RISING;
-  sSlaveConfig.TriggerFilter = 15;
+  sSlaveConfig.InputTrigger = TIM_TS_TI1FP1;
+  sSlaveConfig.TriggerPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sSlaveConfig.TriggerFilter = 0;
   if (HAL_TIM_SlaveConfigSynchro(&htim4, &sSlaveConfig) != HAL_OK)
   {
     Error_Handler();
@@ -590,10 +591,10 @@ static void MX_TIM4_Init(void)
   {
     Error_Handler();
   }
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 15;
+  sConfigIC.ICFilter = 0;
   if (HAL_TIM_IC_ConfigChannel(&htim4, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
@@ -637,7 +638,7 @@ static void MX_TIM5_Init(void)
   sSlaveConfig.SlaveMode = TIM_SLAVEMODE_EXTERNAL1;
   sSlaveConfig.InputTrigger = TIM_TS_TI2FP2;
   sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_RISING;
-  sSlaveConfig.TriggerFilter = 0;
+  sSlaveConfig.TriggerFilter = 15;
   if (HAL_TIM_SlaveConfigSynchro(&htim5, &sSlaveConfig) != HAL_OK)
   {
     Error_Handler();
@@ -675,7 +676,7 @@ static void MX_TIM9_Init(void)
 
   /* USER CODE END TIM9_Init 1 */
   htim9.Instance = TIM9;
-  htim9.Init.Prescaler = 0;
+  htim9.Init.Prescaler = 2;
   htim9.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim9.Init.Period = 3000;
   htim9.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -717,7 +718,7 @@ static void MX_TIM12_Init(void)
 
   /* USER CODE END TIM12_Init 1 */
   htim12.Instance = TIM12;
-  htim12.Init.Prescaler = 0;
+  htim12.Init.Prescaler = 2;
   htim12.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim12.Init.Period = 3000;
   htim12.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -784,9 +785,6 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
-  /* DMA1_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
   /* DMA1_Stream5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);

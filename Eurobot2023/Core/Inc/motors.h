@@ -20,7 +20,7 @@
 //!!!!!!!!-----------USER DEFINED PARAMS BEGIN------------!!!!!!!!!!!!!!!!!!!
 
 constexpr float MAX_MOTOR_ANGULAR_VEL = 44;             // define max speed of EncoderMotor (rad/s) or 425 rpm
-constexpr float ENCODER_TICKS_PER_REVOLUTION = 112.4;   // pulse per revel
+constexpr float ENCODER_TICKS_PER_REVOLUTION = 112.4;   // pulse per revolution
 constexpr uint32_t SPEED_TIMER_PRESCALER = 50;
 
 //--------------------SYSTEM PARAMS BEGIN-------------------------------------

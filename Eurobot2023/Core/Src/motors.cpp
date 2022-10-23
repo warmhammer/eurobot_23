@@ -19,7 +19,6 @@ EncoderMotor::EncoderMotor (
     uint16_t pwm_timer_chanel,
     void (*callback_func)(const std_msgs::Float32&)
 ) {                                                        // TODO: cstr implementation
-    //Node = node;
     _encoder_tick_duration = 0;
     setted_vel = 0;
     DIR = 0;
@@ -46,8 +45,7 @@ EncoderMotor::EncoderMotor (
 void EncoderMotor::init() {
     _encoder_init_value = UINT32_MAX / 2;                                               // TODO
     __HAL_TIM_SET_COUNTER(_encoder_timer, _encoder_init_value);                         // set init encoder counter value to prevent underflow (overflow)
-    HAL_TIM_Base_Start(_encoder_timer);
-    //HAL_TIM_IC_Start(_speed_timer, _speed_timer_channel);                               // start encoder timer
+    HAL_TIM_Base_Start(_encoder_timer);                                                 // start encoder timer
     HAL_TIM_IC_Start_DMA(_speed_timer, _speed_timer_channel, &_encoder_tick_duration, 1);
 }
 
@@ -63,14 +61,28 @@ uint16_t EncoderMotor::_angular_velocity_to_pwm (float cmd_vel) {
     }
 }
 
-void EncoderMotor::update_angle() {
-    angle.data = (__HAL_TIM_GET_COUNTER(_encoder_timer) - static_cast<float>(_encoder_init_value)) * _rads_per_encoder_tick;
+void EncoderMotor::update_angle() {                                                     //TODO Calculating too slow!!!
+    angle.data = static_cast<float>(_encoder_timer->Instance->CNT) * _rads_per_encoder_tick;
 }
 
 void EncoderMotor::update_velocity() {
-    if ( _encoder_tick_duration != 0 ){
+//
+//    static float cur_vel_tmp_1 = 0;
+//    static float cur_vel_tmp_2 = _tick_duration_to_angular_velocity(_encoder_tick_duration, 0);
+//    static int vel_factor = 6;
+
+//    cur_vel_tmp_1 = _tick_duration_to_angular_velocity(_encoder_tick_duration, 0);
+
+    if ( _encoder_tick_duration != 0 ){ //&& cur_vel_tmp_1 <= cur_vel_tmp_2*vel_factor ){
 
         cur_velocity.data = _tick_duration_to_angular_velocity(_encoder_tick_duration, DIR);
+
+//        if (cur_velocity.data <= 0){
+//            cur_vel_tmp_2 = -cur_velocity.data;
+//        }
+//        else{
+//            cur_vel_tmp_2 = cur_velocity.data;
+//        }
 
     }
 }
@@ -100,13 +112,15 @@ void EncoderMotor::update_params(float angular_velocity, bool enable) {
             DIR = 1;
             setted_vel = _angular_velocity_to_pwm(angular_velocity);
         }
+	    if (angular_velocity == 0){                                 // TODO remove if ENA is the Service?
+	        setted_vel = 0;
+	    }
 	} else {
 		_enable = false;
 		setted_vel = 0;
 		_speed_timer->Instance->EGR |= 1UL << 0;                     // reset speed_timer
 		_speed_timer->Instance->SR &= ~(1UL << 0);                   //reset interrupt flag
 	}
-	//_uint_to_float64_encoder_converter();                           //CONVERTER
 }
 
 void EncoderMotor::set_params() {
@@ -129,7 +143,6 @@ void EncoderMotor::set_params() {
 
 		HAL_GPIO_WritePin(ENA_Port, ENA1_Pin, GPIO_PIN_SET);        // -------------------------------MOTOR START
 
-		//_uint_to_float64_speed_converter(&C_Vel.data, &DIR);        //add CONVERTER tim registers to float64 for speed and angle
 //--------------
 
 	} else {
