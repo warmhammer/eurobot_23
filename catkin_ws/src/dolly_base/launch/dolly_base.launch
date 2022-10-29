@@ -1,13 +1,7 @@
 <launch>
-	<node name="dolly_base_node" pkg="dolly_base" type="dolly_base_node" output="screen" >
-		<!-- <param name="control_frequency" type="int" value="100" />
-		<param name="max_wheel_angular_speed" type="double" value="18.0" /> -->
-	</node>
+	<node name="dolly_base_node" pkg="dolly_base" type="dolly_base_node" output="screen" />
 
-	<node name="stm_topic_converter" pkg="dolly_base" type="stm_topic_converter_node" output="screen" >
-		<!-- <param name="control_frequency" type="int" value="100" />
-		<param name="max_wheel_angular_speed" type="double" value="18.0" /> -->
-	</node>
+	<node name="stm_topic_converter" pkg="dolly_base" type="stm_topic_converter_node" output="screen" />
 
 	<!--<node name="hardware_emulator_node" pkg="dolly_base" type="hardware_emulator_node" output="screen" /> -->
 
@@ -26,8 +20,8 @@
     </node>
 
 	<node name="pid_controller" pkg="pid" ns="/dolly/right_wheel" type="controller" >
-		<param name="Kp" value="0.0" />
-		<param name="Ki" value="0.0" />
+		<param name="Kp" value="0.35" />
+		<param name="Ki" value="5.0" />
 		<param name="Kd" value="0.0" />
 		<param name="upper_limit" value="50" />
 		<param name="lower_limit" value="-50" />
