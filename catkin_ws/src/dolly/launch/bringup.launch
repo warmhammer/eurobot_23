@@ -4,7 +4,7 @@
 		pkg="joint_state_publisher"
 		type="joint_state_publisher" /> -->
 
-	<param name="robot_description" textfile="$(find dolly_description)/urdf/dolly.urdf" />
+	<!-- <param name="robot_description" textfile="$(find dolly_description)/urdf/dolly_description.urdf" /> -->
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
 	<include file="$(find dolly_base)/launch/dolly_base.launch" />
