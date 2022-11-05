@@ -46,7 +46,7 @@ if __name__ == "__main__":
     if len(zip_name) > len(zip_path) or zip_path[-len(zip_name):] != zip_name:
         raise ValueError("zip path should end with 'dolly_description.zip'")
 
-    src_dir = 'catkin_ws/src/'
+    src_dir = '../catkin_ws/src/'
     urdf_archive_unzipping(src_dir)
 
     urdf_path = src_dir + 'dolly_description/urdf/dolly_description.urdf'
