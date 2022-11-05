@@ -9,6 +9,8 @@ authors: Daniloff Valery, Popoff Maxim
     2. [VSCode и SSH](#VSCode-и-SSH)
     3. [Настройка ROS Multiple machines](#Настройка-ROS-Multiple-machines)
     4. [Импорт проекта STM32](#Импорт-проекта-STM32)
+2. [Работа в системе](#Работа-в-системе)
+    1. [Экспорт URDF в RVIZ](#Экспорт-URDF-в-RVIZ)
 
 # Настройка системы
 ## Подключение к роботу по SSH
@@ -85,4 +87,17 @@ arm-none-eabi-gdb: error while loading shared libraries: libncurses.so.5: cannot
 то необходимо поставить следующую библиотечку:
 ```
 sudo apt install libncurses5
+```
+
+# Работа в системе
+## Экспорт URDF в RVIZ
+0) Устанавливаем экспортер для SolidWorks (у нас 21 версия). https://wiki.ros.org/sw_urdf_exporter
+1) Экспортируем архив с urdf (сохраняя настройки с диска). Архив должен называться `dolly_description.zip`
+2) Переносим архив на Linux. Запускаем скрипт преобразования архива (находясь в папке проекта):
+```
+./scripts/description_archive_parsep.py [путь_до_архива]
+```
+Если так не запускается, то скорее всего у парсера нет прав. Надо дать:
+```
+chmod +x ./scripts/description_archive_parsep.py
 ```
