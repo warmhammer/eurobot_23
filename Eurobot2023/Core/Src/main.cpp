@@ -64,6 +64,7 @@ DMA_HandleTypeDef hdma_usart2_rx;
 DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
+
 //------------------------------------------------define EncoderMotors perif BEGIN--------------------
 #define dir_port_l 				GPIOA
 #define dir_pin_l 				GPIO_PIN_8
@@ -92,13 +93,6 @@ DMA_HandleTypeDef hdma_usart2_tx;
 #define pwm_timer_r				&htim12
 #define pwm_timer_chanel1_r  	TIM_CHANNEL_1
 //------------------------------------------------define EncoderMotors perif END--------------------
-//------------------------------------------------define ROS Topic NAMES----------------------------
-//#define current_vel_topic_name_left         "/dolly/left_wheel/cur_vel"
-//#define current_angle_topic_name_left       "/dolly/left_wheel/angle"
-//#define pwd_topic_name_left                 "/dolly/left_wheel/pwd"
-//#define current_vel_topic_name_left         "/dolly/left_wheel/cur_vel"
-//------------------------------------------------define ROS Topic NAMES----------------------------
-
 
 /* USER CODE END PV */
 
@@ -129,15 +123,15 @@ ros::NodeHandle node;
 //-------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     node.getHardware()->flush();
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     node.getHardware()->reset_rbuf();
 }
 
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
 
     //HAL_UART_DMAResume(&huart2);
 
@@ -157,7 +151,8 @@ EncoderMotor left_encoder_motor (
     speed_timer_chanel2_l,
     pwm_timer_l,
     pwm_timer_chanel1_l,
-    left_encoder_motor_callback
+    left_encoder_motor_callback,
+	false
 );
 
 EncoderMotor right_encoder_motor (
@@ -171,7 +166,8 @@ EncoderMotor right_encoder_motor (
     speed_timer_chanel2_r,
     pwm_timer_r,
     pwm_timer_chanel1_r,
-    right_encoder_motor_callback
+    right_encoder_motor_callback,
+	true
 );
 
 
@@ -179,11 +175,11 @@ EncoderMotor right_encoder_motor (
 ros::Subscriber<std_msgs::Float32> pwd_subcriber_left("/dolly/left_wheel/pwd32", left_encoder_motor_callback);
 ros::Subscriber<std_msgs::Float32> pwd_subcriber_right("/dolly/right_wheel/pwd32", right_encoder_motor_callback);
 
-ros::Publisher angle_publisher_left("/dolly/left_wheel/angle32", &left_encoder_motor.angle);
-ros::Publisher angle_publisher_right("/dolly/right_wheel/angle32", &right_encoder_motor.angle);
+ros::Publisher angle_publisher_left("/dolly/left_wheel/angle32", left_encoder_motor.get_cur_angle());
+ros::Publisher angle_publisher_right("/dolly/right_wheel/angle32", right_encoder_motor.get_cur_angle());
 
-ros::Publisher vel_publisher_left("/dolly/left_wheel/cur_vel32", &left_encoder_motor.cur_velocity);
-ros::Publisher vel_publisher_right("/dolly/right_wheel/cur_vel32", &right_encoder_motor.cur_velocity);
+ros::Publisher vel_publisher_left("/dolly/left_wheel/cur_vel32", left_encoder_motor.get_cur_velocity());
+ros::Publisher vel_publisher_right("/dolly/right_wheel/cur_vel32", right_encoder_motor.get_cur_velocity());
 
 
 //-----------------------------------------------------------ROS CallBack's--------------------------
@@ -191,6 +187,7 @@ void left_encoder_motor_callback(const std_msgs::Float32& msg){
     left_encoder_motor.update_params(msg.data, 1);  // TODO: minus msg.data
     left_encoder_motor.set_params();
 }
+
 void right_encoder_motor_callback(const std_msgs::Float32& msg){
     right_encoder_motor.update_params(msg.data, 1);
     right_encoder_motor.set_params();
@@ -270,16 +267,6 @@ int main(void)
     auto prev = HAL_GetTick();
 
     while (1) {
-
-//        left_encoder_motor.update_params(20, 1);
-//        right_encoder_motor.update_params(20, 1);
-//
-//        left_encoder_motor.set_params();
-//        right_encoder_motor.set_params();
-//
-//        left_encoder_motor.update_velocity();
-//        right_encoder_motor.update_velocity();
-
         if (node.connected() == true) {
             auto now = HAL_GetTick();
 
@@ -292,20 +279,12 @@ int main(void)
                 left_encoder_motor.update_angle();
                 right_encoder_motor.update_angle();
 
-                vel_publisher_left.publish(&left_encoder_motor.cur_velocity);
-                vel_publisher_right.publish(&right_encoder_motor.cur_velocity);
-                angle_publisher_left.publish(&left_encoder_motor.angle);
-                angle_publisher_right.publish(&right_encoder_motor.angle);
-
+                vel_publisher_left.publish(left_encoder_motor.get_cur_velocity());
+                vel_publisher_right.publish(right_encoder_motor.get_cur_velocity());
+                angle_publisher_left.publish(left_encoder_motor.get_cur_angle());
+                angle_publisher_right.publish(right_encoder_motor.get_cur_angle());
             }
         } else {
-
-//            left_encoder_motor.update_params(0, 0);
-//            right_encoder_motor.update_params(0, 0);
-//
-//            left_encoder_motor.set_params();
-//            right_encoder_motor.set_params();
-
             HAL_Delay(1);
         }
 

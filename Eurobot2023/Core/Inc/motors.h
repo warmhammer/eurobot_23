@@ -44,7 +44,8 @@ class EncoderMotor {
 			uint16_t speed_timer_channel,
 			TIM_HandleTypeDef* pwm_timer,
 			uint16_t pwm_timer_channel,
-			void (*callback_func)(const std_msgs::Float32&)
+			void (*callback_func)(const std_msgs::Float32&),
+			bool inversed
 	    );
 
     public:
@@ -57,9 +58,8 @@ class EncoderMotor {
         void update_params(float angular_vel, bool ena);
         void set_params();
 
-        std_msgs::Float32 angle;
-        std_msgs::Float32 cur_velocity;
-
+        const std_msgs::Float32* get_cur_velocity();
+        const std_msgs::Float32* get_cur_angle();
 
     private:
         // TODO: Any private variable or method should starts with _ like _velocity_callback(...) or _velocity_subcriber
@@ -69,7 +69,7 @@ class EncoderMotor {
         float _tick_duration_to_angular_velocity(const uint32_t tick_duration, bool direction);
 
         uint32_t _encoder_tick_duration;                                               // current angular velocity
-        uint32_t _encoder_init_value = UINT32_MAX / 2;
+        const uint32_t _encoder_init_value = UINT32_MAX / 2; // TODO: definition in cstr
 
         const float _rads_per_encoder_tick = (2 * 3.1415) / ENCODER_TICKS_PER_REVOLUTION;   //radian
         uint16_t setted_vel;
@@ -93,9 +93,12 @@ class EncoderMotor {
 
         TIM_HandleTypeDef* _speed_timer;                                       // TODO: velocity not speed
         uint16_t _speed_timer_channel;
-        uint32_t _speed_data_register;                                          // current angular velocity 2
+        uint32_t _speed_data_register;                                       // current angular velocity 2
+
+        bool _inversed;
+
+        std_msgs::Float32 _cur_angle;
+        std_msgs::Float32 _cur_velocity;
 };
-
-
 
 #endif /* INC_MOTORS_H_ */

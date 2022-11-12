@@ -17,7 +17,8 @@ EncoderMotor::EncoderMotor (
     uint16_t speed_timer_chanel,
     TIM_HandleTypeDef* pwm_timer,
     uint16_t pwm_timer_chanel,
-    void (*callback_func)(const std_msgs::Float32&)
+    void (*callback_func)(const std_msgs::Float32&),
+	bool inversed
 ) {                                                        // TODO: cstr implementation
     _encoder_tick_duration = 0;
     setted_vel = 0;
@@ -40,16 +41,16 @@ EncoderMotor::EncoderMotor (
     _pwm_timer = pwm_timer;
     _pwm_timer_channel = pwm_timer_chanel;
 
+    _inversed = inversed;
 }
 
 void EncoderMotor::init() {
-    _encoder_init_value = UINT32_MAX / 2;                                               // TODO
-    __HAL_TIM_SET_COUNTER(_encoder_timer, _encoder_init_value);                         // set init encoder counter value to prevent underflow (overflow)
+    __HAL_TIM_SET_COUNTER(_encoder_timer, _encoder_init_value);                         // TODO: set init encoder counter value to prevent underflow (overflow)
     HAL_TIM_Base_Start(_encoder_timer);                                                 // start encoder timer
     HAL_TIM_IC_Start_DMA(_speed_timer, _speed_timer_channel, &_encoder_tick_duration, 1);
 }
 
-uint16_t EncoderMotor::_angular_velocity_to_pwm (float cmd_vel) {
+uint16_t EncoderMotor::_angular_velocity_to_pwm (float cmd_vel) { //TODO: using abs()
     if (cmd_vel < -MAX_MOTOR_ANGULAR_VEL || MAX_MOTOR_ANGULAR_VEL < cmd_vel) {
         return(UINT16_MAX);
     }
@@ -62,28 +63,20 @@ uint16_t EncoderMotor::_angular_velocity_to_pwm (float cmd_vel) {
 }
 
 void EncoderMotor::update_angle() {                                                     //TODO Calculating too slow!!!
-    angle.data = static_cast<float>(_encoder_timer->Instance->CNT) * _rads_per_encoder_tick;
+    _cur_angle.data = (static_cast<float>(_encoder_timer->Instance->CNT) - _encoder_init_value) * _rads_per_encoder_tick;
+
+    if (_inversed == true) {
+    	_cur_angle.data = -_cur_angle.data;
+    }
 }
 
 void EncoderMotor::update_velocity() {
-//
-//    static float cur_vel_tmp_1 = 0;
-//    static float cur_vel_tmp_2 = _tick_duration_to_angular_velocity(_encoder_tick_duration, 0);
-//    static int vel_factor = 6;
+    if ( _encoder_tick_duration != 0 ) { // TODO: reason?
+        _cur_velocity.data = _tick_duration_to_angular_velocity(_encoder_tick_duration, DIR);
 
-//    cur_vel_tmp_1 = _tick_duration_to_angular_velocity(_encoder_tick_duration, 0);
-
-    if ( _encoder_tick_duration != 0 ){ //&& cur_vel_tmp_1 <= cur_vel_tmp_2*vel_factor ){
-
-        cur_velocity.data = _tick_duration_to_angular_velocity(_encoder_tick_duration, DIR);
-
-//        if (cur_velocity.data <= 0){
-//            cur_vel_tmp_2 = -cur_velocity.data;
-//        }
-//        else{
-//            cur_vel_tmp_2 = cur_velocity.data;
-//        }
-
+        if (_inversed == true) {
+        	_cur_velocity.data = -_cur_velocity.data;
+        }
     }
 }
 
@@ -101,17 +94,18 @@ float EncoderMotor::_tick_duration_to_angular_velocity(const uint32_t tick_durat
     return 0;
 }
 
-void EncoderMotor::update_params(float angular_velocity, bool enable) {
+void EncoderMotor::update_params(float angular_velocity, bool enable) { // TODO: change name
 	if (enable == true) {
 	    if(angular_velocity > 0) {
             _enable = true;
-            DIR = 0;
+            DIR = (_inversed == true ? 1 : 0);
             setted_vel = _angular_velocity_to_pwm(angular_velocity);
         } else {
             _enable = true;
-            DIR = 1;
+            DIR = (_inversed == true ? 0 : 1);
             setted_vel = _angular_velocity_to_pwm(angular_velocity);
         }
+	    															// TODO: OMG, == with float number
 	    if (angular_velocity == 0){                                 // TODO remove if ENA is the Service?
 	        setted_vel = 0;
 	    }
@@ -125,7 +119,7 @@ void EncoderMotor::update_params(float angular_velocity, bool enable) {
 
 void EncoderMotor::set_params() {
 	if (_enable) {
-		if (DIR) {
+		if (DIR == 1) {
 			HAL_GPIO_WritePin(DIR_Port, DIR_Pin, GPIO_PIN_SET);
 			_encoder_timer->Instance->CR1|= (1UL << 4); 			    //set DIR counting down in Encoder timer
 		} else {
@@ -154,4 +148,12 @@ void EncoderMotor::set_params() {
 		_encoder_tick_duration = 0;
 	}
 
+}
+
+const std_msgs::Float32* EncoderMotor::get_cur_velocity() {
+	return &_cur_velocity;
+}
+
+const std_msgs::Float32* EncoderMotor::get_cur_angle() {
+	return &_cur_angle;
 }
