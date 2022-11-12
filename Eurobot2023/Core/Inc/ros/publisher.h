@@ -45,7 +45,7 @@ namespace ros
 class Publisher
 {
 public:
-  Publisher(const char * topic_name, Msg * msg, int endpoint = rosserial_msgs::TopicInfo::ID_PUBLISHER) :
+  Publisher(const char * topic_name, const Msg * msg, int endpoint = rosserial_msgs::TopicInfo::ID_PUBLISHER) :
     topic_(topic_name),
     msg_(msg),
     endpoint_(endpoint) {};
@@ -60,7 +60,7 @@ public:
   }
 
   const char * topic_;
-  Msg *msg_;
+  const Msg *msg_;
   // id_ and no_ are set by NodeHandle when we advertise
   int id_;
   NodeHandleBase_* nh_;

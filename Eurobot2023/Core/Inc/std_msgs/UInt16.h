@@ -38,8 +38,8 @@ namespace std_msgs
      return offset;
     }
 
-    virtual const char * getType() override { return "std_msgs/UInt16"; };
-    virtual const char * getMD5() override { return "1df79edf208b629fe6b81923a544552d"; };
+    virtual const char * getType() const override { return "std_msgs/UInt16"; };
+    virtual const char * getMD5() const override { return "1df79edf208b629fe6b81923a544552d"; };
 
   };
 

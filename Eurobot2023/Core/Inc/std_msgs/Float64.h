@@ -61,8 +61,8 @@ namespace std_msgs
      return offset;
     }
 
-    virtual const char * getType() override { return "std_msgs/Float64"; };
-    virtual const char * getMD5() override { return "fdb28210bfa9d7c91146260178d9a584"; };
+    virtual const char * getType() const override { return "std_msgs/Float64"; };
+    virtual const char * getMD5() const override { return "fdb28210bfa9d7c91146260178d9a584"; };
 
   };
 

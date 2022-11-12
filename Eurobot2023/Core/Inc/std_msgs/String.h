@@ -46,8 +46,8 @@ namespace std_msgs
      return offset;
     }
 
-    virtual const char * getType() override { return "std_msgs/String"; };
-    virtual const char * getMD5() override { return "992ce8a1687cec8c8bd883ec73ca41d1"; };
+    virtual const char * getType() const override { return "std_msgs/String"; };
+    virtual const char * getMD5() const override { return "992ce8a1687cec8c8bd883ec73ca41d1"; };
 
   };
 

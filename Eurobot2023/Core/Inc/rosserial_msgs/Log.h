@@ -58,8 +58,8 @@ namespace rosserial_msgs
      return offset;
     }
 
-    virtual const char * getType() override { return "rosserial_msgs/Log"; };
-    virtual const char * getMD5() override { return "11abd731c25933261cd6183bd12d6295"; };
+    virtual const char * getType() const override { return "rosserial_msgs/Log"; };
+    virtual const char * getMD5() const override { return "11abd731c25933261cd6183bd12d6295"; };
 
   };
 
