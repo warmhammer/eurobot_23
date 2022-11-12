@@ -3,6 +3,7 @@
  *
  *  Created on: Sep 30, 2022
  *      Author: Valery_Danilov
+ *      Editor: Maxim Popov
  */
 
 #ifndef INC_MOTORS_H_
@@ -45,7 +46,10 @@ class EncoderMotor {
 			TIM_HandleTypeDef* pwm_timer,
 			uint16_t pwm_timer_channel,
 			void (*callback_func)(const std_msgs::Float32&),
-			bool inversed
+			bool inversed,
+			ros::NodeHandle& node,
+			const char* angle_topic_name,
+			const char* velocity_topic_name
 	    );
 
     public:
@@ -60,6 +64,8 @@ class EncoderMotor {
 
         const std_msgs::Float32* get_cur_velocity();
         const std_msgs::Float32* get_cur_angle();
+
+        void publish();
 
     private:
         // TODO: Any private variable or method should starts with _ like _velocity_callback(...) or _velocity_subcriber
@@ -99,6 +105,11 @@ class EncoderMotor {
 
         std_msgs::Float32 _cur_angle;
         std_msgs::Float32 _cur_velocity;
+
+        ros::NodeHandle& _node;
+
+        ros::Publisher _velocity_publisher;
+		ros::Publisher _angle_publisher;
 };
 
 #endif /* INC_MOTORS_H_ */

@@ -3,6 +3,7 @@
  *
  *  Created on: Sep 30, 2022
  *      Author: Valery_Danilov
+ *      Editor: Maxim Popov
  */
 #include "motors.h"
 
@@ -18,8 +19,15 @@ EncoderMotor::EncoderMotor (
     TIM_HandleTypeDef* pwm_timer,
     uint16_t pwm_timer_chanel,
     void (*callback_func)(const std_msgs::Float32&),
-	bool inversed
-) {                                                        // TODO: cstr implementation
+	bool inversed,
+	ros::NodeHandle& node,
+	const char* angle_topic_name,
+	const char* velocity_topic_name
+) :
+	_node(node),
+	_velocity_publisher(velocity_topic_name, &_cur_velocity),
+	_angle_publisher(angle_topic_name, &_cur_angle)
+{                                                        // TODO: cstr implementation
     _encoder_tick_duration = 0;
     setted_vel = 0;
     DIR = 0;
@@ -48,6 +56,9 @@ void EncoderMotor::init() {
     __HAL_TIM_SET_COUNTER(_encoder_timer, _encoder_init_value);                         // TODO: set init encoder counter value to prevent underflow (overflow)
     HAL_TIM_Base_Start(_encoder_timer);                                                 // start encoder timer
     HAL_TIM_IC_Start_DMA(_speed_timer, _speed_timer_channel, &_encoder_tick_duration, 1);
+
+	_node.advertise(_velocity_publisher);
+	_node.advertise(_angle_publisher);
 }
 
 uint16_t EncoderMotor::_angular_velocity_to_pwm (float cmd_vel) { //TODO: using abs()
@@ -156,4 +167,9 @@ const std_msgs::Float32* EncoderMotor::get_cur_velocity() {
 
 const std_msgs::Float32* EncoderMotor::get_cur_angle() {
 	return &_cur_angle;
+}
+
+void EncoderMotor::publish() {
+	_velocity_publisher.publish(&_cur_velocity);
+	_angle_publisher.publish(&_cur_angle);
 }

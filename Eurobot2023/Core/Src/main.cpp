@@ -152,7 +152,10 @@ EncoderMotor left_encoder_motor (
     pwm_timer_l,
     pwm_timer_chanel1_l,
     left_encoder_motor_callback,
-	false
+	false,
+	node,
+	"/dolly/left_wheel/angle32",
+	"/dolly/left_wheel/cur_vel32"
 );
 
 EncoderMotor right_encoder_motor (
@@ -167,7 +170,10 @@ EncoderMotor right_encoder_motor (
     pwm_timer_r,
     pwm_timer_chanel1_r,
     right_encoder_motor_callback,
-	true
+	true,
+	node,
+	"/dolly/right_wheel/angle32",
+	"/dolly/right_wheel/cur_vel32"
 );
 
 
@@ -175,16 +181,9 @@ EncoderMotor right_encoder_motor (
 ros::Subscriber<std_msgs::Float32> pwd_subcriber_left("/dolly/left_wheel/pwd32", left_encoder_motor_callback);
 ros::Subscriber<std_msgs::Float32> pwd_subcriber_right("/dolly/right_wheel/pwd32", right_encoder_motor_callback);
 
-ros::Publisher angle_publisher_left("/dolly/left_wheel/angle32", left_encoder_motor.get_cur_angle());
-ros::Publisher angle_publisher_right("/dolly/right_wheel/angle32", right_encoder_motor.get_cur_angle());
-
-ros::Publisher vel_publisher_left("/dolly/left_wheel/cur_vel32", left_encoder_motor.get_cur_velocity());
-ros::Publisher vel_publisher_right("/dolly/right_wheel/cur_vel32", right_encoder_motor.get_cur_velocity());
-
-
 //-----------------------------------------------------------ROS CallBack's--------------------------
 void left_encoder_motor_callback(const std_msgs::Float32& msg){
-    left_encoder_motor.update_params(msg.data, 1);  // TODO: minus msg.data
+    left_encoder_motor.update_params(msg.data, 1);
     left_encoder_motor.set_params();
 }
 
@@ -238,26 +237,17 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-    //EMotor_L.Init();
-    //EMotor_R.Init();
-
-    left_encoder_motor.init();
-    right_encoder_motor.init();
-
     //-------------------------------------------------------------ROS----------------------
     node.initNode();
-
-    node.advertise(vel_publisher_left);
-    node.advertise(angle_publisher_right);
-
-
-    node.advertise(angle_publisher_left);
-    node.advertise(vel_publisher_right);
 
     node.subscribe(pwd_subcriber_left);
     node.subscribe(pwd_subcriber_right);
 
     //--------------------------------------------------------------------------------------
+
+    left_encoder_motor.init();
+    right_encoder_motor.init();
+
 
   /* USER CODE END 2 */
 
@@ -279,10 +269,8 @@ int main(void)
                 left_encoder_motor.update_angle();
                 right_encoder_motor.update_angle();
 
-                vel_publisher_left.publish(left_encoder_motor.get_cur_velocity());
-                vel_publisher_right.publish(right_encoder_motor.get_cur_velocity());
-                angle_publisher_left.publish(left_encoder_motor.get_cur_angle());
-                angle_publisher_right.publish(right_encoder_motor.get_cur_angle());
+                left_encoder_motor.publish();
+                right_encoder_motor.publish();
             }
         } else {
             HAL_Delay(1);
