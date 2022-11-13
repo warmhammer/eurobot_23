@@ -16,100 +16,82 @@
 
 #include "stm32f4xx_hal.h"
 
-//!!!!!!!!-----------USER DEFINED PARAMS BEGIN------------!!!!!!!!!!!!!!!!!!!
+#include "wrappers.h"
 
-constexpr float MAX_MOTOR_ANGULAR_VEL = 44;             // define max speed of EncoderMotor (rad/s) or 425 rpm
-constexpr float ENCODER_TICKS_PER_REVOLUTION = 112.4;   // pulse per revolution
-constexpr uint32_t SPEED_TIMER_PRESCALER = 50;
+namespace motors {
+	constexpr float MAX_MOTOR_ANGULAR_VEL = 44;             // define max speed of EncoderMotor (rad/s) or 425 rpm
+	constexpr float ENCODER_TICKS_PER_REVOLUTION = 112.4;   // pulse per revolution
+	constexpr float RADS_PER_ENCODER_TICK = (2 * 3.1415) / ENCODER_TICKS_PER_REVOLUTION;   //radian
 
-//--------------------SYSTEM PARAMS BEGIN-------------------------------------
-constexpr uint32_t VELOCITY_TIMER_FREQUENCY = 50000000;    // !!!!CAUTION!!!! ALL OF THE MOTOR TIMERS HAVE INCOMMON CLOCK BUS (APB1)
-//constexpr uint32_t Timer_Encoder_init_value       =  200000;
+	constexpr uint32_t SPEED_TIMER_PRESCALER = 50;
+	constexpr uint32_t VELOCITY_TIMER_FREQUENCY = 50000000;
 
-//--------------------SYSTEM PARAMS END---------------------------------------
+	class EncoderMotor {
+		public:
+			EncoderMotor (
+				wrappers::pin_wrapper dir_pin,
+				wrappers::pin_wrapper ena_pin,
+				wrappers::timer_wrapper encoder_timer,
+				wrappers::timer_wrapper speed_timer,
+				wrappers::timer_wrapper pwm_timer,
+				bool inversed,
+				ros::NodeHandle& node,
+				const char* angle_topic_name,
+				const char* velocity_topic_name,
+				const char* pwd_topic_name
+			);
 
-//!!!!!!!!-----------USER DEFINED PARAMS END------------!!!!!!!!!!!!!!!!!!!
+		public:
+			void init();
 
-class EncoderMotor {
-    public:
-	    EncoderMotor (
-	        GPIO_TypeDef* dir_port,
-	        GPIO_TypeDef* ena_port,
-	        uint16_t dir_pin,
-	        uint16_t ena_pin,
-	        TIM_HandleTypeDef* encoder_timer,
-	        uint16_t encoder_timer_channel, // TODO: ????
-			TIM_HandleTypeDef* speed_timer,
-			uint16_t speed_timer_channel,
-			TIM_HandleTypeDef* pwm_timer,
-			uint16_t pwm_timer_channel,
-			bool inversed,
-			ros::NodeHandle& node,
-			const char* angle_topic_name,
-			const char* velocity_topic_name,
-			const char* pwd_topic_name
-	    );
+			void read();
+			void publish(bool readFlag = true);
 
-    public:
-	    void init();
+			const std_msgs::Float32* get_cur_velocity();
+			const std_msgs::Float32* get_cur_angle();
 
-        void update_angle();
-        void update_velocity();
+		private:
+			enum _Direction {DIRECT, REVERSE};
 
-        void update_params(float angular_vel, bool ena);
-        void set_params();
 
-        const std_msgs::Float32* get_cur_velocity();
-        const std_msgs::Float32* get_cur_angle();
+			void _read_angle();
+			void _read_velocity();
 
-        void publish();
+			void _write(const std_msgs::Float32& msg);
+			void _set_velocity_params(float angular_vel);
+			void _update_hardware();
 
-    private:
-        // TODO: Any private variable or method should starts with _ like _velocity_callback(...) or _velocity_subcriber
+			uint16_t _angular_velocity_to_pwm(float cmd_vel);
+			float _tick_duration_to_angular_velocity(uint32_t tick_duration, _Direction direction);
 
-        uint16_t _angular_velocity_to_pwm(float cmd_vel);
-        float _tick_duration_to_angular_velocity(const uint32_t tick_duration, bool direction);
 
-        void _callback(const std_msgs::Float32& msg);
+			wrappers::pin_wrapper _dir_pin;
+			wrappers::pin_wrapper _ena_pin;
 
-        uint32_t _encoder_tick_duration;                                               // current angular velocity
-        const uint32_t _encoder_init_value = UINT32_MAX / 2; // TODO: definition in cstr
+			wrappers::timer_wrapper _encoder_timer;
+			wrappers::timer_wrapper _speed_timer;
+			wrappers::timer_wrapper _pwm_timer;
 
-        const float _rads_per_encoder_tick = (2 * 3.1415) / ENCODER_TICKS_PER_REVOLUTION;   //radian
-        uint16_t setted_vel;
+			bool _inversed;
 
-        // TODO: direction to enum
-        bool DIR; 					                                            // direction of rotation 0 -is CW, 1 -is CCW
-        bool _enable; 					                                            //Motor enable (1 - is enable, 0 - is disable)
+			ros::NodeHandle& _node;
 
-        GPIO_TypeDef* DIR_Port;
-        uint16_t DIR_Pin;
+			ros::Publisher _velocity_publisher;
+			ros::Publisher _angle_publisher;
 
-        GPIO_TypeDef* ENA_Port;                                                 // TODO: struct for pins
-        uint16_t ENA1_Pin;
+			ros::Subscriber<std_msgs::Float32> _pwd_subscriber;
 
-        TIM_HandleTypeDef* _encoder_timer;                                      // TODO: struct for timer
-        uint16_t _encoder_timer_channel;
+			std_msgs::Float32 _cur_angle;
+			std_msgs::Float32 _cur_velocity;
 
-        TIM_HandleTypeDef* _pwm_timer;
-        uint16_t _pwm_timer_channel;                                           //TODO: const
-        uint16_t _pulse;
+			bool _enable;
+			uint16_t _written_velocity;
 
-        TIM_HandleTypeDef* _speed_timer;                                       // TODO: velocity not speed
-        uint16_t _speed_timer_channel;
-        uint32_t _speed_data_register;                                       // current angular velocity 2
+			_Direction _direction;
+			uint32_t _encoder_tick_duration;
 
-        bool _inversed;
-
-        std_msgs::Float32 _cur_angle;
-        std_msgs::Float32 _cur_velocity;
-
-        ros::NodeHandle& _node;
-
-        ros::Publisher _velocity_publisher;
-		ros::Publisher _angle_publisher;
-
-		ros::Subscriber<std_msgs::Float32> _pwd_subscriber;
-};
+			static constexpr uint32_t _encoder_init_value = UINT32_MAX / 2;
+	};
+}
 
 #endif /* INC_MOTORS_H_ */

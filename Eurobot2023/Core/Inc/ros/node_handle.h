@@ -44,7 +44,7 @@
 
 #include "ros/msg.h"
 
-#include "stm32f4xx_hal.h" // TODO: check necessity
+#include "stm32f4xx_hal.h"
 
 namespace ros
 {

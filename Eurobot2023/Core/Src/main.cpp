@@ -24,6 +24,7 @@
 #include "ros.h"
 
 #include "motors.h"
+#include "wrappers.h"
 
 /* USER CODE END Includes */
 
@@ -134,17 +135,12 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
 //-------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------------GLOBAL OBJ---------------------------------
-EncoderMotor left_encoder_motor (
-    dir_port_l,
-    ena_port,
-    dir_pin_l,
-    ena_pin,
-    encoder_timer_l,
-    encoder_timer_chanel1_l,
-    speed_timer_l,
-    speed_timer_chanel2_l,
-    pwm_timer_l,
-    pwm_timer_chanel1_l,
+motors::EncoderMotor left_encoder_motor (
+    {dir_port_l, dir_pin_l},
+    {ena_port, ena_pin},
+    {encoder_timer_l, encoder_timer_chanel1_l},
+    {speed_timer_l, speed_timer_chanel2_l},
+    {pwm_timer_l, pwm_timer_chanel1_l},
 	false,
 	node,
 	"/dolly/left_wheel/angle32",
@@ -152,17 +148,12 @@ EncoderMotor left_encoder_motor (
 	"/dolly/left_wheel/pwd32"
 );
 
-EncoderMotor right_encoder_motor (
-    dir_port_r,
-    ena_port,
-    dir_pin_r,
-    ena_pin,
-    encoder_timer_r,
-    encoder_timer_chanel1_r,
-    speed_timer_r,
-    speed_timer_chanel2_r,
-    pwm_timer_r,
-    pwm_timer_chanel1_r,
+motors::EncoderMotor right_encoder_motor (
+    {dir_port_r, dir_pin_r},
+    {ena_port, ena_pin},
+    {encoder_timer_r, encoder_timer_chanel1_r},
+    {speed_timer_r, speed_timer_chanel2_r},
+    {pwm_timer_r, pwm_timer_chanel1_r},
 	true,
 	node,
 	"/dolly/right_wheel/angle32",
@@ -233,12 +224,6 @@ int main(void)
 
             if (now - prev >= 20) {
                 prev = now;
-
-                left_encoder_motor.update_velocity();
-                right_encoder_motor.update_velocity();
-
-                left_encoder_motor.update_angle();
-                right_encoder_motor.update_angle();
 
                 left_encoder_motor.publish();
                 right_encoder_motor.publish();
