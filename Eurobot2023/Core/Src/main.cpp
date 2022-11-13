@@ -22,18 +22,13 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <ros.h>
-#include <std_msgs/String.h>
-#include <std_msgs/UInt16.h>
-#include <std_msgs/UInt32.h>
 
-#include <std_msgs/Bool.h>
 #include <motors.h>
-#include <callbacks.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -42,7 +37,6 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -151,11 +145,11 @@ EncoderMotor left_encoder_motor (
     speed_timer_chanel2_l,
     pwm_timer_l,
     pwm_timer_chanel1_l,
-    left_encoder_motor_callback,
 	false,
 	node,
 	"/dolly/left_wheel/angle32",
-	"/dolly/left_wheel/cur_vel32"
+	"/dolly/left_wheel/cur_vel32",
+	"/dolly/left_wheel/pwd32"
 );
 
 EncoderMotor right_encoder_motor (
@@ -169,30 +163,12 @@ EncoderMotor right_encoder_motor (
     speed_timer_chanel2_r,
     pwm_timer_r,
     pwm_timer_chanel1_r,
-    right_encoder_motor_callback,
 	true,
 	node,
 	"/dolly/right_wheel/angle32",
-	"/dolly/right_wheel/cur_vel32"
+	"/dolly/right_wheel/cur_vel32",
+	"/dolly/right_wheel/pwd32"
 );
-
-
-//-------------------------------------------------------------------------------------------------------
-ros::Subscriber<std_msgs::Float32> pwd_subcriber_left("/dolly/left_wheel/pwd32", left_encoder_motor_callback);
-ros::Subscriber<std_msgs::Float32> pwd_subcriber_right("/dolly/right_wheel/pwd32", right_encoder_motor_callback);
-
-//-----------------------------------------------------------ROS CallBack's--------------------------
-void left_encoder_motor_callback(const std_msgs::Float32& msg){
-    left_encoder_motor.update_params(msg.data, 1);
-    left_encoder_motor.set_params();
-}
-
-void right_encoder_motor_callback(const std_msgs::Float32& msg){
-    right_encoder_motor.update_params(msg.data, 1);
-    right_encoder_motor.set_params();
-}
-
-//---------------------------------------------------------------------------------------------------
 
 /* USER CODE END 0 */
 
@@ -239,11 +215,6 @@ int main(void)
 
     //-------------------------------------------------------------ROS----------------------
     node.initNode();
-
-    node.subscribe(pwd_subcriber_left);
-    node.subscribe(pwd_subcriber_right);
-
-    //--------------------------------------------------------------------------------------
 
     left_encoder_motor.init();
     right_encoder_motor.init();

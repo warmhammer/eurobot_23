@@ -18,15 +18,16 @@ EncoderMotor::EncoderMotor (
     uint16_t speed_timer_chanel,
     TIM_HandleTypeDef* pwm_timer,
     uint16_t pwm_timer_chanel,
-    void (*callback_func)(const std_msgs::Float32&),
 	bool inversed,
 	ros::NodeHandle& node,
 	const char* angle_topic_name,
-	const char* velocity_topic_name
+	const char* velocity_topic_name,
+	const char* pwd_topic_name
 ) :
 	_node(node),
 	_velocity_publisher(velocity_topic_name, &_cur_velocity),
-	_angle_publisher(angle_topic_name, &_cur_angle)
+	_angle_publisher(angle_topic_name, &_cur_angle),
+	_pwd_subscriber(pwd_topic_name, [&, this](const std_msgs::Float32& msg){this->_callback(msg);}) // TODO: good name for callback
 {                                                        // TODO: cstr implementation
     _encoder_tick_duration = 0;
     setted_vel = 0;
@@ -59,6 +60,8 @@ void EncoderMotor::init() {
 
 	_node.advertise(_velocity_publisher);
 	_node.advertise(_angle_publisher);
+
+    _node.subscribe(_pwd_subscriber);
 }
 
 uint16_t EncoderMotor::_angular_velocity_to_pwm (float cmd_vel) { //TODO: using abs()
@@ -172,4 +175,9 @@ const std_msgs::Float32* EncoderMotor::get_cur_angle() {
 void EncoderMotor::publish() {
 	_velocity_publisher.publish(&_cur_velocity);
 	_angle_publisher.publish(&_cur_angle);
+}
+
+void EncoderMotor::_callback(const std_msgs::Float32& msg) {
+    update_params(msg.data, 1);
+    set_params();
 }

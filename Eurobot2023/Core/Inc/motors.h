@@ -11,12 +11,12 @@
 
 // TODO: <...> for libraries and "..." for user's .h files
 
-#include "stdint.h"
-#include "stm32f4xx_hal.h"
-#include "ros.h"
+#include <cstdint>
+
+#include <ros.h>
 #include <std_msgs/Float32.h>
-#include <std_msgs/UInt32.h>
-#include <std_msgs/UInt16.h>
+
+#include "stm32f4xx_hal.h"
 
 //!!!!!!!!-----------USER DEFINED PARAMS BEGIN------------!!!!!!!!!!!!!!!!!!!
 
@@ -40,20 +40,19 @@ class EncoderMotor {
 	        uint16_t dir_pin,
 	        uint16_t ena_pin,
 	        TIM_HandleTypeDef* encoder_timer,
-	        uint16_t encoder_timer_channel, // ????
+	        uint16_t encoder_timer_channel, // TODO: ????
 			TIM_HandleTypeDef* speed_timer,
 			uint16_t speed_timer_channel,
 			TIM_HandleTypeDef* pwm_timer,
 			uint16_t pwm_timer_channel,
-			void (*callback_func)(const std_msgs::Float32&),
 			bool inversed,
 			ros::NodeHandle& node,
 			const char* angle_topic_name,
-			const char* velocity_topic_name
+			const char* velocity_topic_name,
+			const char* pwd_topic_name
 	    );
 
     public:
-	    //-------methods EncoderMotor-------------------------------
 	    void init();
 
         void update_angle();
@@ -71,8 +70,9 @@ class EncoderMotor {
         // TODO: Any private variable or method should starts with _ like _velocity_callback(...) or _velocity_subcriber
 
         uint16_t _angular_velocity_to_pwm(float cmd_vel);
-
         float _tick_duration_to_angular_velocity(const uint32_t tick_duration, bool direction);
+
+        void _callback(const std_msgs::Float32& msg);
 
         uint32_t _encoder_tick_duration;                                               // current angular velocity
         const uint32_t _encoder_init_value = UINT32_MAX / 2; // TODO: definition in cstr
@@ -110,6 +110,8 @@ class EncoderMotor {
 
         ros::Publisher _velocity_publisher;
 		ros::Publisher _angle_publisher;
+
+		ros::Subscriber<std_msgs::Float32> _pwd_subscriber;
 };
 
 #endif /* INC_MOTORS_H_ */
