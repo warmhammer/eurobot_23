@@ -19,11 +19,11 @@
 #include "wrappers.h"
 
 namespace motors {
-	constexpr float MAX_MOTOR_ANGULAR_VEL = 44;             // define max speed of EncoderMotor (rad/s) or 425 rpm
-	constexpr float ENCODER_TICKS_PER_REVOLUTION = 112.4;   // pulse per revolution
-	constexpr float RADS_PER_ENCODER_TICK = (2 * 3.1415) / ENCODER_TICKS_PER_REVOLUTION;   //radian
+	constexpr float MAX_MOTOR_ANGULAR_VEL = 425 * (2 * 3.14159) / 60;             // define max speed of EncoderMotor (rad/s) or 425 rpm
+	constexpr float ENCODER_TICKS_PER_REVOLUTION = 18.8 * 6;   // pulse per revolution
+	constexpr float RADS_PER_ENCODER_TICK = (2 * 3.14159) / (ENCODER_TICKS_PER_REVOLUTION * 2);   //radian, both tick edges
 
-	constexpr uint32_t SPEED_TIMER_PRESCALER = 50;
+	constexpr uint32_t SPEED_TIMER_PRESCALER = 999 + 1;
 	constexpr uint32_t VELOCITY_TIMER_FREQUENCY = 50000000;
 
 	class EncoderMotor {
@@ -32,7 +32,7 @@ namespace motors {
 				wrappers::pin_wrapper dir_pin,
 				wrappers::pin_wrapper ena_pin,
 				wrappers::timer_wrapper encoder_timer,
-				wrappers::timer_wrapper speed_timer,
+				wrappers::timer_wrapper velocity_timer,
 				wrappers::timer_wrapper pwm_timer,
 				bool inversed,
 				ros::NodeHandle& node,
@@ -69,7 +69,7 @@ namespace motors {
 			wrappers::pin_wrapper _ena_pin;
 
 			wrappers::timer_wrapper _encoder_timer;
-			wrappers::timer_wrapper _speed_timer;
+			wrappers::timer_wrapper _velocity_timer;
 			wrappers::timer_wrapper _pwm_timer;
 
 			bool _inversed;
@@ -89,6 +89,7 @@ namespace motors {
 
 			_Direction _direction;
 			uint32_t _encoder_tick_duration;
+			uint32_t _encoder_tick_count;
 
 			static constexpr uint32_t _encoder_init_value = UINT32_MAX / 2;
 	};

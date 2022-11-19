@@ -14,7 +14,7 @@ namespace motors {
 		wrappers::pin_wrapper dir_pin,
 		wrappers::pin_wrapper ena_pin,
 		wrappers::timer_wrapper encoder_timer,
-		wrappers::timer_wrapper speed_timer,
+		wrappers::timer_wrapper velocity_timer,
 		wrappers::timer_wrapper pwm_timer,
 		bool inversed,
 		ros::NodeHandle& node,
@@ -25,7 +25,7 @@ namespace motors {
 		_dir_pin(dir_pin),
 		_ena_pin(ena_pin),
 		_encoder_timer(encoder_timer),
-		_speed_timer(speed_timer),
+		_velocity_timer(velocity_timer),
 		_pwm_timer(pwm_timer),
 		_inversed(inversed),
 		_node(node),
@@ -35,13 +35,14 @@ namespace motors {
 		_enable(true),
 		_written_velocity(0),
 		_direction(DIRECT),
-		_encoder_tick_duration(0)
+		_encoder_tick_duration(0),
+		_encoder_tick_count(_encoder_init_value)
 	{}
 
 	void EncoderMotor::init() {
 		__HAL_TIM_SET_COUNTER(_encoder_timer.tim, _encoder_init_value);
-		HAL_TIM_Base_Start(_encoder_timer.tim);
-		HAL_TIM_IC_Start_DMA(_speed_timer.tim, _speed_timer.channel, &_encoder_tick_duration, 1);
+		HAL_TIM_IC_Start_DMA(_encoder_timer.tim, _encoder_timer.channel, &_encoder_tick_count, 1);
+		HAL_TIM_IC_Start_DMA(_velocity_timer.tim, _velocity_timer.channel, &_encoder_tick_duration, 1);
 
 		_node.advertise(_velocity_publisher);
 		_node.advertise(_angle_publisher);
@@ -58,7 +59,7 @@ namespace motors {
 	}
 
 	void EncoderMotor::_read_angle() {
-		_cur_angle.data = (static_cast<float>(_encoder_timer.tim->Instance->CNT) - _encoder_init_value) * RADS_PER_ENCODER_TICK;
+		_cur_angle.data = (static_cast<int64_t>(_encoder_tick_count) - _encoder_init_value) * RADS_PER_ENCODER_TICK;
 
 		if (_inversed == true) {
 			_cur_angle.data = -_cur_angle.data;
@@ -79,7 +80,7 @@ namespace motors {
 
 	float EncoderMotor::_tick_duration_to_angular_velocity(uint32_t tick_duration, _Direction direction) {
 		if (tick_duration != 0){
-			float angular_velocity = RADS_PER_ENCODER_TICK * static_cast<float>(VELOCITY_TIMER_FREQUENCY / SPEED_TIMER_PRESCALER) /  tick_duration ;
+			float angular_velocity = RADS_PER_ENCODER_TICK * (static_cast<double>(VELOCITY_TIMER_FREQUENCY) / SPEED_TIMER_PRESCALER) /  tick_duration;  //TODO: one constant
 
 			if (direction == REVERSE) {
 			   return -angular_velocity;
@@ -109,11 +110,11 @@ namespace motors {
 		if (_enable == true) {
 			if (_direction == DIRECT) {
 				HAL_GPIO_WritePin(_dir_pin.port, _dir_pin.pin, GPIO_PIN_RESET);
+				_encoder_timer.tim->Instance->CR1 &= ~(1UL << 4);				//set DIR counting down in Encoder timer
 			} else if (_direction == REVERSE){
 				HAL_GPIO_WritePin(_dir_pin.port, _dir_pin.pin, GPIO_PIN_SET);
+				_encoder_timer.tim->Instance->CR1 |= (1UL << 4);				//set DIR counting down in Encoder timer
 			}
-
-			_encoder_timer.tim->Instance->CR1 &= ~(1UL << 4);					//set DIR counting down in Encoder timer
 
 	//---set PWM----
 			uint16_t pulse = _written_velocity * _pwm_timer.tim->Instance->ARR/0xFFFF;
@@ -126,8 +127,8 @@ namespace motors {
 			HAL_GPIO_WritePin(_ena_pin.port, _ena_pin.pin, GPIO_PIN_SET);
 
 		} else {
-			_speed_timer.tim->Instance->EGR |= 1UL << 0;                     // reset speed_timer
-			_speed_timer.tim->Instance->SR &= ~(1UL << 0);                   //reset interrupt flag
+			_velocity_timer.tim->Instance->EGR |= 1UL << 0;                     // reset velocity_timer
+			_velocity_timer.tim->Instance->SR &= ~(1UL << 0);                   //reset interrupt flag
 
 			HAL_GPIO_WritePin(_ena_pin.port, _ena_pin.pin, GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(_ena_pin.port, _ena_pin.pin, GPIO_PIN_RESET);
