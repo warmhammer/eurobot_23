@@ -52,6 +52,7 @@ CATKIN_IGNORE
 
 #vscode
 .vscode/*
+*/.vscode/*
 
 # eclipse specific git ignore
 .metadata/
