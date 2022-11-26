@@ -86,6 +86,9 @@ DMA_HandleTypeDef hdma_usart2_tx;
 #define speed_timer_r 			&htim4
 #define speed_timer_chanel2_r  	TIM_CHANNEL_2
 
+//#define speed_timer_r 			&htim8
+//#define speed_timer_chanel2_r  	TIM_CHANNEL_1
+
 #define pwm_timer_r				&htim12
 #define pwm_timer_chanel1_r  	TIM_CHANNEL_1
 //------------------------------------------------define EncoderMotors perif END--------------------
@@ -118,23 +121,6 @@ ros::NodeHandle node;
 
 //-------------------------------------------------------------------------------------------------------
 
-//------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
-    node.getHardware()->flush();
-}
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-    node.getHardware()->reset_rbuf();
-}
-
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
-
-    //HAL_UART_DMAResume(&huart2);
-
-}
-
-//-------------------------------------------------------------------------------------------------------
-
 //------------------------------------------------------------GLOBAL OBJ---------------------------------
 motors::EncoderMotor left_encoder_motor (
     {dir_port_l, dir_pin_l},
@@ -161,6 +147,28 @@ motors::EncoderMotor right_encoder_motor (
 	"/dolly/right_wheel/cur_vel32",
 	"/dolly/right_wheel/pwd32"
 );
+
+//------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+    node.getHardware()->flush();
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+    node.getHardware()->reset_rbuf();
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
+
+    //HAL_UART_DMAResume(&huart2);
+
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
+	  left_encoder_motor.__set_velocity_to_null__(htim);
+	  right_encoder_motor.__set_velocity_to_null__(htim);
+}
+
+//-------------------------------------------------------------------------------------------------------
 
 /* USER CODE END 0 */
 
@@ -208,9 +216,15 @@ int main(void)
     //-------------------------------------------------------------ROS----------------------
     node.initNode();
 
+    while (node.connected() == false) {
+    	HAL_Delay(1);
+    	node.spinOnce();
+    }
+
     left_encoder_motor.init();
     right_encoder_motor.init();
 
+    node.getHardware()->flush();	// buffer flush
 
   /* USER CODE END 2 */
 
@@ -440,7 +454,7 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 999;
+  htim3.Init.Prescaler = 199;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 65535;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -503,7 +517,7 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 999;
+  htim4.Init.Prescaler = 199;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim4.Init.Period = 65535;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;

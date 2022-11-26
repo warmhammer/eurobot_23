@@ -9,7 +9,7 @@
 #ifndef INC_MOTORS_H_
 #define INC_MOTORS_H_
 
-#include <cstdint>
+#include <stdint.h>
 
 #include "ros.h"
 #include "std_msgs/Float32.h"
@@ -23,8 +23,9 @@ namespace motors {
 	constexpr float ENCODER_TICKS_PER_REVOLUTION = 18.8 * 6;   // pulse per revolution
 	constexpr float RADS_PER_ENCODER_TICK = (2 * 3.14159) / (ENCODER_TICKS_PER_REVOLUTION * 2);   //radian, both tick edges
 
-	constexpr uint32_t SPEED_TIMER_PRESCALER = 999 + 1;
+	constexpr uint32_t SPEED_TIMER_PRESCALER = 199 + 1;
 	constexpr uint32_t VELOCITY_TIMER_FREQUENCY = 50000000;
+	constexpr float VELOCITY_COUNTER_FREQUENCY = static_cast<float>(VELOCITY_TIMER_FREQUENCY) / SPEED_TIMER_PRESCALER;
 
 	class EncoderMotor {
 		public:
@@ -49,6 +50,9 @@ namespace motors {
 
 			const std_msgs::Float32* get_cur_velocity();
 			const std_msgs::Float32* get_cur_angle();
+
+			/*Pseudo public methods*/
+			void __set_velocity_to_null__(TIM_HandleTypeDef* htim);
 
 		private:
 			enum _Direction {DIRECT, REVERSE};

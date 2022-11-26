@@ -37,12 +37,20 @@ namespace motors {
 		_direction(DIRECT),
 		_encoder_tick_duration(0),
 		_encoder_tick_count(_encoder_init_value)
-	{}
+	{
+		_cur_angle.data = 0;
+		_cur_velocity.data = 0;
+
+		_write(_cur_velocity);
+	}
 
 	void EncoderMotor::init() {
 		__HAL_TIM_SET_COUNTER(_encoder_timer.tim, _encoder_init_value);
 		HAL_TIM_IC_Start_DMA(_encoder_timer.tim, _encoder_timer.channel, &_encoder_tick_count, 1);
+
+		HAL_TIM_Base_Start_IT(_velocity_timer.tim);
 		HAL_TIM_IC_Start_DMA(_velocity_timer.tim, _velocity_timer.channel, &_encoder_tick_duration, 1);
+		_velocity_timer.tim->Instance->CR1 |= 1 << 2;
 
 		_node.advertise(_velocity_publisher);
 		_node.advertise(_angle_publisher);
@@ -67,20 +75,20 @@ namespace motors {
 	}
 
 	void EncoderMotor::_read_velocity() {
-		if (_encoder_tick_duration != 0) {
-			_cur_velocity.data = _tick_duration_to_angular_velocity(_encoder_tick_duration, _direction);
+		float vel = _tick_duration_to_angular_velocity(_encoder_tick_duration, _direction);
+
+		if (std::isnan(vel) == false && std::abs(vel) < (1.2f * MAX_MOTOR_ANGULAR_VEL)) {
+			_cur_velocity.data = vel;
 
 			if (_inversed == true) {
 				_cur_velocity.data = -_cur_velocity.data;
 			}
-		} else {
-			_cur_velocity.data = 0;
 		}
 	}
 
 	float EncoderMotor::_tick_duration_to_angular_velocity(uint32_t tick_duration, _Direction direction) {
 		if (tick_duration != 0){
-			float angular_velocity = RADS_PER_ENCODER_TICK * (static_cast<double>(VELOCITY_TIMER_FREQUENCY) / SPEED_TIMER_PRESCALER) /  tick_duration;  //TODO: one constant
+			float angular_velocity = (RADS_PER_ENCODER_TICK * VELOCITY_COUNTER_FREQUENCY) / tick_duration;
 
 			if (direction == REVERSE) {
 			   return -angular_velocity;
@@ -89,16 +97,16 @@ namespace motors {
 			return angular_velocity;
 		}
 
-		return 0;
+		return NAN;
 	}
 
 	void EncoderMotor::_set_velocity_params(float angular_velocity) {
 		if (_enable == true) {
-			if(angular_velocity > 0) {
+			if(angular_velocity > 1e-5) {
 				_direction = (_inversed == false ? DIRECT : REVERSE);
-			} else {
+			} else if (angular_velocity < -1e-5) {
 				_direction = (_inversed == false ? REVERSE : DIRECT);
-			}
+			} // else angular_velocity == 0: ignoring direction change
 
 			_written_velocity = _angular_velocity_to_pwm(angular_velocity);
 		} else {
@@ -120,7 +128,7 @@ namespace motors {
 			uint16_t pulse = _written_velocity * _pwm_timer.tim->Instance->ARR/0xFFFF;
 			__HAL_TIM_SET_COMPARE(_pwm_timer.tim, _pwm_timer.channel, pulse);
 
-			if (!(_pwm_timer.tim->Instance->CR1 & (1<<0))) {
+			if (!(_pwm_timer.tim->Instance->CR1 & (1 << 0))) {
 				HAL_TIM_PWM_Start(_pwm_timer.tim, _pwm_timer.channel);
 			}
 
@@ -128,7 +136,7 @@ namespace motors {
 
 		} else {
 			_velocity_timer.tim->Instance->EGR |= 1UL << 0;                     // reset velocity_timer
-			_velocity_timer.tim->Instance->SR &= ~(1UL << 0);                   //reset interrupt flag
+			_velocity_timer.tim->Instance->SR &= ~(1UL << 0);                   // reset interrupt flag
 
 			HAL_GPIO_WritePin(_ena_pin.port, _ena_pin.pin, GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(_ena_pin.port, _ena_pin.pin, GPIO_PIN_RESET);
@@ -163,5 +171,11 @@ namespace motors {
 	void EncoderMotor::read() {
         _read_velocity();
         _read_angle();
+	}
+
+	void EncoderMotor::__set_velocity_to_null__(TIM_HandleTypeDef* htim) {
+		if (htim == _velocity_timer.tim) {
+			_encoder_tick_duration = UINT16_MAX;
+		}
 	}
 }
