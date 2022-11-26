@@ -6,9 +6,9 @@
 	<!--<node name="hardware_emulator_node" pkg="dolly_base" type="hardware_emulator_node" output="screen" /> -->
 
 	<node name="pid_controller" pkg="pid" ns="/dolly/left_wheel" type="controller" >
-		<param name="Kp" value="0.35" />
+		<param name="Kp" value="0.25" />
 		<param name="Ki" value="5.0" />
-		<param name="Kd" value="0.0" />
+		<param name="Kd" value="0.001" />
 		<param name="upper_limit" value="50" />
 		<param name="lower_limit" value="-50" />
 		<param name="windup_limit" value="10" />
@@ -20,9 +20,9 @@
     </node>
 
 	<node name="pid_controller" pkg="pid" ns="/dolly/right_wheel" type="controller" >
-		<param name="Kp" value="0.35" />
+		<param name="Kp" value="0.25" />
 		<param name="Ki" value="5.0" />
-		<param name="Kd" value="0.0" />
+		<param name="Kd" value="0.001" />
 		<param name="upper_limit" value="50" />
 		<param name="lower_limit" value="-50" />
 		<param name="windup_limit" value="10" />
@@ -31,22 +31,5 @@
 		<remap from="setpoint" to="/dolly/right_wheel/cmd_vel64" />
 		<remap from="state" to="/dolly/right_wheel/cur_vel64" />
 		<remap from="control_effort" to="/dolly/right_wheel/pwd64" />
-    </node>
-
-	<node
-		name="rqt_reconfigure"
-		pkg="rqt_reconfigure"
-		type="rqt_reconfigure" />
-
-	<node
-		name="rqt_plot_left_wheel"
-		pkg="rqt_plot"
-		type="rqt_plot"
-		args="/dolly/left_wheel/cmd_vel64 /dolly/left_wheel/cur_vel64" />
-	<node
-		name="rqt_plot_right_wheel"
-		pkg="rqt_plot"
-		type="rqt_plot"
-		args="/dolly/right_wheel/cmd_vel64 /dolly/right_wheel/cur_vel64" />
-		
+    </node>		
 </launch>

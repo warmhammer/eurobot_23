@@ -3,4 +3,17 @@
 		<param name="port" value="/dev/ttyS4"/>
 		<param name="baud" value="921600" />
 	</node>
+
+	<!-- <node
+	name="joint_state_publisher"
+	pkg="joint_state_publisher"
+	type="joint_state_publisher" /> -->
+
+	<param name="robot_description" textfile="$(find dolly_description)/urdf/dolly_description.urdf" />
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+	<include file="$(find dolly_base)/launch/dolly_base.launch" />
+	<include file="$(find dolly_control)/launch/dolly_control.launch" />
+	<!-- <include file="$(find dolly_description)/launch/dolly_description.launch" /> -->
+	<!-- <include file="$(find abot_driver)/launch/abot_drivers.launch" /> -->
 </launch>
