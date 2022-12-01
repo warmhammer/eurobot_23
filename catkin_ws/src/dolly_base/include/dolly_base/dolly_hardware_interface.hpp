@@ -8,6 +8,7 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/robot_hw.h>
 
+#include <std_msgs/Float32.h>
 #include <std_msgs/Float64.h>
 
 #include <string>
@@ -48,8 +49,8 @@ namespace dolly_hw {
         private:
             void _registerJoints();
 
-            void _leftWheelCallback(const std_msgs::Float64&);
-            void _rightWheelCallback(const std_msgs::Float64&);
+            void _leftWheelCallback(const std_msgs::Float32&);
+            void _rightWheelCallback(const std_msgs::Float32&);
 
             hardware_interface::JointStateInterface _jnt_state_interface;
             hardware_interface::VelocityJointInterface _vel_jnt_interface;
@@ -74,8 +75,8 @@ namespace dolly_hw {
 
         _registerJoints();
 
-        _left_wheel_angle_sub = _root_node.subscribe("/dolly/left_wheel/angle", 1, &DollyHW::_leftWheelCallback, this);
-        _right_wheel_angle_sub = _root_node.subscribe("/dolly/right_wheel/angle", 1, &DollyHW::_rightWheelCallback, this);
+        _left_wheel_angle_sub = _root_node.subscribe("/dolly/left_wheel/angle32", 1, &DollyHW::_leftWheelCallback, this);
+        _right_wheel_angle_sub = _root_node.subscribe("/dolly/right_wheel/angle32", 1, &DollyHW::_rightWheelCallback, this);
 
         _left_wheel_cmd_vel_pub = _root_node.advertise<std_msgs::Float64>("/dolly/left_wheel/cmd_vel64", 1);
         _right_wheel_cmd_vel_pub = _root_node.advertise<std_msgs::Float64>("/dolly/right_wheel/cmd_vel64", 1);
@@ -127,11 +128,11 @@ namespace dolly_hw {
         _right_wheel_cmd_vel_pub.publish(right_cmd_vel);
     }
 
-    void DollyHW::_leftWheelCallback(const std_msgs::Float64& angle) {
+    void DollyHW::_leftWheelCallback(const std_msgs::Float32& angle) {
         _left_wheel.pos = angle.data;
     }
 
-    void DollyHW::_rightWheelCallback(const std_msgs::Float64& angle) {
+    void DollyHW::_rightWheelCallback(const std_msgs::Float32& angle) {
         _right_wheel.pos = angle.data;
     }
 }
