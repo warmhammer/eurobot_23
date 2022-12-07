@@ -1,5 +1,6 @@
 #include <ros/ros.h>
 
+#include <std_msgs/Float32.h>
 #include <std_msgs/Float64.h>
 
 struct Wheel {
@@ -51,15 +52,15 @@ void foo(std_msgs::Float64) {}
 
 HW_Emulator::HW_Emulator(const ros::NodeHandle& node) : _node(node) {
     _left_wheel = Wheel (
-        _node.subscribe("/dolly/left_wheel/cmd_vel", 1, &HW_Emulator::_leftWheelCallback, this),
-        _node.advertise<std_msgs::Float64>("/dolly/left_wheel/cur_vel", 1),
-        _node.advertise<std_msgs::Float64>("/dolly/left_wheel/angle", 1)
+        _node.subscribe("/dolly/left_wheel/cmd_vel64", 1, &HW_Emulator::_leftWheelCallback, this),
+        _node.advertise<std_msgs::Float64>("/dolly/left_wheel/cur_vel64", 1),
+        _node.advertise<std_msgs::Float32>("/dolly/left_wheel/angle32", 1)
     );
 
     _right_wheel = Wheel (
-        _node.subscribe("/dolly/right_wheel/cmd_vel", 1, &HW_Emulator::_rightWheelCallback, this),
-        _node.advertise<std_msgs::Float64>("/dolly/right_wheel/cur_vel", 1),
-        _node.advertise<std_msgs::Float64>("/dolly/right_wheel/angle", 1)
+        _node.subscribe("/dolly/right_wheel/cmd_vel64", 1, &HW_Emulator::_rightWheelCallback, this),
+        _node.advertise<std_msgs::Float64>("/dolly/right_wheel/cur_vel64", 1),
+        _node.advertise<std_msgs::Float32>("/dolly/right_wheel/angle32", 1)
     );
 
     // _left_wheel_cmd_vel_sub = _node.subscribe("/dolly/left_wheel/cmd_vel", 1, &HW_Emulator::_leftWheelVelCallback, this);
@@ -82,7 +83,7 @@ void HW_Emulator::_wheelVelCallback(Wheel& wheel, const std_msgs::Float64& cmd_v
     wheel.angle += wheel.vel * delta.toSec();
     wheel.vel = cmd_vel.data;
 
-    std_msgs::Float64 angle;
+    std_msgs::Float32 angle;
     angle.data = wheel.angle;
 
     wheel.cur_vel_pub.publish(cmd_vel);
