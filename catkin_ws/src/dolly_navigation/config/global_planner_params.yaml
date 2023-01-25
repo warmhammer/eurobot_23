@@ -1,0 +1,22 @@
+GlobalPlanner:
+    # allow_unknown: true               # default
+    # default_tolerance: 0.0            # default
+
+    # visualize_potential: true
+
+    # use_dijkstra: false
+    # use_quadratic: true               # default
+    # use_grid_path: false              # default
+    # use_grid_path: false              # default
+    # old_navfn_behavior: false         # default
+
+    # lethal_cost: 253                  # default
+    # neutral_cost: 50                  # default
+    # cost_factor: 3.0
+
+    # publish_potential: true           # default
+
+    orientation_mode: 0                 # default
+    # orientation_window_size: 1        # default
+
+    # outline_map: true                 # default
