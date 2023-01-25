@@ -15,7 +15,7 @@
     name="rviz"
     pkg="rviz"
     type="rviz"
-    args="-d $(find dolly_description)/rviz/description_config.rviz" />
+    args="-d $(find dolly_description)/rviz/movebase_config.rviz" />
   <!-- <node
     name="rviz"
     pkg="rviz"
