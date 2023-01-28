@@ -1,11 +1,11 @@
 # Coordinate frame and tf parameters
 global_frame: odom                  # default
 robot_base_frame: base_footprint
-transform_tolerance: 0.04
+transform_tolerance: 0.5
 
 # Rate parameters
-update_frequency: 10
-publish_frequency: 10
+# update_frequency: 1.0
+# publish_frequency: 2.0
 
 # Map management parameters
 # rolling_window: false               # default
@@ -13,7 +13,7 @@ always_send_full_costmap: false     # default
 
 # Footprint
 # footprint: [[0.17, 0.15], [0.17, -0.15], [-0.17, -0.15], [-0.17, 0.15]]   # polygon
-robot_radius: 0.17  # circle
+robot_radius: 0.15  # circle
 
 # Layers' parameters
 static_layer:

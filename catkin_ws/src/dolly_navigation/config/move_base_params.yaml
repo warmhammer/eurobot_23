@@ -4,14 +4,14 @@
 base_local_planner: base_local_planner/TrajectoryPlannerROS
 
 # recovery_behaviors: [...]       # default
-controller_frequency: 20          # default
-planner_patience: 1
-controller_patience: 2
+planner_frequency: 0.0            # default
+controller_frequency: 20.0        # default
+# planner_patience: 1
+# controller_patience: 2
 conservative_reset_dist: 0.3
 recovery_behavior_enabled: true   # default
 clearing_rotation_allowed: false  # default 
 shutdown_costmaps: true
-oscillation_timeout: 0.5
+oscillation_timeout: 0.0
 oscillation_distance: 0.2
-planner_frequency: 0.0            # default
 max_planning_retries: 3

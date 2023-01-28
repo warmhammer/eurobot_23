@@ -10,31 +10,31 @@ TrajectoryPlannerROS:
     min_vel_theta: -13.31
 
     min_in_place_vel_theta: 0.4     # default
-    escape_vel: -0.1                # default
+    escape_vel: -0.5                # default
 
     holonomic_robot: false
 
     # Goal tolerance parameters
-    xy_goal_tolerance: 0.01
-    yaw_goal_tolerance: 0.05
+    xy_goal_tolerance: 0.02
+    yaw_goal_tolerance: 0.1
     latch_xy_goal_tolerance: true
 
-    # Forward simulation parameters
-    sim_time: 1
-    sim_granularity: 0.005
-    angular_sim_granularity: 0.025
+    # # Forward simulation parameters
+    # sim_time: 1
+    sim_granularity: 0.05
+    angular_sim_granularity: 0.1
     vx_samples: 20
     vtheta_samples: 40
-    controller_frequency: 20        # default
+    # controller_frequency: 20        # default
 
-    # Trajectory scoring parameters
-    meter_scoring: true
-    path_distance_bias: 4.0
-    goal_distance_bias: 0.8         # default
-    occdist_scale: 4.0
-    heading_lookahead: 1.0
-    heading_scoring: true
-    heading_scoring_timestep: 0.8   # default
+    # # Trajectory scoring parameters
+    # meter_scoring: true
+    path_distance_bias: 0.3
+    goal_distance_bias: 0.4
+    occdist_scale: 0.01
+    # heading_lookahead: 1.0
+    # heading_scoring: true
+    # heading_scoring_timestep: 0.8   # default
 
     # dwa: true                       # default
     # publish_cost_grid_pc: true
@@ -43,20 +43,22 @@ TrajectoryPlannerROS:
 
     # twirling_scale: 0.0 
 
-    # # forward_point_distance: 0.02
-    # # stop_time_buffer: 0.2           # default
-    # # scaling_speed: 0.25             # default
-    # # max_scaling_factor: 0.2         # default
+    # forward_point_distance: 0.02
+    # stop_time_buffer: 0.2           # default
+    scaling_speed: 0.25             # default
+    max_scaling_factor: 0.2         # default
 
-    # # Oscillation prevention parameters 
-    # oscillation_reset_dist: 0.05
-    # oscillation_reset_angle: 0.2
+    # Oscillation prevention parameters 
+    oscillation_reset_dist: 0.05
+    oscillation_reset_angle: 0.2
 
-    # # Global plan parameters
-    # prune_plan: true
+    # Global plan parameters
+    prune_plan: true
 
-    # # ...
-    # restore_defaults: false
+    # ...
+    restore_defaults: false
+
+
 
 # DWAPlannerROS:
 #     # Robot configuration parameters 
