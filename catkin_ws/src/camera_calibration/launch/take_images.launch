@@ -3,5 +3,8 @@
     <arg name="cameraIndex" default="0"/>
     <arg name="frameWidth" default="640"/>
     <arg name="frameHeight" default="480"/>
-    <param name="images_taken" command="$(find camera_calibration)/scripts/take_images.py cameraIndex $(arg cameraIndex) frameWidth $(arg frameWidth) frameHeight $(arg frameHeight)"/>
+    <param name="images_taken" command="$(find camera_calibration)/scripts/take_images.py
+    --cameraIndex $(arg cameraIndex)
+    --frameWidth $(arg frameWidth)
+    --frameHeight $(arg frameHeight)"/>
 </launch>

@@ -5,6 +5,10 @@
     <arg name="sizeOfSquareSide" default="24"/>
     <arg name="frameWidth" default="640"/>
     <arg name="frameHeight" default="480"/>
-    <arg name="imagesPath" default="$(find camera_calibration)/images"/>
-    <param name="camera_calibrated" command="python3 $(find camera_calibration)/scripts/calibrate_camera.py chessboardCornersCountX $(arg chessboardCornersCountX) chessboardCornersCountY $(arg chessboardCornersCountY) sizeOfSquareSide $(arg sizeOfSquareSide) frameWidth $(arg frameWidth) frameHeight $(arg frameHeight) imagesPath $(arg imagesPath)"/>
+    <param name="camera_calibrated" command="$(find camera_calibration)/scripts/calibrate_camera.py
+    --chessboardCornersCountX $(arg chessboardCornersCountX)
+    --chessboardCornersCountY $(arg chessboardCornersCountY)
+    --sizeOfSquareSide $(arg sizeOfSquareSide)
+    --frameWidth $(arg frameWidth)
+    --frameHeight $(arg frameHeight)"/>
 </launch>
