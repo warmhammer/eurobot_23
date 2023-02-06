@@ -15,7 +15,6 @@ msg/*Result.msg
 msg/_*.py
 build_isolated/
 devel_isolated/
-**/camera_calibration/camera_info/*
 **/camera_calibration/images/*
 **/aruco_description/meshes/**
 !**/aruco_description/meshes/template.dae
