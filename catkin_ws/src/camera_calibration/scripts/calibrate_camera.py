@@ -1,16 +1,32 @@
 import argparse
-import os
-import traceback
 import cv2
 import glob
 import numpy as np
+import os
 from os import path
 from os.path import abspath
+import textwrap
+import traceback
 
-THIS_DIR = path.dirname(abspath(__file__))
 
+def parse_arguments():
+    this_dir = path.dirname(abspath(__file__))
+    arg_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                         description=textwrap.dedent('''\
+        ================================== Description ===================================
+        This script performs  camera  calibration  based on  pictures  of  the calibration
+        board taken by the camera whose parameters you want to  define. It  is recommended
+        to use at least twenty pictures for calibration. Camera  parameters will be  saved
+        in camera_info.npz file. Below is the python code by which  you can get the camera
+        parameters from this file:
 
-def configure_arg_parser(arg_parser):
+        with numpy.load(camera_info_path) as file:
+            camera_matrix, dist_coeffs = [file[i] for i in ('cameraMatrix', 'distCoeffs')]
+
+        For more information about camera calibration:
+        https://learnopencv.com/camera-calibration-using-opencv/
+        =================================================================================='''))
+
     arg_parser.add_argument("-cx", "--chessboardCornersCountX", type=int, required=True,
                             help="Number of internal corners of the calibration chessboard horizontally")
     arg_parser.add_argument("-cy", "--chessboardCornersCountY", type=int, required=True,
@@ -21,13 +37,15 @@ def configure_arg_parser(arg_parser):
                             help="Frame width of the images")
     arg_parser.add_argument("-fh", "--frameHeight", type=int, required=True,
                             help="Frame height of the images")
-    arg_parser.add_argument("-ip", "--imagesPath", type=str, default=f'{THIS_DIR}/../images',
+    arg_parser.add_argument("-ip", "--imagesPath", type=str, default=f'{this_dir}/../images',
                             help="Path to images that will be used for camera calibration. Default path: "
-                                 f"'{abspath(f'{THIS_DIR}/../images')}")
-    arg_parser.add_argument("-op", "--outputPath", type=str, default=f'{THIS_DIR}/../camera_info',
+                                 f"'{abspath(f'{this_dir}/../images')}")
+    arg_parser.add_argument("-op", "--outputPath", type=str, default=f'{this_dir}/../camera_info',
                             help="Path - where the calibration results will be saved. Default: "
-                                 f"'{abspath(f'{THIS_DIR}/../camera_info')}'\nThe script creates folder if it doesn't "
+                                 f"'{abspath(f'{this_dir}/../camera_info')}'\nThe script creates folder if it doesn't "
                                  "exist, deletes all existing files in it")
+
+    return vars(arg_parser.parse_args())
 
 
 def find_chessboard_corners(chessboard_size, size_of_square_side, images_path):
@@ -75,47 +93,45 @@ def save_camera_params_to_file(camera_matrix, dist_coeffs, output_path):
     np.savez(file_path, cameraMatrix=camera_matrix, distCoeffs=dist_coeffs)
 
 
-if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    configure_arg_parser(ap)
-    args = vars(ap.parse_args())
+def calibrate_camera(frame_size, chessboard_size, size_of_square_side, images_path, output_path):
+    if not path.isdir(images_path):
+        raise FileNotFoundError(f"Path to images folder '{images_path}' doesn't exists")
 
+    if len(glob.glob(f"{images_path}/*.png")) < 1:
+        raise FileNotFoundError(f"There is no any .png files in '{images_path}'")
+
+    obj_points, img_points = find_chessboard_corners(chessboard_size, size_of_square_side, images_path)
+
+    if len(obj_points) < 1 or len(img_points) < 1:
+        raise ValueError(f"Calibration chessboard was not found in images in '{images_path}'")
+
+    ret_val, cam_mtx, dist, _, _ = cv2.calibrateCamera(obj_points, img_points, frame_size, None, None)
+
+    if ret_val:
+        save_camera_params_to_file(cam_mtx, dist, output_path)
+
+        print('calibration was successful',
+              'camera info:',
+              'cameraMatrix:', cam_mtx,
+              'distortionCoeffs:', dist,
+              f"results were saved in '{output_path}/camera_info.npz'",
+              sep='\n\n')
+    else:
+        print('calibration failed')
+
+
+if __name__ == "__main__":
+    args = parse_arguments()
+
+    frameSize = (args['frameWidth'], args['frameHeight'])
+    chessboardSize = (args['chessboardCornersCountX'], args['chessboardCornersCountY'])
+    sizeOfSquareSide = args['sizeOfSquareSide']
     imagesPath = abspath(args['imagesPath'])
     outputPath = abspath(args['outputPath'])
     try:
-        if not path.isdir(args['imagesPath']):
-            raise FileNotFoundError(f"Path to images folder '{imagesPath}' doesn't exists")
-            
-        if len(glob.glob(f"{imagesPath}/*.png")) < 1:
-            raise FileNotFoundError(f"There is no any .png files in '{imagesPath}'")
+        calibrate_camera(frameSize, chessboardSize, sizeOfSquareSide, imagesPath, outputPath)
 
-        frameSize = (args['frameWidth'], args['frameHeight'])
-
-        chessboardSize = (args['chessboardCornersCountX'], args['chessboardCornersCountY'])
-
-        objPoints, imgPoints = find_chessboard_corners(chessboardSize, args['sizeOfSquareSide'], imagesPath)
-
-        if len(objPoints) < 1 or len(imgPoints) < 1:
-            raise ValueError(f"Calibration chessboard was not found in images in '{imagesPath}'")
-
-        retVal, camMtx, dist, _, _ = cv2.calibrateCamera(objPoints, imgPoints, frameSize, None, None)
-
-        if retVal:
-            save_camera_params_to_file(camMtx, dist, outputPath)
-
-            print('calibration was successful',
-                  'camera info:',
-                  'cameraMatrix:', camMtx,
-                  'distortionCoeffs:', dist,
-                  f"results were saved in '{outputPath}/camera_info.npz'",
-                  sep='\n\n')
-        else:
-            print('calibration failed')
-
-    except FileNotFoundError as e:
-        print("\033[31m{}\033[0m".format(f'[ ERROR: ] {e}'))
-
-    except ValueError as e:
+    except (FileNotFoundError, ValueError) as e:
         print("\033[31m{}\033[0m".format(f'[ ERROR: ] {e}'))
 
     except cv2.error as e:

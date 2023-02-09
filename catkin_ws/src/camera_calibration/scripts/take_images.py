@@ -1,23 +1,33 @@
 import argparse
 import cv2
 import os
-import traceback
 from os import path
 from os.path import abspath
+import textwrap
+import traceback
 
-THIS_DIR = path.dirname(abspath(__file__))
 
+def parse_arguments():
+    this_dir = path.dirname(abspath(__file__))
+    arg_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                         description=textwrap.dedent('''\
+        ================================== Description ===================================
+        This script is needed in order to take pictures. When launched, a window opens  in
+        which the image from the camera is displayed. To save the current frame, press the
+        space bar or the 's' key. To exit press Escape
+        =================================================================================='''))
 
-def configure_arg_parser(arg_parser):
     arg_parser.add_argument("-ci", "--cameraIndex", type=int, default=0,
                             help="Camera index in system. Default: 0")
     arg_parser.add_argument("-fw", "--frameWidth", type=int, required=True,
                             help="Frame width")
     arg_parser.add_argument("-fh", "--frameHeight", type=int, required=True,
                             help="Frame height")
-    arg_parser.add_argument("-op", "--outputPath", type=str, default=f'{THIS_DIR}/../images',
-                            help=f"Path - where the images will be saved. Default: '{abspath(f'{THIS_DIR}/../images')}'"
+    arg_parser.add_argument("-op", "--outputPath", type=str, default=f'{this_dir}/../images',
+                            help=f"Path - where the images will be saved. Default: '{abspath(f'{this_dir}/../images')}'"
                                  "\nThe script creates folder if it doesn't exist, deletes all existing files in it")
+
+    return vars(arg_parser.parse_args())
 
 
 def configure_video_capturer(camera_index, frame_width, frame_height):
@@ -25,12 +35,18 @@ def configure_video_capturer(camera_index, frame_width, frame_height):
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
     if not cap.isOpened():
-        raise ValueError(f"Can not open camera by index {args['cameraIndex']}")
+        raise ValueError(f"Can not open camera by index {camera_index}")
 
     return cap
 
 
 def take_images(video_capturer, output_path):
+    if not path.isdir(output_path):
+            os.makedirs(output_path)
+    else:
+        for f in os.listdir(output_path):
+            os.remove(os.path.join(output_path, f))
+
     count = 1
     while video_capturer.isOpened():
         ret_val, frame = video_capturer.read()
@@ -48,36 +64,23 @@ def take_images(video_capturer, output_path):
             elif key == ord('q') or key == 27:
                 break
 
+    print(f"Taken images were saved in '{output_path}'")
+
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    configure_arg_parser(ap)
-    args = vars(ap.parse_args())
+    args = parse_arguments()
+    
+    cameraIndex = args['cameraIndex']
+    frameWidth = args['frameWidth']
+    frameHeight = args['frameHeight']
     outputPath = abspath(args['outputPath'])
     try:
-        if not path.isdir(outputPath):
-            os.makedirs(outputPath)
-        else:
-            for f in os.listdir(outputPath):
-                os.remove(os.path.join(outputPath, f))
+        capturer = configure_video_capturer(cameraIndex, frameWidth, frameHeight)
+        take_images(capturer, outputPath)
+        capturer.release()
 
-        try:
-            capturer = configure_video_capturer(args['cameraIndex'], args['frameWidth'], args['frameHeight'])
-            take_images(capturer, outputPath)
-            capturer.release()
-
-        except ValueError as e:
-            print("\033[31m{}\033[0m".format(f'[ ERROR: ] {e}'))
-            raise
-
-        except Exception:
-            raise
-
-        else:
-            print(f"Taken images were saved in '{outputPath}'")
-
-        finally:
-            cv2.destroyAllWindows()
+    except ValueError as e:
+        print("\033[31m{}\033[0m".format(f'[ ERROR: ] {e}'))
 
     except cv2.error as e:
         print("\033[31m{}\033[0m".format(f'[ OPENCV ERROR: ] {e}\n{traceback.format_exc()}'))
@@ -86,4 +89,4 @@ if __name__ == "__main__":
         print("\033[31m{}\033[0m".format(traceback.format_exc()))
 
     finally:
-        pass
+        cv2.destroyAllWindows()
