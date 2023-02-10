@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import cv2
 import os
@@ -42,7 +43,7 @@ def configure_video_capturer(camera_index, frame_width, frame_height):
 
 def take_images(video_capturer, output_path):
     if not path.isdir(output_path):
-            os.makedirs(output_path)
+        os.makedirs(output_path)
     else:
         for f in os.listdir(output_path):
             os.remove(os.path.join(output_path, f))
@@ -64,20 +65,20 @@ def take_images(video_capturer, output_path):
             elif key == ord('q') or key == 27:
                 break
 
-    print(f"Taken images were saved in '{output_path}'")
+    cv2.destroyAllWindows()
 
 
-if __name__ == "__main__":
+def main():
     args = parse_arguments()
-    
-    cameraIndex = args['cameraIndex']
-    frameWidth = args['frameWidth']
-    frameHeight = args['frameHeight']
-    outputPath = abspath(args['outputPath'])
+    camera_index = args['cameraIndex']
+    frame_width = args['frameWidth']
+    frame_height = args['frameHeight']
+    output_path = abspath(args['outputPath'])
     try:
-        capturer = configure_video_capturer(cameraIndex, frameWidth, frameHeight)
-        take_images(capturer, outputPath)
+        capturer = configure_video_capturer(camera_index, frame_width, frame_height)
+        take_images(capturer, output_path)
         capturer.release()
+        print(f"Taken images were saved in '{output_path}'")
 
     except ValueError as e:
         print("\033[31m{}\033[0m".format(f'[ ERROR: ] {e}'))
@@ -90,3 +91,7 @@ if __name__ == "__main__":
 
     finally:
         cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    main()
