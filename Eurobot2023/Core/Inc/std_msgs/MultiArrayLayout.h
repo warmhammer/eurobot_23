@@ -68,8 +68,8 @@ namespace std_msgs
      return offset;
     }
 
-    virtual const char * getType() override { return "std_msgs/MultiArrayLayout"; };
-    virtual const char * getMD5() override { return "0fed2a11c13e11c5571b4e2a995a91a3"; };
+    virtual const char * getType()const override { return "std_msgs/MultiArrayLayout"; };
+    virtual const char * getMD5()const override { return "0fed2a11c13e11c5571b4e2a995a91a3"; };
 
   };
 

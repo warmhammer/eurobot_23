@@ -67,7 +67,7 @@ namespace motors {
 	}
 
 	void EncoderMotor::_read_angle() {
-		_cur_angle.data = (static_cast<int64_t>(_encoder_tick_count) - _encoder_init_value) * RADS_PER_ENCODER_TICK;
+		_cur_angle.data = (static_cast<int64_t>(_encoder_tick_count) - _encoder_init_value) * RADS_PER_ENCODER_TICK; //TODO int64_t on the 32 bit system without Float Pointer Unit
 
 		if (_inversed == true) {
 			_cur_angle.data = -_cur_angle.data;
@@ -106,7 +106,8 @@ namespace motors {
 				_direction = (_inversed == false ? DIRECT : REVERSE);
 			} else if (angular_velocity < -1e-5) {
 				_direction = (_inversed == false ? REVERSE : DIRECT);
-			} // else angular_velocity == 0: ignoring direction change
+			}
+			// else angular_velocity == 0: ignoring direction change
 
 			_written_velocity = _angular_velocity_to_pwm(angular_velocity);
 		} else {
@@ -117,9 +118,12 @@ namespace motors {
 	void EncoderMotor::_update_hardware() {
 		if (_enable == true) {
 			if (_direction == DIRECT) {
+
 				HAL_GPIO_WritePin(_dir_pin.port, _dir_pin.pin, GPIO_PIN_RESET);
-				_encoder_timer.tim->Instance->CR1 &= ~(1UL << 4);				//set DIR counting down in Encoder timer
+				_encoder_timer.tim->Instance->CR1 &= ~(1UL << 4);				//set DIR counting up in Encoder timer
+
 			} else if (_direction == REVERSE){
+
 				HAL_GPIO_WritePin(_dir_pin.port, _dir_pin.pin, GPIO_PIN_SET);
 				_encoder_timer.tim->Instance->CR1 |= (1UL << 4);				//set DIR counting down in Encoder timer
 			}

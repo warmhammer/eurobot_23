@@ -25,6 +25,8 @@
 
 #include "motors.h"
 #include "wrappers.h"
+#include "servo_description.h"
+#include "servo_trajectory_generator.h"
 
 /* USER CODE END Includes */
 
@@ -91,6 +93,14 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 #define pwm_timer_r				&htim12
 #define pwm_timer_chanel1_r  	TIM_CHANNEL_1
+
+//void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
+
+    //HAL_UART_DMAResume(&huart2);
+//    volatile int k = 2;
+
+
+//}
 //------------------------------------------------define EncoderMotors perif END--------------------
 
 /* USER CODE END PV */
@@ -147,6 +157,52 @@ motors::EncoderMotor right_encoder_motor (
 	"/dolly/right_wheel/cur_vel32",
 	"/dolly/right_wheel/pwd32"
 );
+//add trajectory_generators
+Minimum_Jerk_Generator lift_generator(1000, 0);
+// add servo's
+//Servo<Minimum_Jerk_Generator> left_grip_servo(1,2,3,4,5,6,&lift_generator);
+//Servo right_grip_servo(1,2,3,4,5,6);
+//Servo lift_servo(1,2,3,4,5,6);
+//Servo apron_servo(1,2,3,4,5,6);
+//Servo separator_servo(1,2,3,4,5,6);
+//Servo placer_servo(1,2,3,4,5,6);
+
+//.........
+//------------------------------------------------------------SYSTEM UART CallBack's-------------------
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
+
+    uint8_t data[1];
+  __HAL_UART_CLEAR_OREFLAG(huart);
+  __HAL_UART_CLEAR_NEFLAG(huart);
+  __HAL_UART_CLEAR_FEFLAG(huart);
+
+  /* Disable the UART Error Interrupt: (Frame error, noise error, overrun error) */
+  __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
+
+ //The most important thing when UART framing error occur/any error is restart the RX process
+
+
+ if(huart->Instance == USART1)
+
+  {
+    //Restarting the RX, .. 1 byte. .. u8DATUartShortRxBuffer is My own rx buffer
+
+    HAL_UART_Receive_IT(huart, data, 1);
+
+  }
+
+  if(huart->Instance == USART2)
+
+  {
+    //Restarting the RX, .. 1 byte.
+
+    HAL_UART_Receive_IT(huart, data, 1);
+
+  }
+
+}
+
 
 //------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
@@ -157,16 +213,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     node.getHardware()->reset_rbuf();
 }
 
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
 
-    //HAL_UART_DMAResume(&huart2);
-
-}
-
+//------------------------------------------------------------SYSTEM Motors CallBack's-------------------
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 	  left_encoder_motor.__set_velocity_to_null__(htim);
 	  right_encoder_motor.__set_velocity_to_null__(htim);
 }
+
+
 
 //-------------------------------------------------------------------------------------------------------
 
@@ -214,16 +268,19 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
     //-------------------------------------------------------------ROS----------------------
+
     node.initNode();
 
-    while (node.connected() == false) {
+    while (node.connected() == false) {                 // waiting for connection
     	HAL_Delay(1);
     	node.spinOnce();
     }
+   //-----------------------------------------------------------ROS::Init_begin------------
 
     left_encoder_motor.init();
     right_encoder_motor.init();
 
+   //-----------------------------------------------------------ROS::Init_end--------------
     node.getHardware()->flush();	// buffer flush
 
   /* USER CODE END 2 */
@@ -234,6 +291,7 @@ int main(void)
     auto prev = HAL_GetTick();
 
     while (1) {
+
         if (node.connected() == true) {
             auto now = HAL_GetTick();
 
@@ -244,9 +302,18 @@ int main(void)
                 right_encoder_motor.publish();
             }
         } else {
-            HAL_Delay(1);
         }
 
+        if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_ORE) != RESET) {
+
+            __HAL_UART_CLEAR_OREFLAG(&huart2);
+            __HAL_UART_FLUSH_DRREGISTER(&huart2);
+            __HAL_UART_ENABLE_IT(&huart2,UART_IT_ERR);
+            huart2.Instance->CR3 |= 1 << 6;
+
+        }
+
+        HAL_Delay(1);
         node.spinOnce();
 
     /* USER CODE END WHILE */
