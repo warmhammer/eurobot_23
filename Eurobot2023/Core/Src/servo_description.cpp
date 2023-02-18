@@ -7,17 +7,14 @@
 
 #include "servo_description.h"
 
-template <class generator_type >
-Servo<generator_type>::Servo( float angle_range,
-                  float default_position,
-                  float min_angle,
-                  float max_angle,
-                  float operating_vel,
-                  unsigned int default_frequency,
-                  generator_type* generator
-                  ):
-                  _traj_generator(generator)
-                  {
+
+Servo::Servo( float angle_range,
+        float default_position,
+        float min_angle,
+        float max_angle,
+        float operating_vel,
+        unsigned int default_frequency)
+        {
 
                   _angle_range = angle_range;
                   _operating_vel = operating_vel;
@@ -26,4 +23,10 @@ Servo<generator_type>::Servo( float angle_range,
                   _current_position = default_position;
                   _max_angle = max_angle;
                   _min_angle = min_angle;
-                  }
+        }
+float Servo::get_min_angle(){
+    return _min_angle;
+}
+float Servo::get_max_angle(){
+    return _max_angle;
+}

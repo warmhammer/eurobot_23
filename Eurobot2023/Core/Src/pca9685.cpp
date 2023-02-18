@@ -9,8 +9,8 @@
  *      GitHub:  https://github.com/lamik/Servos_PWM_STM32_HAL
  */
 
-#include "main.h"
-#include "stm32f4xx_hal_i2c.h"
+#include "stm32f4xx_hal.h"
+//#include "stm32f4xx_hal_i2c.h"
 
 #include "pca9685.h"
 #include "math.h"
