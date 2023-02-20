@@ -159,18 +159,30 @@ Servo servos[3] = {left_grip_servo, right_grip_servo, plunger_servo};
 Servo_Interface Servo_Interface(&hi2c1, node, "servo_cmd_topic", servos);
 
 //------------------------------------------------------------SYSTEM UART func-------------------
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
+
+    uint8_t data[1];
+  __HAL_UART_CLEAR_OREFLAG(huart);
+  __HAL_UART_CLEAR_NEFLAG(huart);
+  __HAL_UART_CLEAR_FEFLAG(huart);
+
+  /* Disable the UART Error Interrupt: (Frame error, noise error, overrun error) */
+  __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
+  //The most important thing when UART framing error occur/any error is restart the RX process
+  //Restarting the RX, .. 1 byte. .. u8DATUartShortRxBuffer is My own rx buffer
+    HAL_UART_Receive_IT(huart, data, 1);
+}
+
 void UART_check(UART_HandleTypeDef *huart){
-    if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_ORE) != RESET  ||
-        __HAL_UART_GET_FLAG(&huart2, UART_FLAG_FE) != RESET  ||
-        __HAL_UART_GET_FLAG(&huart2, UART_FLAG_NE) != RESET) {
+    if (__HAL_UART_GET_FLAG(huart, UART_FLAG_ORE) != RESET){
 
-              __HAL_UART_CLEAR_FEFLAG(&huart2);
-              __HAL_UART_CLEAR_NEFLAG(&huart2);
-              __HAL_UART_CLEAR_OREFLAG(&huart2);
-              __HAL_UART_FLUSH_DRREGISTER(&huart2);
+              __HAL_UART_CLEAR_OREFLAG(huart);
+              __HAL_UART_ENABLE_IT(huart,UART_IT_ERR);
 
-              __HAL_UART_ENABLE_IT(&huart2,UART_IT_ERR);
-              huart2.Instance->CR3 |= 1 << 6;
+              if (__HAL_UART_GET_FLAG(huart,UART_FLAG_RXNE) == SET){
+                  huart->Instance->CR3 |= 1 << 6;
+                  huart->Instance->CR3 |= 1 << 7;
+              }
           }
 }
 

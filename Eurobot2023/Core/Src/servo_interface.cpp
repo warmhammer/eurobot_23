@@ -33,9 +33,9 @@ void Servo_Interface::_write(const std_msgs::Float32MultiArray& msg){
     uint16_t value = 0;
     float angle = 0;
 
-    if (_servos != NULL && msg.layout.dim[0]->size == SERVO_COUNT){  //are servo's exist's and len of data is correct
+    if (_servos != NULL && msg.layout.dim->size == SERVO_COUNT){  //are servo's exist's and len of data is correct
 
-        for (uint8_t i = 0; i < msg.layout.dim[0]->size; i++) {      //check angle
+        for (uint8_t i = 0; i < msg.layout.dim->size; i++) {      //check angle
 
             channel = i;
             angle = msg.data[i];
