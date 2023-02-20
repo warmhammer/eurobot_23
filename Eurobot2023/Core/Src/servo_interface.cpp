@@ -9,8 +9,9 @@
 #include "servo_interface.h"
 
 
-void Servo_Interface::servo_interface_Init(I2C_HandleTypeDef *hi2c){
+void Servo_Interface::Init(I2C_HandleTypeDef *hi2c){
         PCA9685_Init(hi2c);
+        _node.subscribe(_servo_cmd_subscriber);
 }
 
 
@@ -22,18 +23,19 @@ Servo_Interface::Servo_Interface(
         const Servo* servos
         ):
         //_servo_state_publisher(servo_state_topic_name, &_cur_angle),
+        _node(node),
         _servo_cmd_subscriber(servo_cmd_topic, [&, this](const std_msgs::Float32MultiArray& msg){this->_write(msg);})
     {
-        servo_interface_Init(hi2c);
+        //Init(hi2c);
     }
 void Servo_Interface::_write(const std_msgs::Float32MultiArray& msg){
     uint8_t channel = 0;
     uint16_t value = 0;
     float angle = 0;
 
-    if (_servos != NULL && msg.data_length == SERVO_COUNT){  //are servo's exist's and len of data is correct
+    if (_servos != NULL && msg.layout.dim[0]->size == SERVO_COUNT){  //are servo's exist's and len of data is correct
 
-        for (uint8_t i = 0; i < msg.data_length; i++) {      //check angle
+        for (uint8_t i = 0; i < msg.layout.dim[0]->size; i++) {      //check angle
 
             channel = i;
             angle = msg.data[i];

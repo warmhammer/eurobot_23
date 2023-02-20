@@ -11,6 +11,9 @@
 #include <std_msgs/Float32.h>
 #include <std_msgs/Float64.h>
 
+#include <std_msgs/Float32MultiArray.h>
+#include <std_msgs/MultiArrayDimension.h>
+
 #include <string>
 #include <vector>
 
@@ -58,6 +61,8 @@ namespace dolly_hw {
             Joint _left_wheel;
             Joint _right_wheel;
 
+            std_msgs::Float32MultiArray servo_cmd;
+
             ros::NodeHandle _root_node;
             ros::NodeHandle _robot_hw_node;
 
@@ -65,6 +70,7 @@ namespace dolly_hw {
             ros::Subscriber _right_wheel_angle_sub;
             ros::Publisher _left_wheel_cmd_vel_pub;
             ros::Publisher _right_wheel_cmd_vel_pub;
+            ros::Publisher _servo_cmd_pub;
     };
 
     DollyHW::DollyHW(ros::NodeHandle& root_node, ros::NodeHandle& robot_hw_node) 
@@ -75,11 +81,20 @@ namespace dolly_hw {
 
         _registerJoints();
 
+        servo_cmd.layout.dim.push_back(std_msgs::MultiArrayDimension());
+        servo_cmd.layout.dim[0].size = 3;
+        servo_cmd.layout.dim[0].stride = 1;
+        servo_cmd.layout.dim[0].label = "servo_cmd";
+        //servo_cmd.data = {50, 50, 50};
+
         _left_wheel_angle_sub = _root_node.subscribe("/dolly/left_wheel/angle32", 1, &DollyHW::_leftWheelCallback, this);
         _right_wheel_angle_sub = _root_node.subscribe("/dolly/right_wheel/angle32", 1, &DollyHW::_rightWheelCallback, this);
 
         _left_wheel_cmd_vel_pub = _root_node.advertise<std_msgs::Float64>("/dolly/left_wheel/cmd_vel64", 1);
         _right_wheel_cmd_vel_pub = _root_node.advertise<std_msgs::Float64>("/dolly/right_wheel/cmd_vel64", 1);
+
+        _servo_cmd_pub = _root_node.advertise<std_msgs::Float32MultiArray>("/servo_cmd_topic",1);
+        
     }
 
     void DollyHW::_registerJoints() {
@@ -126,6 +141,8 @@ namespace dolly_hw {
 
         _left_wheel_cmd_vel_pub.publish(left_cmd_vel);
         _right_wheel_cmd_vel_pub.publish(right_cmd_vel);
+
+        //_servo_cmd_pub.publish(servo_cmd);
     }
 
     void DollyHW::_leftWheelCallback(const std_msgs::Float32& angle) {

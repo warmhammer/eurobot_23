@@ -238,6 +238,12 @@ int main(void)
     //-------------------------------------------------------------ROS----------------------
 
     node.initNode();
+    /*PCA9685_Init(&hi2c1);
+    PCA9685_SetPin(0, 180, 0); // plunger 102-180
+    PCA9685_SetPin(1, 520, 0); // left grip 410-520
+    PCA9685_SetPin(2, 100, 0); // right grip 210-100
+    PCA9685_SetPin(3, 410, 0);// lift 120-410*/
+
 
     while (node.connected() == false) {
         // waiting for connection
@@ -249,6 +255,8 @@ int main(void)
 
     left_encoder_motor.init();
     right_encoder_motor.init();
+
+    Servo_Interface.Init(&hi2c1);
 
    //-----------------------------------------------------------ROS::Init_end--------------
     node.getHardware()->flush();	// buffer flush

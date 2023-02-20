@@ -32,13 +32,15 @@ constexpr int SERVO_COUNT = 3; //number of connected servo's
                     const Servo* servos
             );
             void update();
-            void servo_interface_Init(I2C_HandleTypeDef *hi2c);
+            void Init(I2C_HandleTypeDef *hi2c);
         private:
             void _write(const std_msgs::Float32MultiArray& msg);
 
             Servo* _servos[SERVO_COUNT];
 
             //ros::Publisher _servo_state_publisher;
+
+            ros::NodeHandle& _node;
 
             ros::Subscriber<std_msgs::Float32MultiArray> _servo_cmd_subscriber;
     };
