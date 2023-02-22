@@ -150,13 +150,15 @@ motors::EncoderMotor right_encoder_motor (
 	"/dolly/right_wheel/pwd32"
 );
 //-----------------------------------------------------------Servos------------------------------
-Servo left_grip_servo(270, 30, 30, 120, 15, 50);
-Servo right_grip_servo(270, 30, 30, 120, 15, 50);
-Servo plunger_servo(270, 30, 30, 120, 15, 50);
+//Servo left_grip_servo(270, 30, 30, 120, 15, 50);
+//Servo right_grip_servo(270, 30, 30, 120, 15, 50);
+//Servo plunger_servo(270, 30, 30, 120, 15, 50);
 
-Servo servos[3] = {left_grip_servo, right_grip_servo, plunger_servo};
+//Servo servos[3] = {(270, 30, 30, 120, 15, 50), (270, 30, 30, 120, 15, 50), (270, 30, 30, 120, 15, 50)};
 
-Servo_Interface Servo_Interface(&hi2c1, node, "servo_cmd_topic", servos);
+Servo_Interface Servo_Interface({{270, 30, 30, 120, 15, 50},
+                                 {270, 30, 30, 120, 15, 50}},
+                                 &hi2c1, node, "servo_cmd_topic");
 
 //------------------------------------------------------------SYSTEM UART func-------------------
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
