@@ -22,7 +22,6 @@
 #include "servo_description.h"
 #include "pca9685.h"
 
-//template <class T>  ?
     class Servo_Interface{
         public:
             Servo_Interface(
