@@ -22,8 +22,6 @@
 #include "servo_description.h"
 #include "pca9685.h"
 
-constexpr int SERVO_COUNT = 3; //number of connected servo's
-
 //template <class T>  ?
     class Servo_Interface{
         public:
@@ -33,7 +31,6 @@ constexpr int SERVO_COUNT = 3; //number of connected servo's
                     ros::NodeHandle& node,
                     //const char* servo_state_topic_name,
                     const char* servo_cmd_topic
-                    //const Servo servos[]
             );
             void update();
             void Init(I2C_HandleTypeDef *hi2c);

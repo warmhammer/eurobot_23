@@ -27,8 +27,6 @@ Servo_Interface::Servo_Interface(
         _servo_cmd_subscriber(servo_cmd_topic, [&, this](const std_msgs::Float32MultiArray& msg){this->_write(msg);}),
         _servos(servo_params_list)
     {
-        //Init(hi2c);
-        //_servos = *servos;
     }
 void Servo_Interface::_write(const std_msgs::Float32MultiArray& msg){
     uint8_t channel = 0;
@@ -37,17 +35,16 @@ void Servo_Interface::_write(const std_msgs::Float32MultiArray& msg){
 
     if (_servos.size() != 0 && msg.layout.dim->size == _servos.size()){  //are servo's exist's and len of data is correct
 
-        for (uint8_t i = 0; i < msg.layout.dim->size; i++) {      //check angle
+        for (uint8_t channel = 0; channel < msg.layout.dim->size; channel++) {      //check angle
 
-            channel = i;
-            angle = msg.data[i];
-           static float min_angle = _servos[i].get_min_angle();
-           static float max_angle = _servos[i].get_max_angle();
+            angle = msg.data[channel];
+           static float min_angle = _servos[channel].get_min_angle();
+           static float max_angle = _servos[channel].get_max_angle();
 
-            if( msg.data[i] < min_angle ){
+            if( msg.data[channel] < min_angle ){
                 angle = min_angle;
             }
-            if( msg.data[i] > max_angle ){
+            if( msg.data[channel] > max_angle ){
                 angle = max_angle;
             }
 
@@ -56,5 +53,7 @@ void Servo_Interface::_write(const std_msgs::Float32MultiArray& msg){
             ///PCA9685_SetPin(Channel, Value, Invert)
         }
 
+    }else{
+        _node.logwarn("Servo_Interface incorrect size or not servos");
     }
 }
