@@ -26,6 +26,7 @@
 #include "motors.h"
 #include "wrappers.h"
 #include "servo_interface.h"
+#include "range_sensor_interface.h"
 
 /* USER CODE END Includes */
 
@@ -150,15 +151,14 @@ motors::EncoderMotor right_encoder_motor (
 	"/dolly/right_wheel/pwd32"
 );
 //-----------------------------------------------------------Servos------------------------------
-//Servo left_grip_servo(270, 30, 30, 120, 15, 50);
-//Servo right_grip_servo(270, 30, 30, 120, 15, 50);
-//Servo plunger_servo(270, 30, 30, 120, 15, 50);
-
-//Servo servos[3] = {(270, 30, 30, 120, 15, 50), (270, 30, 30, 120, 15, 50), (270, 30, 30, 120, 15, 50)};
 
 Servo_Interface Servo_Interface({{270, 30, 30, 120, 15, 50},
-                                 {270, 30, 30, 120, 15, 50}},
+                                 {270, 30, 30, 120, 15, 45}},
                                  &hi2c1, node, "servo_cmd_topic");
+
+//-----------------------------------------------------------Sensors------------------------------
+Range_Sensor_Interface range_sensors_interface(node, "range_sensors_topic", 1);
+
 
 //------------------------------------------------------------SYSTEM UART func-------------------
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
@@ -204,7 +204,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 	  right_encoder_motor.__set_velocity_to_null__(htim);
 }
 
-//-------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------RANGE Sensors CallBack-------------------
+void EXTI1_IRQHandler(void) //calls,when range sensors ready to send data
+{
+    VL53L0X_RangingMeasurementData_t Data;
+    for (int i = 0; i < range_sensors_interface.get_dev_count(); i++){
+        VL53L0X_GetRangingMeasurementData(range_sensors_interface.get_dev(i), &Data);
+    }
+}
+//--------------------------------------------------------------------------------------------------------
 
 /* USER CODE END 0 */
 
@@ -215,6 +223,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -271,6 +280,7 @@ int main(void)
     right_encoder_motor.init();
 
     Servo_Interface.Init(&hi2c1);
+    range_sensors_interface.Init(&hi2c2);
 
    //-----------------------------------------------------------ROS::Init_end--------------
     node.getHardware()->flush();	// buffer flush
@@ -287,11 +297,12 @@ int main(void)
         if (node.connected() == true) {
             auto now = HAL_GetTick();
 
-            if (now - prev >= 20) {
+            if (now - prev >= 15) {
                 prev = now;
 
-                left_encoder_motor.publish();
                 right_encoder_motor.publish();
+                left_encoder_motor.publish();
+
             }
         } else {
         }
@@ -404,7 +415,7 @@ static void MX_I2C2_Init(void)
 
   /* USER CODE END I2C2_Init 1 */
   hi2c2.Instance = I2C2;
-  hi2c2.Init.ClockSpeed = 100000;
+  hi2c2.Init.ClockSpeed = 400000;
   hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c2.Init.OwnAddress1 = 0;
   hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -856,6 +867,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(ENA_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : RangeSensorINT_Pin */
+  GPIO_InitStruct.Pin = RangeSensorINT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(RangeSensorINT_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
 }
 

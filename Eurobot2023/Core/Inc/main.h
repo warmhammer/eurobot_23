@@ -65,6 +65,9 @@ void Error_Handler(void);
 #define DIR_R_GPIO_Port GPIOA
 #define ENA_Pin GPIO_PIN_10
 #define ENA_GPIO_Port GPIOA
+#define RangeSensorINT_Pin GPIO_PIN_1
+#define RangeSensorINT_GPIO_Port GPIOD
+#define RangeSensorINT_EXTI_IRQn EXTI1_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

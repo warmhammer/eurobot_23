@@ -21,8 +21,8 @@ class Servo{
                    float operating_vel,
                    unsigned int default_frequency
                    );
-          const float get_min_angle();
-          const float get_max_angle();
+          float get_min_angle();
+          float get_max_angle();
         private:
             float _angle_range;                     // [ rad ]
             float _operating_vel;                   // [ rad/s ]
