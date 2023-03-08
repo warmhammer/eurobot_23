@@ -26,10 +26,10 @@ class ButtonCounter:
 def main(led_pin=14, host="192.168.1.10", port=65432):
     counter = ButtonCounter(led_pin)
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        print('Waiting for server...')
+    while True:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            print('Waiting for server...')
 
-        while True:
             while True:
                 try:
                     s.connect((host, port))
@@ -45,9 +45,10 @@ def main(led_pin=14, host="192.168.1.10", port=65432):
 
                 try:
                     s.sendall(bytes(f"{counter.count}", 'utf-8'))
-                    
+
                     time.sleep(0.1)
                 except Exception as _:
+                    print('Connection is lost...')
                     break
 
 
