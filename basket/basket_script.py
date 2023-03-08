@@ -30,20 +30,26 @@ def main(led_pin=14, host="192.168.1.10", port=65432):
         print('Waiting for server...')
 
         while True:
-            try:
-                s.connect((host, port))
-                break
-            except Exception as _:
-                time.sleep(1)
+            while True:
+                try:
+                    s.connect((host, port))
+                    break
+                except Exception as _:
+                    time.sleep(1)
 
-        while True:
-            counter.update()
+            while True:
+                counter.update()
 
-            os.system('clear')
-            art.tprint(str(counter.count), font="tarty9")
-            s.sendall(bytes(f"{counter.count}", 'utf-8'))
+                os.system('clear')
+                art.tprint(str(counter.count), font="tarty9")
 
-            time.sleep(0.1)
+                try:
+                    s.sendall(bytes(f"{counter.count}", 'utf-8'))
+                    
+                    time.sleep(0.1)
+                except Exception as _:
+                    break
+
 
 if __name__ == "__main__":
     main()
