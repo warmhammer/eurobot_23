@@ -37,19 +37,25 @@ def main(led_pin=14, host="192.168.1.10", port=65432):
                 except Exception as _:
                     time.sleep(1)
 
+
+            prev_time = time.time()
+
             while True:
                 counter.update()
 
-                os.system('clear')
-                art.tprint(str(counter.count), font="tarty9")
+                if time.time() - prev_time > 0.5:
+                    prev_time = time.time()
 
-                try:
-                    s.sendall(bytes(f"{counter.count}", 'utf-8'))
+                    os.system('clear')
+                    art.tprint(str(counter.count), font="tarty9")
 
-                    time.sleep(0.1)
-                except Exception as _:
-                    print('Connection is lost...')
-                    break
+                    try:
+                        s.sendall(bytes(f"{counter.count}", 'utf-8'))
+                    except Exception as _:
+                        print('Connection is lost...')
+                        break
+
+                time.sleep(1e-5)
 
 
 if __name__ == "__main__":
