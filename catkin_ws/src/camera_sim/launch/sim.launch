@@ -37,11 +37,11 @@
   
 
   <node name="spawn_urdf2" pkg="gazebo_ros" type="spawn_model"
-    args="-param camera_description -urdf -x 0 -y 1 -z 0 -model my_camera" />
+    args="-param camera_description -urdf -x 0 -y 0 -z 0 -model my_camera" />
 
   <node name="spawn_urdf3" pkg="gazebo_ros" type="spawn_model"
-    args="-param $(arg aruco_dictionary)_id1_description -urdf -x 1 -y 1 -z 0.1 -R 0 -P -1.57 -Y 0 -model $(arg aruco_dictionary)_id1" />
-
+    args="-param $(arg aruco_dictionary)_id1_description -urdf -x 1 -y 0 -z 0.05 -R -1.57 -P 0 -Y 1.57 -model $(arg aruco_dictionary)_id1" />
+<!-- 
   <node name="spawn_urdf4" pkg="gazebo_ros" type="spawn_model"
     args="-param $(arg aruco_dictionary)_id3_description -urdf -x 1.5 -y 0.5 -z 0.1 -R 0 -P -1.57 -Y 0 -model $(arg aruco_dictionary)_id3" />
 
@@ -49,7 +49,7 @@
     args="-param $(arg aruco_dictionary)_id7_description -urdf -x 2 -y 1 -z 0.1 -R 0 -P -1.57 -Y 0 -model $(arg aruco_dictionary)_id7" />
 
   <node name="spawn_urdf6" pkg="gazebo_ros" type="spawn_model"
-    args="-param $(arg aruco_dictionary)_id13_description -urdf -x 1.5 -y 1.5 -z 0.1 -R 0 -P -1.57 -Y 0 -model $(arg aruco_dictionary)_id13" />
+    args="-param $(arg aruco_dictionary)_id13_description -urdf -x 1.5 -y 1.5 -z 0.1 -R 0 -P -1.57 -Y 0 -model $(arg aruco_dictionary)_id13" /> -->
 
 </launch>
   
