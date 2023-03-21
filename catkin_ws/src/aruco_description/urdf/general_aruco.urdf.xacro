@@ -3,7 +3,7 @@
     <xacro:arg name="aruco_dictionary" default="DICT_4X4_100"/>
     <xacro:arg name="aruco_id" default="0"/>
     <xacro:arg name="aruco_name" default="DICT_4X4_100_id0"/>
-    <xacro:arg name="aruco_l" default="0.2"/>
+    <xacro:arg name="aruco_l" default="0.1"/>
     <xacro:arg name="white_border" default="0"/>
     <xacro:arg name="meshes_directory" default="$(find aruco_description)/meshes"/>
     <xacro:include filename="$(find aruco_description)/urdf/general_aruco.xacro"/>
