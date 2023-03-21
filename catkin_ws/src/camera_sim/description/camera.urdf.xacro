@@ -3,6 +3,14 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="box">
 
     <xacro:arg name="sim_mode" default="false"/>
+    <xacro:arg name="tripod_a" default="0.02"/>
+    <xacro:arg name="tripod_b" default="0.02"/>
+    <xacro:arg name="tripod_h" default="0.05"/>
+    <xacro:arg name="camera_a" default="0.03"/>
+    <xacro:arg name="camera_h" default="0.01"/>
+    <xacro:arg name="camera_cyl_r" default="0.01"/>
+    <xacro:arg name="camera_cyl_h" default="0.005"/>
+
 
     <xacro:include filename="inertial_macros.xacro"/>
 
@@ -45,36 +53,33 @@
     </link>
 
     <joint name="camera_joint" type="fixed">
-        <origin xyz="0.0 0 1" rpy="0 ${pi/6} 0"/>
+        <origin xyz="0.0 0 $(arg tripod_h)" rpy="0 0 0"/>
         <parent link="tripod_link"/>
         <child link="camera_link"/>
     </joint>
 
     <link name="camera_link">
         <visual>
-            <origin xyz="0.005 0 0" rpy="0 0 0"/>
+            <origin xyz="${$(arg camera_h)/2} 0 0" rpy="0 0 0"/>
             <geometry>
-                <box size="0.01 0.03 0.03"/>
+                <box size="$(arg camera_h) $(arg camera_a) $(arg camera_a)"/>
             </geometry>
             <material name="black"/>
         </visual>
         <visual>
-            <origin xyz="0.0125 0 0" rpy="0 ${pi/2} 0"/>
+            <origin xyz="${$(arg camera_h) + ($(arg camera_cyl_h)/2)} 0 0" rpy="0 ${pi/2} 0"/>
             <geometry>
-                <cylinder radius="0.01" length="0.005"/>
+                <cylinder radius="$(arg camera_cyl_r)" length="$(arg camera_cyl_h)"/>
             </geometry>
             <material name="black"/>
         </visual>
         
         <collision>
-            <origin xyz="0.0075 0 0" rpy="0 0 0"/>
+            <origin xyz="${($(arg camera_h) + $(arg camera_cyl_h))/2}" rpy="0 0 0"/>
             <geometry>
-                <box size="0.015 0.03 0.03"/>
+                <box size="${$(arg camera_h) + $(arg camera_cyl_h)} $(arg camera_a) $(arg camera_a)"/>
             </geometry>
         </collision>
-        <xacro:inertial_box mass="0.01" x="0.02" y="0.03" z="0.03">
-            <origin xyz="0.0075 0 0" rpy="0 0 0"/>
-        </xacro:inertial_box>
     </link> 
     <gazebo reference="camera_link">
         <material>Gazebo/Black</material>
@@ -88,20 +93,20 @@
 
     <link name="tripod_link">
         <visual>
-            <origin xyz="-0.005 0 0.5"/>
+            <origin xyz="${-$(arg tripod_a)/2} 0 ${$(arg tripod_h)/2}"/>
             <geometry>
-                <box size="0.01 0.02 1"/>
+                <box size="$(arg tripod_a) $(arg tripod_b) $(arg tripod_h)"/>
             </geometry>
             <material name="orange"/>
         </visual>
         <collision>
-            <origin xyz="-0.005 0 0.5"/>
+            <origin xyz="${-$(arg tripod_a)/2} 0 ${$(arg tripod_h)/2}"/>
             <geometry>
-                <box size="0.01 0.02 1"/>
+                <box size="$(arg tripod_a) $(arg tripod_b) $(arg tripod_h)"/>
             </geometry>
         </collision>
-        <xacro:inertial_box mass="1" x="0.01" y="0.02" z="1">
-            <origin xyz="-0.005 0 0.5" rpy="0 0 0"/>
+        <xacro:inertial_box mass="0.1" x="$(arg tripod_a)" y="$(arg tripod_b)" z="$(arg tripod_h)">
+            <origin xyz="${-$(arg tripod_a)/2} 0 ${$(arg tripod_h)/2}" rpy="0 0 0"/>
         </xacro:inertial_box>
     </link>
     <gazebo reference="tripod_link">
@@ -113,33 +118,41 @@
 
         <sensor name="camera" type="camera">
             <pose> 0 0 0 0 0 0 </pose>
-            <visualize>true</visualize>
+            <visualize>false</visualize>
             <update_rate>30</update_rate>
             <camera>
-                <horizontal_fov>1.089</horizontal_fov>
+                <!-- <horizontal_fov>1.089</horizontal_fov> -->
                 <image>
                     <format>R8G8B8</format>
-                    <width>640</width>
-                    <height>480</height>
+                    <width>320</width>
+                    <height>240</height>
                 </image>
                 <clip>
                     <near>0.05</near>
                     <far>8.0</far>
                 </clip>
+                <lens>
+                    <intrinsics>
+                            <fx>384.43139475</fx>
+                            <fy>385.70939564</fy>
+                            <cx>176.37429647</cx>
+                            <cy>130.02273157</cy>
+                            <s>0</s>
+                    </intrinsics>
+                </lens>
             </camera>
             <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
                 <alwaysOn>true</alwaysOn>
-                <updateRate>0.0</updateRate>
+                <updateRate>30.0</updateRate>
                 <cameraName>my_robot/camera1</cameraName>
                 <imageTopicName>image_raw</imageTopicName>
                 <cameraInfoTopicName>camera_info</cameraInfoTopicName>
                 <frameName>camera_link_optical</frameName>
-                <hackBaseline>0.07</hackBaseline>
-                <distortionK1>0.21628</distortionK1>
-                <distortionK2>-6.66825</distortionK2>
-                <distortionK3>0.0008</distortionK3>
-                <distortionT1>0.00242</distortionT1>
-                <distortionT2>77.4634</distortionT2>
+                <distortionK1>-5.06836513e-01</distortionK1>
+                <distortionK2>1.00342456e+01</distortionK2>
+                <distortionT1>1.58587178e-02</distortionT1>
+                <distortionT2>5.85243802e-03</distortionT2>
+                <distortionK3>-6.85750667e+01</distortionK3>
             </plugin>
         </sensor>
     </gazebo>
