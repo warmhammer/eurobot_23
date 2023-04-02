@@ -5,11 +5,12 @@
     <xacro:arg name="sim_mode" default="false"/>
     <xacro:arg name="tripod_a" default="0.02"/>
     <xacro:arg name="tripod_b" default="0.02"/>
-    <xacro:arg name="tripod_h" default="0.05"/>
+    <xacro:arg name="tripod_h" default="1"/>
     <xacro:arg name="camera_a" default="0.03"/>
     <xacro:arg name="camera_h" default="0.01"/>
     <xacro:arg name="camera_cyl_r" default="0.01"/>
     <xacro:arg name="camera_cyl_h" default="0.005"/>
+    <xacro:arg name="camera_tilt" default="2.3562"/>
 
 
     <xacro:include filename="inertial_macros.xacro"/>
@@ -53,7 +54,7 @@
     </link>
 
     <joint name="camera_joint" type="fixed">
-        <origin xyz="0.0 0 $(arg tripod_h)" rpy="0 0 0"/>
+        <origin xyz="0.0 0 $(arg tripod_h)" rpy="0 ${$(arg camera_tilt) - pi/2} 0"/>
         <parent link="tripod_link"/>
         <child link="camera_link"/>
     </joint>
@@ -118,14 +119,14 @@
 
         <sensor name="camera" type="camera">
             <pose> 0 0 0 0 0 0 </pose>
-            <visualize>false</visualize>
+            <visualize>true</visualize>
             <update_rate>30</update_rate>
             <camera>
-                <!-- <horizontal_fov>1.089</horizontal_fov> -->
+                <horizontal_fov>2.0944</horizontal_fov>
                 <image>
                     <format>R8G8B8</format>
-                    <width>320</width>
-                    <height>240</height>
+                    <width>640</width>
+                    <height>480</height>
                 </image>
                 <clip>
                     <near>0.05</near>
@@ -133,10 +134,10 @@
                 </clip>
                 <lens>
                     <intrinsics>
-                            <fx>384.43139475</fx>
-                            <fy>385.70939564</fy>
-                            <cx>176.37429647</cx>
-                            <cy>130.02273157</cy>
+                            <fx>400.50390742</fx>
+                            <fy>401.0784034</fy>
+                            <cx>312.79068201</cx>
+                            <cy>241.10000571</cy>
                             <s>0</s>
                     </intrinsics>
                 </lens>
@@ -148,11 +149,11 @@
                 <imageTopicName>image_raw</imageTopicName>
                 <cameraInfoTopicName>camera_info</cameraInfoTopicName>
                 <frameName>camera_link_optical</frameName>
-                <distortionK1>-5.06836513e-01</distortionK1>
-                <distortionK2>1.00342456e+01</distortionK2>
-                <distortionT1>1.58587178e-02</distortionT1>
-                <distortionT2>5.85243802e-03</distortionT2>
-                <distortionK3>-6.85750667e+01</distortionK3>
+                <distortionK1>-0.41357183</distortionK1>
+                <distortionK2>0.33531083</distortionK2>
+                <distortionT1>0.00206728</distortionT1>
+                <distortionT2>-0.00143632</distortionT2>
+                <distortionK3>-0.26233402</distortionK3>
             </plugin>
         </sensor>
     </gazebo>
