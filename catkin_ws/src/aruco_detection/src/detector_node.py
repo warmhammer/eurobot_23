@@ -3,6 +3,9 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 import numpy
 import cv2
+from tf.transformations import quaternion_from_matrix
+from tf.transformations import translation_from_matrix
+from tf import TransformBroadcaster
 import math
 import sys
 import os
@@ -12,7 +15,7 @@ from include.aruco_detector import Detector
 
 
 rospy.init_node('detector_node')
-
+tb = TransformBroadcaster()
 bridge = CvBridge()
 
 this_dir = os.path.dirname(__file__)
@@ -21,24 +24,20 @@ detector = Detector(0.1, cv2.aruco.DICT_4X4_100, camera_info_path)
 
 
 def image_callback(img_msg):
-
-    # rospy.loginfo(img_msg.header)
-
     try:
         cv_image = bridge.imgmsg_to_cv2(img_msg, "bgr8")
     except CvBridgeError:
         rospy.logerr("CvBridge Error")
 
-    markers_poses, res_frame = detector.detect_markers(cv_image)
+    rotation_matricies, res_frame = detector.detect_markers(cv_image)
 
-    print(f'=== markers poses ===')
-    for id, pose in markers_poses.items():
-        pose.Roll = math.degrees(pose.Roll)
-        pose.Pitch = math.degrees(pose.Pitch)
-        pose.Yaw = math.degrees(pose.Yaw)
-        print('\nid: %d' % id, '\nx:\t%0.3f \ny:\t%0.3f \nz:\t%0.3f' %(pose.X, pose.Y, pose.Z),
-              '\nroll:\t%d, \npitch:\t%d, \nyaw:\t%d\n' %(pose.Roll, pose.Pitch, pose.Yaw), sep='\n')
-    
+    for id, r_mtx in rotation_matricies.items():
+        
+        tb.sendTransform(translation_from_matrix(r_mtx), 
+                         quaternion_from_matrix(r_mtx), 
+                         rospy.Time.now(), 
+                         f'marker_id_{id}', '/camera')
+            
     cv2.imshow('Image', res_frame)
     cv2.waitKey(1)
 
