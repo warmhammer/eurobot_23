@@ -2,8 +2,8 @@
 <launch>
     <arg name="takeImagesFirst" default="true"/>
     <arg name="cameraIndex" default="0"/>
-    <arg name="frameWidth" default="320"/>
-    <arg name="frameHeight" default="240"/>
+    <arg name="frameWidth" default="640"/>
+    <arg name="frameHeight" default="480"/>
     <arg name="chessboardCornersCountX" default="9"/>
     <arg name="chessboardCornersCountY" default="6"/>
     <arg name="sizeOfSquareSide" default="24"/>
