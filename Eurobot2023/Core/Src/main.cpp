@@ -26,7 +26,7 @@
 #include "motors.h"
 #include "wrappers.h"
 #include "servo_interface.h"
-#include "range_sensor_interface.h"
+//#include "range_sensor_interface.h"
 
 /* USER CODE END Includes */
 
@@ -152,12 +152,17 @@ motors::EncoderMotor right_encoder_motor (
 );
 //-----------------------------------------------------------Servos------------------------------
 
-Servo_Interface Servo_Interface({{270, 30, 30, 120, 15, 50},
-                                 {270, 30, 30, 120, 15, 45}},
-                                 &hi2c1, node, "servo_cmd_topic");
+servo_interface::Servo_Interface servos(
+		{
+			servo_description::PDI_6225MG_300_Servo(0),
+			servo_description::RDS3225_Servo(1),
+		},
+		node,
+		"servo_cmd_topic"
+);
 
 //-----------------------------------------------------------Sensors------------------------------
-Range_Sensor_Interface range_sensors_interface(node, "range_sensors_topic", 1);
+//Range_Sensor_Interface range_sensors_interface(node, "range_sensors_topic", 1);
 
 
 //------------------------------------------------------------SYSTEM UART func-------------------
@@ -207,10 +212,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 //------------------------------------------------------------------RANGE Sensors CallBack-------------------
 void EXTI1_IRQHandler(void) //calls,when range sensors ready to send data
 {
-    VL53L0X_RangingMeasurementData_t Data;
-    for (int i = 0; i < range_sensors_interface.get_dev_count(); i++){
-        VL53L0X_GetRangingMeasurementData(range_sensors_interface.get_dev(i), &Data);
-    }
+//    VL53L0X_RangingMeasurementData_t Data;
+//    for (int i = 0; i < range_sensors_interface.get_dev_count(); i++){
+//        VL53L0X_GetRangingMeasurementData(range_sensors_interface.get_dev(i), &Data);
+//    }
 }
 //--------------------------------------------------------------------------------------------------------
 
@@ -261,12 +266,6 @@ int main(void)
     //-------------------------------------------------------------ROS----------------------
 
     node.initNode();
-    /*PCA9685_Init(&hi2c1);
-    PCA9685_SetPin(0, 180, 0); // plunger 102-180
-    PCA9685_SetPin(1, 520, 0); // left grip 410-520
-    PCA9685_SetPin(2, 100, 0); // right grip 210-100
-    PCA9685_SetPin(3, 410, 0);// lift 120-410*/
-
 
     while (node.connected() == false) {
         // waiting for connection
@@ -279,8 +278,8 @@ int main(void)
     left_encoder_motor.init();
     right_encoder_motor.init();
 
-    Servo_Interface.Init(&hi2c1);
-    range_sensors_interface.Init(&hi2c2);
+    servos.init(&hi2c1);
+//    range_sensors_interface.Init(&hi2c2);
 
    //-----------------------------------------------------------ROS::Init_end--------------
     node.getHardware()->flush();	// buffer flush
