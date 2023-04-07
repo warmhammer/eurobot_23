@@ -1,5 +1,5 @@
 /*
- * servo_driver.cpp
+ * servo_interface.cpp
  *
  *  Created on: Jan 28, 2023
  *      Author: Valery_Danilov
@@ -7,53 +7,53 @@
  */
 
 #include "servo_interface.h"
+#include "pca9685.h"
 
+#include <string>
 
-void Servo_Interface::Init(I2C_HandleTypeDef *hi2c){
-        PCA9685_Init(hi2c);
-        _node.subscribe(_servo_cmd_subscriber);
-}
+namespace servo_interface {
+	Servo_Interface::Servo_Interface (
+		std::initializer_list<servo_description::Servo> servos_list,
+		ros::NodeHandle& node,
+		const char* positions_topic
+	) :
+		_servos(servos_list),
+		_node(node),
+		_pos_topic_subscriber(positions_topic, [&, this](const std_msgs::Float32MultiArray& msg){this->_write(msg);})
+	{
+		if (_servos.size() == 0) {
+			_node.logwarn("Servo_Interface: no servos were passed");
+		}
+	}
 
+	void Servo_Interface::init(I2C_HandleTypeDef *hi2c) {
+		_node.subscribe(_pos_topic_subscriber);
 
-Servo_Interface::Servo_Interface(
-        std::initializer_list<Servo> servo_params_list,
-        I2C_HandleTypeDef *hi2c,
-        ros::NodeHandle& node,
-        //const char* servo_state_topic_name,
-        const char* servo_cmd_topic
-        ):
-        //_servo_state_publisher(servo_state_topic_name, &_cur_angle),
-        _node(node),
-        _servo_cmd_subscriber(servo_cmd_topic, [&, this](const std_msgs::Float32MultiArray& msg){this->_write(msg);}),
-        _servos(servo_params_list)
-    {
-    }
-void Servo_Interface::_write(const std_msgs::Float32MultiArray& msg){
-    uint8_t channel = 0;
-    uint16_t value = 0;
-    float angle = 0;
+		PCA9685_Init(hi2c);
 
-    if (_servos.size() != 0 && msg.layout.dim->size == _servos.size()){  //are servo's exist's and len of data is correct
+		for (auto& servo : _servos) {
+			servo.init();
+		}
+	}
 
-        for (uint8_t channel = 0; channel < msg.layout.dim->size; channel++) {      //check angle
+	bool Servo_Interface::_write(const std_msgs::Float32MultiArray& msg){
+		if (msg.data_length != _servos.size()) {
+			_node.logwarn("Servo_Interface: incorrect size of servos' positions MultiArray");
 
-            angle = msg.data[channel];
-           static float min_angle = _servos[channel].get_min_angle();
-           static float max_angle = _servos[channel].get_max_angle();
+			return true;
+		}
 
-            if( msg.data[channel] < min_angle ){
-                angle = min_angle;
-            }
-            if( msg.data[channel] > max_angle ){
-                angle = max_angle;
-            }
+		bool return_flag = false;
 
-            value = (angle - min_angle) * ((float)SERVO_MAX - (float)SERVO_MIN) / (max_angle - min_angle) + (float)SERVO_MIN;  //TODO SERVO MAX, SERVO MIN ?
-            PCA9685_SetPin(channel, value, 0);    //write on PCA9685
-            ///PCA9685_SetPin(Channel, Value, Invert)
-        }
+		for (uint8_t i = 0; i < _servos.size(); i++) {
+			float angle = msg.data[i];
 
-    }else{
-        _node.logwarn("Servo_Interface incorrect size or not servos");
-    }
+			if (_servos[i].set_angle(angle) != PCA9685_OK) {
+				_node.logwarn("Servo_Interface: pca9685 error");
+				return_flag = true;
+			}
+		}
+
+		return return_flag;
+	}
 }
