@@ -19,7 +19,6 @@
 #include "wrappers.h"
 
 namespace motors {
-
 	constexpr float MAX_MOTOR_ANGULAR_VEL = 425 * (2 * 3.14159) / 60;             // define max speed of EncoderMotor (rad/s) or 425 rpm
 	constexpr float ENCODER_TICKS_PER_REVOLUTION = 18.8 * 6;   // pulse per revolution
 	constexpr float RADS_PER_ENCODER_TICK = (2 * 3.14159) / (ENCODER_TICKS_PER_REVOLUTION * 2);   //radian, both tick edges
