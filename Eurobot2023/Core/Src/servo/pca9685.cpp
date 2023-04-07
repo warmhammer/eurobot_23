@@ -14,7 +14,7 @@
 
 // TODO: OOP style
 
-#include "pca9685.h"
+#include "servo/pca9685.h"
 #include "math.h"
 
 I2C_HandleTypeDef *pca9685_i2c;

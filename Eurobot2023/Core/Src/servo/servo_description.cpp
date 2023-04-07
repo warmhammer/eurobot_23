@@ -6,7 +6,7 @@
  *      Edited: Maxim Popov
  */
 
-#include "servo_description.h"
+#include "servo/servo_description.h"
 
 #include <cassert>
 

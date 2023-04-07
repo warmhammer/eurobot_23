@@ -6,8 +6,8 @@
  *      Edited: Maxim_Popov
  */
 
-#include "servo_interface.h"
-#include "pca9685.h"
+#include "servo/servo_interface.h"
+#include "servo/pca9685.h"
 
 #include <string>
 

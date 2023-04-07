@@ -25,7 +25,7 @@
 
 #include "motors.h"
 #include "wrappers.h"
-#include "servo_interface.h"
+#include "servo/servo_interface.h"
 //#include "range_sensor_interface.h"
 
 /* USER CODE END Includes */
