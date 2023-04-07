@@ -26,7 +26,6 @@
 #include "motors.h"
 #include "wrappers.h"
 #include "servo/servo_interface.h"
-//#include "range_sensor_interface.h"
 
 /* USER CODE END Includes */
 
@@ -161,10 +160,6 @@ servo_interface::Servo_Interface servos(
 		"servo_cmd_topic"
 );
 
-//-----------------------------------------------------------Sensors------------------------------
-//Range_Sensor_Interface range_sensors_interface(node, "range_sensors_topic", 1);
-
-
 //------------------------------------------------------------SYSTEM UART func-------------------
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 
@@ -209,14 +204,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 	  right_encoder_motor.__set_velocity_to_null__(htim);
 }
 
-//------------------------------------------------------------------RANGE Sensors CallBack-------------------
-void EXTI1_IRQHandler(void) //calls,when range sensors ready to send data
-{
-//    VL53L0X_RangingMeasurementData_t Data;
-//    for (int i = 0; i < range_sensors_interface.get_dev_count(); i++){
-//        VL53L0X_GetRangingMeasurementData(range_sensors_interface.get_dev(i), &Data);
-//    }
-}
 //--------------------------------------------------------------------------------------------------------
 
 /* USER CODE END 0 */
