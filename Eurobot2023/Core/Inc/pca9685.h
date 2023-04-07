@@ -12,20 +12,12 @@
 #ifndef PCA9685_H_
 #define PCA9685_H_
 
+#include "stm32f4xx_hal.h"
+
 //
 //	Enable Servo control mode
 //
 #define PCA9685_SERVO_MODE
-
-#ifdef PCA9685_SERVO_MODE
-//
-//	Servo min and max values for TURINGY TG9e Servos
-//
-#define SERVO_MIN	20
-#define SERVO_MAX	500
-#define MIN_ANGLE	0.0
-#define MAX_ANGLE	180.0
-#endif
 
 //
 //	Adjustable address 0x80 - 0xFE
@@ -69,22 +61,17 @@ typedef enum
 {
 	PCA9685_OK 		= 0,
 	PCA9685_ERROR	= 1
-}PCA9685_STATUS;
+} PCA9685_STATUS;
 
 PCA9685_STATUS PCA9685_SoftwareReset(void);
 PCA9685_STATUS PCA9685_SleepMode(uint8_t Enable);
 PCA9685_STATUS PCA9685_RestartMode(uint8_t Enable);
 PCA9685_STATUS PCA9685_AutoIncrement(uint8_t Enable);
 
-#ifndef PCA9685_SERVO_MODE
 PCA9685_STATUS PCA9685_SetPwmFrequency(uint16_t Frequency);
-#endif
 
 PCA9685_STATUS PCA9685_SetPwm(uint8_t Channel, uint16_t OnTime, uint16_t OffTime);
 PCA9685_STATUS PCA9685_SetPin(uint8_t Channel, uint16_t Value, uint8_t Invert);
-#ifdef PCA9685_SERVO_MODE
-PCA9685_STATUS PCA9685_SetServoAngle(uint8_t Channel, float Angle);
-#endif
 
 PCA9685_STATUS PCA9685_Init(I2C_HandleTypeDef *hi2c);
 

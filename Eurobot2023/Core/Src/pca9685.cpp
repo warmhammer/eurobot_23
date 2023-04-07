@@ -7,9 +7,12 @@
  *
  *      Website: https://msalamon.pl/nigdy-wiecej-multipleksowania-na-gpio!-max7219-w-akcji-cz-3/
  *      GitHub:  https://github.com/lamik/Servos_PWM_STM32_HAL
+ *
+ *  Edited on: 07.04.2023
+ *  	Author: Popov Maxim
  */
 
-#include "stm32f4xx_hal.h"
+// TODO: OOP style
 
 #include "pca9685.h"
 #include "math.h"
@@ -153,19 +156,6 @@ PCA9685_STATUS PCA9685_SetPin(uint8_t Channel, uint16_t Value, uint8_t Invert)
     }
   }
 }
-
-#ifdef PCA9685_SERVO_MODE
-PCA9685_STATUS PCA9685_SetServoAngle(uint8_t Channel, float Angle)
-{
-	float Value;
-	if(Angle < MIN_ANGLE) Angle = MIN_ANGLE;
-	if(Angle > MAX_ANGLE) Angle = MAX_ANGLE;
-
-	Value = (Angle - MIN_ANGLE) * ((float)SERVO_MAX - (float)SERVO_MIN) / (MAX_ANGLE - MIN_ANGLE) + (float)SERVO_MIN;
-
-	return PCA9685_SetPin(Channel, (uint16_t)Value, 0);
-}
-#endif
 
 PCA9685_STATUS PCA9685_Init(I2C_HandleTypeDef *hi2c)
 {
