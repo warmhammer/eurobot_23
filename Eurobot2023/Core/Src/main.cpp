@@ -266,7 +266,6 @@ int main(void)
     right_encoder_motor.init();
 
     servos.init(&hi2c1);
-//    range_sensors_interface.Init(&hi2c2);
 
    //-----------------------------------------------------------ROS::Init_end--------------
     node.getHardware()->flush();	// buffer flush
@@ -853,12 +852,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(ENA_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : RangeSensorINT_Pin */
-  GPIO_InitStruct.Pin = RangeSensorINT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(RangeSensorINT_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
