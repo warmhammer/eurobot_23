@@ -83,8 +83,8 @@ const uint8_t MODE_FIRST_FF = 0;
 const uint8_t MODE_PROTOCOL_VER   = 1;
 const uint8_t PROTOCOL_VER1       = 0xff; // through groovy
 const uint8_t PROTOCOL_VER2       = 0xfe; // in hydro
-const uint8_t PROTOCOL_VER6       = 0xfd; // in noetic
-const uint8_t PROTOCOL_VER        = PROTOCOL_VER6;
+//const uint8_t PROTOCOL_VER6       = 0xfd; // in noetic
+const uint8_t PROTOCOL_VER        = PROTOCOL_VER2;
 const uint8_t MODE_SIZE_L         = 2;
 const uint8_t MODE_SIZE_H         = 3;
 const uint8_t MODE_SIZE_CHECKSUM  = 4;    // checksum for msg size received from size L and H
@@ -94,7 +94,7 @@ const uint8_t MODE_MESSAGE        = 7;
 const uint8_t MODE_MSG_CHECKSUM   = 8;    // checksum for msg and topic id
 
 
-const uint8_t SERIAL_MSG_TIMEOUT  = 30;   // 20 milliseconds to recieve all of message data
+const uint8_t SERIAL_MSG_TIMEOUT  = 20;   // 20 milliseconds to recieve all of message data
 
 using rosserial_msgs::TopicInfo;
 

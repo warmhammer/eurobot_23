@@ -140,8 +140,8 @@ namespace sensor_msgs
      return offset;
     }
 
-    virtual const char * getType() override { return "sensor_msgs/Range"; };
-    virtual const char * getMD5() override { return "c005c34273dc426c67a020a87bc24148"; };
+    virtual const char * getType() const override { return "sensor_msgs/Range"; };
+    virtual const char * getMD5() const override { return "c005c34273dc426c67a020a87bc24148"; };
 
   };
 

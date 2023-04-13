@@ -1,5 +1,5 @@
-#ifndef DOLLY_HW
-#define DOLLY_HW
+#ifndef DOLLY_HARDWARE_INTERFACE
+#define DOLLY_HARDWARE_INTERFACE
 
 #include <ros/ros.h>
 #include <ros/console.h>
@@ -19,23 +19,12 @@ namespace dolly_hw {
         const std::string name;
 		double pos = 0;
         double prev_pos = 0;
-		// double pos_offset = 0;
 		double vel = 0;
 		double eff = 0;
 		double cmd = 0;
 
         Joint() = delete;
         Joint(const std::string& name) : name(name) {}
-
-        // void print() {
-        //     ROS_INFO_STREAM (
-        //         "name: " << name << "\n"
-        //         << "pos: " << pos << "\n"
-        //         << "vel: " << vel << "\n"
-        //         << "eff: " << eff << "\n"
-        //         << "cmd: " << cmd << "\n"
-        //     );
-        // }
 	};
 
     class DollyHW : public hardware_interface::RobotHW {
@@ -106,11 +95,6 @@ namespace dolly_hw {
     void DollyHW::read(const ros::Duration& delta) {
         std::vector<Joint*> joints = {&_left_wheel, &_right_wheel};
 
-        // for(auto& joint : joints) {
-        //     joint->pos += joint->cmd * delta.toSec();
-        //     joint->vel = joint->cmd;
-        // }
-
         for(auto& joint : joints) {
             joint->vel = (joint->pos - joint->prev_pos) / delta.toSec();
             joint->prev_pos = joint->pos;
@@ -137,4 +121,4 @@ namespace dolly_hw {
     }
 }
 
-#endif // DOLLY_HW
+#endif // DOLLY_HARDWARE_INTERFACE

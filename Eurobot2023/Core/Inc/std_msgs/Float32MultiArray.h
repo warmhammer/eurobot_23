@@ -79,8 +79,8 @@ namespace std_msgs
      return offset;
     }
 
-    virtual const char * getType() override { return "std_msgs/Float32MultiArray"; };
-    virtual const char * getMD5() override { return "6a40e0ffa6a17a503ac3f8616991b1f6"; };
+    virtual const char * getType()const override { return "std_msgs/Float32MultiArray"; };
+    virtual const char * getMD5()const override { return "6a40e0ffa6a17a503ac3f8616991b1f6"; };
 
   };
 

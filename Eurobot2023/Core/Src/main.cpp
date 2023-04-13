@@ -25,6 +25,7 @@
 
 #include "motors.h"
 #include "wrappers.h"
+#include "servo/servo_interface.h"
 
 /* USER CODE END Includes */
 
@@ -91,6 +92,7 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 #define pwm_timer_r				&htim12
 #define pwm_timer_chanel1_r  	TIM_CHANNEL_1
+
 //------------------------------------------------define EncoderMotors perif END--------------------
 
 /* USER CODE END PV */
@@ -147,6 +149,44 @@ motors::EncoderMotor right_encoder_motor (
 	"/dolly/right_wheel/cur_vel32",
 	"/dolly/right_wheel/pwd32"
 );
+//-----------------------------------------------------------Servos------------------------------
+
+servo_interface::Servo_Interface servos(
+		{
+			servo_description::PDI_6225MG_300_Servo(0),
+			servo_description::RDS3225_Servo(1),
+		},
+		node,
+		"servo_cmd_topic"
+);
+
+//------------------------------------------------------------SYSTEM UART func-------------------
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
+
+    uint8_t data[1];
+  __HAL_UART_CLEAR_OREFLAG(huart);
+  __HAL_UART_CLEAR_NEFLAG(huart);
+  __HAL_UART_CLEAR_FEFLAG(huart);
+
+  /* Disable the UART Error Interrupt: (Frame error, noise error, overrun error) */
+  __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
+  //The most important thing when UART framing error occur/any error is restart the RX process
+  //Restarting the RX, .. 1 byte. .. u8DATUartShortRxBuffer is My own rx buffer
+    HAL_UART_Receive_IT(huart, data, 1);
+}
+
+void UART_check(UART_HandleTypeDef *huart){
+    if (__HAL_UART_GET_FLAG(huart, UART_FLAG_ORE) != RESET){
+
+              __HAL_UART_CLEAR_OREFLAG(huart);
+              __HAL_UART_ENABLE_IT(huart,UART_IT_ERR);
+
+              if (__HAL_UART_GET_FLAG(huart,UART_FLAG_RXNE) == SET){
+                  huart->Instance->CR3 |= 1 << 6;
+                  huart->Instance->CR3 |= 1 << 7;
+              }
+          }
+}
 
 //------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
@@ -157,18 +197,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     node.getHardware()->reset_rbuf();
 }
 
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
 
-    //HAL_UART_DMAResume(&huart2);
-
-}
-
+//------------------------------------------------------------TIM SYSTEM Motors CallBack's-------------------
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 	  left_encoder_motor.__set_velocity_to_null__(htim);
 	  right_encoder_motor.__set_velocity_to_null__(htim);
 }
 
-//-------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------
 
 /* USER CODE END 0 */
 
@@ -179,6 +215,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -214,16 +251,23 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
     //-------------------------------------------------------------ROS----------------------
+
     node.initNode();
 
     while (node.connected() == false) {
+        // waiting for connection
+        UART_check(&huart2);
     	HAL_Delay(1);
     	node.spinOnce();
     }
+   //-----------------------------------------------------------ROS::Init_begin------------
 
     left_encoder_motor.init();
     right_encoder_motor.init();
 
+    servos.init(&hi2c1);
+
+   //-----------------------------------------------------------ROS::Init_end--------------
     node.getHardware()->flush();	// buffer flush
 
   /* USER CODE END 2 */
@@ -234,19 +278,23 @@ int main(void)
     auto prev = HAL_GetTick();
 
     while (1) {
+
         if (node.connected() == true) {
             auto now = HAL_GetTick();
 
-            if (now - prev >= 20) {
+            if (now - prev >= 15) {
                 prev = now;
 
-                left_encoder_motor.publish();
                 right_encoder_motor.publish();
+                left_encoder_motor.publish();
+
             }
         } else {
-            HAL_Delay(1);
         }
 
+        UART_check(&huart2);
+
+        HAL_Delay(1);
         node.spinOnce();
 
     /* USER CODE END WHILE */
@@ -352,7 +400,7 @@ static void MX_I2C2_Init(void)
 
   /* USER CODE END I2C2_Init 1 */
   hi2c2.Instance = I2C2;
-  hi2c2.Init.ClockSpeed = 100000;
+  hi2c2.Init.ClockSpeed = 400000;
   hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c2.Init.OwnAddress1 = 0;
   hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -804,6 +852,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(ENA_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
 }
 
