@@ -1,0 +1,3 @@
+<launch>
+    <node name="basket_listener" pkg="basket_listener" type="basket_listener.py" output="screen"/>
+</launch>
