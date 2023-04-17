@@ -26,7 +26,6 @@
 #include "motors.h"
 #include "wrappers.h"
 #include "servo/servo_interface.h"
-#include "servo/servo_description.h"
 
 /* USER CODE END Includes */
 
@@ -87,9 +86,6 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 #define speed_timer_r 			&htim4
 #define speed_timer_chanel2_r  	TIM_CHANNEL_2
-
-//#define speed_timer_r 			&htim8
-//#define speed_timer_chanel2_r  	TIM_CHANNEL_1
 
 #define pwm_timer_r				&htim12
 #define pwm_timer_chanel1_r  	TIM_CHANNEL_1
@@ -157,13 +153,13 @@ constexpr servo_description::PDI_6225MG_300_Servo left_gripper(0, 100, 200);
 constexpr servo_description::PDI_6225MG_300_Servo right_gripper(0, 100, 200);
 
 servo_interface::Servo_Interface servos(
-		{
-			left_gripper,
-			right_gripper
+	{
+		left_gripper,
+		right_gripper
 
-		},
-		node,
-		"servo_cmd_topic"
+	},
+	node,
+	"servo_cmd_topic"
 );
 
 //------------------------------------------------------------SYSTEM UART func-------------------
@@ -183,15 +179,14 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 
 void UART_check(UART_HandleTypeDef *huart){
     if (__HAL_UART_GET_FLAG(huart, UART_FLAG_ORE) != RESET){
+		__HAL_UART_CLEAR_OREFLAG(huart);
+		__HAL_UART_ENABLE_IT(huart,UART_IT_ERR);
 
-              __HAL_UART_CLEAR_OREFLAG(huart);
-              __HAL_UART_ENABLE_IT(huart,UART_IT_ERR);
-
-              if (__HAL_UART_GET_FLAG(huart,UART_FLAG_RXNE) == SET){
-                  huart->Instance->CR3 |= 1 << 6;
-                  huart->Instance->CR3 |= 1 << 7;
-              }
-          }
+		if (__HAL_UART_GET_FLAG(huart,UART_FLAG_RXNE) == SET){
+			huart->Instance->CR3 |= 1 << 6;
+			huart->Instance->CR3 |= 1 << 7;
+		}
+	}
 }
 
 //------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
@@ -206,8 +201,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 //------------------------------------------------------------TIM SYSTEM Motors CallBack's-------------------
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
-	  left_encoder_motor.__set_velocity_to_null__(htim);
-	  right_encoder_motor.__set_velocity_to_null__(htim);
+	left_encoder_motor.__set_velocity_to_null__(htim);
+	right_encoder_motor.__set_velocity_to_null__(htim);
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -229,16 +224,12 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
-
-
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -283,7 +274,6 @@ int main(void)
     auto prev = HAL_GetTick();
 
     while (1) {
-
         if (node.connected() == true) {
             auto now = HAL_GetTick();
 
@@ -294,7 +284,6 @@ int main(void)
                 left_encoder_motor.publish();
 
             }
-        } else {
         }
 
         UART_check(&huart2);
