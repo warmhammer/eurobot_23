@@ -35,17 +35,17 @@ namespace servo_description {
 			PCA9685_STATUS set_angle(float angle);
 
 		private:
-			float _angle_range;
+			const float _angle_range;
 
-			float _pwm_koef;
-			uint16_t _pwm_bias;
+			const float _pwm_koef;
+			const uint16_t _pwm_bias;
 
-			float _min_angle;
-			float _max_angle;
-			float _default_angle;
+			const float _min_angle;
+			const float _max_angle;
+			const float _default_angle;
 			float _current_angle;
 
-			uint8_t _pca_channel;
+			const uint8_t _pca_channel;
 	};
 
 //*************************************************

@@ -11,6 +11,7 @@
 #include <cassert>
 
 namespace servo_description {
+
 	Servo::Servo (
 		float angle_range,
 		uint16_t pwm_min,
@@ -21,19 +22,17 @@ namespace servo_description {
 		uint8_t pca_channel
 	) :
 		_angle_range(angle_range),
+		_pwm_koef(angle_range > 0 ? (pwm_max - pwm_min) / angle_range : 0),
+		_pwm_bias(pwm_min),
 		_min_angle(min_angle),
 		_max_angle(max_angle),
 		_default_angle(default_angle),
 		_current_angle(default_angle),
 		_pca_channel(pca_channel)
 	{
-		assert(0 <= min_angle && max_angle <= angle_range);
-		assert(min_angle <= default_angle && default_angle <= max_angle);
-
-		assert(pwm_min < pwm_max);
-
-		_pwm_koef = (pwm_max - pwm_min) / (max_angle - min_angle);
-		_pwm_bias = pwm_min;
+//		static_assert(0 <= min_angle && max_angle <= angle_range);
+//		static_assert(min_angle <= default_angle && default_angle <= max_angle);
+//		static_assert(pwm_min < pwm_max);
 	}
 
 	void Servo::init() {
@@ -61,7 +60,7 @@ namespace servo_description {
 
 		_current_angle = angle;
 
-		uint16_t pwm_value = static_cast<uint16_t>((angle - _min_angle) * _pwm_koef) + _pwm_bias;
+		uint16_t pwm_value = static_cast<uint16_t>(angle * _pwm_koef) + _pwm_bias;
 
 		return PCA9685_SetPin(_pca_channel, pwm_value, 0);
 	}
