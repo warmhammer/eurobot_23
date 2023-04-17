@@ -60,45 +60,23 @@ class ServoBridge:
         return return_flag
 
     def _publish(self, event: rospy.timer.TimerEvent = None):
-        # rospy.logwarn(f'{self._servos_angles}')
         self._servo_publisher.publish(msg.Float32MultiArray(data=self._servos_angles))
-
-
-# class Initialization(smach.State):
-#     def __init__(self, 
-#                  servo_bridge_set: ServoBridge.set,
-#                  state_dict: typing.Dict[str, str]
-#                  ) -> None:
-#         smach.State.__init__(self, outcomes=['succeed', 'aborted'])
-        
-#         self.servo_bridge_set = servo_bridge_set
-#         self.state_dict = state_dict
-
-#     def execute(self, userdata: smach.UserData):
-#         rospy.logwarn(f'servo')
-
-#         flag = self.servo_bridge_set(self.state_dict)
-
-#         if flag:
-#             return 'aborted'
-#         else:
-#             return 'succeed'
 
 
 class Servos(smach.State):
     def __init__(self, 
-                 servo_bridge_set: ServoBridge.set,
+                 servo_bridge: ServoBridge,
                  state_dict: typing.Dict[str, str],
                  sleep_duration: float = None
                  ) -> None:
         smach.State.__init__(self, outcomes=['succeed', 'aborted'])
         
-        self.servo_bridge_set = servo_bridge_set
+        self.servo_bridge = servo_bridge
         self.state_dict = state_dict
         self.sleep_duration = sleep_duration
 
     def execute(self, userdata: smach.UserData):
-        flag = self.servo_bridge_set(self.state_dict)
+        flag = self.servo_bridge.set(self.state_dict)
 
         if self.sleep_duration != None:
             rospy.sleep(self.sleep_duration)
@@ -121,7 +99,6 @@ class SleepState(smach.State):
         return 'succeed'
 
 
-# main
 def main():
     rospy.init_node('state_machine')
 
@@ -144,19 +121,18 @@ def main():
 
         smach.StateMachine.add(
             'GripperServo', 
-            Servos(servo_bridge.set, {'gripper' : 'closed'}, sleep_duration=3), 
+            Servos(servo_bridge, {'gripper' : 'closed'}, sleep_duration=3), 
             transitions={'succeed':'LiftServo', 'aborted':'aborted'})
-        
         
         smach.StateMachine.add(
             'LiftServo', 
-            Servos(servo_bridge.set, {'lift' : 'down'}, sleep_duration=3), 
+            Servos(servo_bridge, {'lift' : 'down'}, sleep_duration=3), 
             transitions={'succeed':'BothServo', 'aborted':'aborted'})
         
         
         smach.StateMachine.add(
             'BothServo', 
-            Servos(servo_bridge.set, {'gripper' : 'opened', 'lift' : 'up'}, sleep_duration=3), 
+            Servos(servo_bridge, {'gripper' : 'opened', 'lift' : 'up'}, sleep_duration=3), 
             transitions={'succeed':'succeed', 'aborted':'aborted'})
 
     sis = smach_ros.IntrospectionServer('server', state_machine, 'SM_ROOT')
