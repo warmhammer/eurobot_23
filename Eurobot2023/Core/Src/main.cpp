@@ -26,6 +26,7 @@
 #include "motors.h"
 #include "wrappers.h"
 #include "servo/servo_interface.h"
+#include "servo/servo_description.h"
 
 /* USER CODE END Includes */
 
@@ -151,10 +152,15 @@ motors::EncoderMotor right_encoder_motor (
 );
 //-----------------------------------------------------------Servos------------------------------
 
+// constexpr is used here to avoid logic error at compile time
+constexpr servo_description::PDI_6225MG_300_Servo left_gripper(0, 100, 200);
+constexpr servo_description::PDI_6225MG_300_Servo right_gripper(0, 100, 200);
+
 servo_interface::Servo_Interface servos(
 		{
-			servo_description::PDI_6225MG_300_Servo(0),
-			servo_description::RDS3225_Servo(1),
+			left_gripper,
+			right_gripper
+
 		},
 		node,
 		"servo_cmd_topic"
@@ -215,7 +221,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
