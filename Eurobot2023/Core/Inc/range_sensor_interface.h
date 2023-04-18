@@ -19,24 +19,31 @@
 #include "vl53l0x_api.h"
 #include "vl53l0x_platform.h"
 
+#include "wrappers.h"
+namespace VL53L0X_sensor {
     class Range_Sensor_Interface{
         public:
             Range_Sensor_Interface(
+                    std::initializer_list<wrappers::pin_wrapper> XSHUT_Pins_list,
                     ros::NodeHandle& node,
-                    //const char* sensors_state_topic_name,
-                    const char* range_sensors_topic_name,
-                    const unsigned int dev_count
+                    const char* range_sensors_topic_name
             );
             void update();
             unsigned int get_dev_count();
-            void Init(I2C_HandleTypeDef *hi2c);
+            void init(I2C_HandleTypeDef *hi2c);
             VL53L0X_DEV get_dev(unsigned int dev_index);
+            void start_range();
+            VL53L0X_DeviceError get_error();
+            void calibrate();
 
         private:
+            void _disable_all();
+            void _enable_all();
             //void _write(const std_msgs::Float32MultiArray& msg);
             //sensor_msgs::Range _range;
 
             std::vector<VL53L0X_Dev_t> _sensors;
+            std::vector<wrappers::pin_wrapper> _XSHUT_Pins;
 
             //ros::Publisher _ranges_publisher;
 
@@ -44,5 +51,5 @@
 
             //ros::Subscriber<> _servo_cmd_subscriber;
     };
-
+}
 #endif /* INC_RANGE_SENSOR_INTERFACE_H_ */

@@ -59,6 +59,18 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define XSHUT_1_Pin GPIO_PIN_1
+#define XSHUT_1_GPIO_Port GPIOC
+#define XSHUT_2_Pin GPIO_PIN_2
+#define XSHUT_2_GPIO_Port GPIOC
+#define XSHUT_3_Pin GPIO_PIN_3
+#define XSHUT_3_GPIO_Port GPIOC
+#define XSHUT_4_Pin GPIO_PIN_7
+#define XSHUT_4_GPIO_Port GPIOE
+#define XSHUT_5_Pin GPIO_PIN_9
+#define XSHUT_5_GPIO_Port GPIOE
+#define XSHUT_6_Pin GPIO_PIN_11
+#define XSHUT_6_GPIO_Port GPIOE
 #define DIR_L_Pin GPIO_PIN_8
 #define DIR_L_GPIO_Port GPIOA
 #define DIR_R_Pin GPIO_PIN_9

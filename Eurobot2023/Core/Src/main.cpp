@@ -26,6 +26,7 @@
 #include "motors.h"
 #include "wrappers.h"
 #include "servo/servo_interface.h"
+#include "range_sensor_interface.h"
 
 /* USER CODE END Includes */
 
@@ -91,6 +92,12 @@ DMA_HandleTypeDef hdma_usart2_tx;
 #define pwm_timer_chanel1_r  	TIM_CHANNEL_1
 
 //------------------------------------------------define EncoderMotors perif END--------------------
+
+//------------------------------------------------define Range_Sensors perif BEGIN------------------
+
+//------------------------------------------------define Range_Sensors perif END--------------------
+
+
 
 /* USER CODE END PV */
 
@@ -161,7 +168,17 @@ servo_interface::Servo_Interface servos(
 	node,
 	"servo_cmd_topic"
 );
+//-----------------------------------------------------------Range_Sensors-----------------------
 
+VL53L0X_sensor::Range_Sensor_Interface range_sensors(
+        {
+          {XSHUT_1_GPIO_Port,XSHUT_1_Pin},
+          {XSHUT_2_GPIO_Port,XSHUT_2_Pin},
+          {XSHUT_3_GPIO_Port,XSHUT_3_Pin},
+          {XSHUT_4_GPIO_Port,XSHUT_4_Pin},
+          {XSHUT_5_GPIO_Port,XSHUT_5_Pin},
+          {XSHUT_6_GPIO_Port,XSHUT_6_Pin}
+        }, node, "range_sensors_topic");
 //------------------------------------------------------------SYSTEM UART func-------------------
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 
@@ -249,6 +266,8 @@ int main(void)
     //-------------------------------------------------------------ROS----------------------
 
     node.initNode();
+    range_sensors.init(&hi2c2);
+    range_sensors.start_range();
 
     while (node.connected() == false) {
         // waiting for connection
@@ -394,7 +413,7 @@ static void MX_I2C2_Init(void)
 
   /* USER CODE END I2C2_Init 1 */
   hi2c2.Instance = I2C2;
-  hi2c2.Init.ClockSpeed = 400000;
+  hi2c2.Init.ClockSpeed = 100000;
   hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c2.Init.OwnAddress1 = 0;
   hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -826,12 +845,33 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, XSHUT_1_Pin|XSHUT_2_Pin|XSHUT_3_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, XSHUT_4_Pin|XSHUT_5_Pin|XSHUT_6_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, DIR_L_Pin|DIR_R_Pin|ENA_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : XSHUT_1_Pin XSHUT_2_Pin XSHUT_3_Pin */
+  GPIO_InitStruct.Pin = XSHUT_1_Pin|XSHUT_2_Pin|XSHUT_3_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : XSHUT_4_Pin XSHUT_5_Pin XSHUT_6_Pin */
+  GPIO_InitStruct.Pin = XSHUT_4_Pin|XSHUT_5_Pin|XSHUT_6_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : DIR_L_Pin DIR_R_Pin */
   GPIO_InitStruct.Pin = DIR_L_Pin|DIR_R_Pin;
