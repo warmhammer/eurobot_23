@@ -14,8 +14,8 @@ namespace VL53L0X_sensor {
                     ros::NodeHandle& node,
                     const char* range_sensors_topic_name
                     ) :
-                    _node(node),
-                    _XSHUT_Pins(XSHUT_Pins_list)
+                    _XSHUT_Pins(XSHUT_Pins_list),
+                    _node(node)
                     //_ranges_publisher(range_sensors_topic_name,&_range)
                     {
                         for (int i = 0; i < XSHUT_Pins_list.size(); i++){
@@ -37,6 +37,9 @@ namespace VL53L0X_sensor {
             HAL_GPIO_WritePin(_XSHUT_Pins[i].port, _XSHUT_Pins[i].pin, GPIO_PIN_SET);
             HAL_Delay(2);                                                                    //BOOT_Delay
             _sensors[i].I2cHandle = hi2c;
+
+            VL53L0X_SetDeviceAddress(&_sensors[i], 0x52 + 2*i);
+
             _sensors[i].I2cDevAddr = 0x52 + 2*i;
 
             VL53L0X_DataInit(&_sensors[i]);                                                  //TODO return status
