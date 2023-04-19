@@ -37,6 +37,7 @@ namespace VL53L0X_sensor {
             HAL_GPIO_WritePin(_XSHUT_Pins[i].port, _XSHUT_Pins[i].pin, GPIO_PIN_SET);
             HAL_Delay(2);                                                                    //BOOT_Delay
             _sensors[i].I2cHandle = hi2c;
+            _sensors[i].I2cDevAddr = 0x52;
 
             VL53L0X_SetDeviceAddress(&_sensors[i], 0x52 + 2*i);
 
@@ -63,7 +64,6 @@ namespace VL53L0X_sensor {
 
         _enable_all();
         Status = get_error();
-        int k = 5;
 }
 
     unsigned int Range_Sensor_Interface::get_dev_count(){
