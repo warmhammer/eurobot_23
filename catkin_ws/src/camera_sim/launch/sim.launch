@@ -10,7 +10,7 @@
   <param name="camera_description" 
     command="$(find xacro)/xacro $(arg camera_model) tripod_h:=$(arg camera_height) camera_tilt:=$(arg camera_tilt)" />
 
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" /> -->
 
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -25,32 +25,44 @@
   </include>
 
   <include file="$(find aruco_description)/launch/load_aruco_description.launch">
-    <arg name="aruco_id" value="1" />
+    <arg name="aruco_id" value="20" />
   </include>
   <include file="$(find aruco_description)/launch/load_aruco_description.launch">
-    <arg name="aruco_id" value="3" />
+    <arg name="aruco_id" value="21" />
   </include>
   <include file="$(find aruco_description)/launch/load_aruco_description.launch">
-    <arg name="aruco_id" value="7" />
+    <arg name="aruco_id" value="22" />
   </include>
   <include file="$(find aruco_description)/launch/load_aruco_description.launch">
-    <arg name="aruco_id" value="13" />
+    <arg name="aruco_id" value="23" />
   </include>
 
-  <node name="tf_footprint_base" pkg="tf" type="static_transform_publisher"
-    args="0 0 $(arg camera_height) 1.57 0 $(arg camera_tilt) world camera 30" />
+  <!-- <node name="tf_footprint_base" pkg="tf" type="static_transform_publisher"
+    args="1 0 $(arg camera_height) 3.14 0 $(arg camera_tilt) world camera 30" /> -->
   
 
   <node name="spawn_urdf2" pkg="gazebo_ros" type="spawn_model"
-    args="-param camera_description -urdf -x 0 -y 0 -z 0 -model my_camera" />
+    args="-param camera_description -urdf -x 1 -y 0 -z 0 -Y 1.57 -model my_camera" />
 
-  <node name="spawn_urdf3" pkg="gazebo_ros" type="spawn_model"
-    args="-param $(arg aruco_dictionary)_id1_description -urdf -x 1 -y 0 -z 0.05 -R -1.57 -P 0 -Y 1.57 -model $(arg aruco_dictionary)_id1" />
+  <!-- <node name="spawn_urdf3" pkg="gazebo_ros" type="spawn_model"
+    args="-param $(arg aruco_dictionary)_id1_description -urdf -x 1 -y 0 -z 0.05 -R -1.57 -P 0 -Y 1.57 -model $(arg aruco_dictionary)_id1" /> -->
 
-  <!-- <node name="spawn_urdf4" pkg="gazebo_ros" type="spawn_model"
-    args="-param $(arg aruco_dictionary)_id3_description -urdf -x 1 -y 0.5 -z 0 -R 0 -P 0 -Y 0 -model $(arg aruco_dictionary)_id3" />
+  <node name="spawn_urdf4" pkg="gazebo_ros" type="spawn_model"
+    args="-param $(arg aruco_dictionary)_id20_description -urdf -x 1.43 -y 0.575 -z 0 -R 0 -P 0 -Y 3.1415 -model $(arg aruco_dictionary)_id20" />
 
   <node name="spawn_urdf5" pkg="gazebo_ros" type="spawn_model"
+    args="-param $(arg aruco_dictionary)_id21_description -urdf -x 0.57 -y 0.575 -z 0 -R 0 -P 0 -Y 3.1415 -model $(arg aruco_dictionary)_id21" />
+  
+    <node name="spawn_urdf6" pkg="gazebo_ros" type="spawn_model"
+    args="-param $(arg aruco_dictionary)_id22_description -urdf -x 1.43 -y 1.5 -z 0 -R 0 -P 0 -Y 3.1415 -model $(arg aruco_dictionary)_id22" />
+
+    <node name="spawn_urdf7" pkg="gazebo_ros" type="spawn_model"
+    args="-param $(arg aruco_dictionary)_id23_description -urdf -x 0.57 -y 1.5 -z 0 -R 0 -P 0 -Y 3.1415 -model $(arg aruco_dictionary)_id23" />
+
+    <!-- <node name="spawn_urdf4" pkg="gazebo_ros" type="spawn_model"
+    args="-param $(arg aruco_dictionary)_id3_description -urdf -x 1 -y 0.5 -z 0 -R 0 -P 0 -Y 0 -model $(arg aruco_dictionary)_id3" /> -->
+
+ <!--  <node name="spawn_urdf5" pkg="gazebo_ros" type="spawn_model"
     args="-param $(arg aruco_dictionary)_id7_description -urdf -x 2 -y 1 -z 0.1 -R 0 -P -1.57 -Y 0 -model $(arg aruco_dictionary)_id7" />
 
   <node name="spawn_urdf6" pkg="gazebo_ros" type="spawn_model"
