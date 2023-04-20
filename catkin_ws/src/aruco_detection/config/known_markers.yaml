@@ -1,0 +1,33 @@
+marker_size: &marker_size_value 0.1
+
+static_markers:
+  - id: 21
+    size: *marker_size_value
+    coordinates:
+      x: 0.57
+      y: 0.575
+  - id: 23
+    size: *marker_size_value
+    coordinates:
+      x: 0.57
+      y: 1.5 # 2.425
+  - id: 20
+    size: *marker_size_value
+    coordinates:
+      x: 1.43
+      y: 0.575
+  - id: 22
+    size: *marker_size_value
+    coordinates:
+      x: 1.43
+      y: 1.5 # 2.425
+
+dolly_markers:
+  - id: 1
+    size: *marker_size_value
+  - id: 2
+    size: *marker_size_value
+  - id: 3
+    size: *marker_size_value
+  - id: 4
+    size: *marker_size_value
