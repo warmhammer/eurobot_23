@@ -7,10 +7,7 @@ from typing import Dict, Tuple, Any, Optional
 
 class Detector:
 
-    def __init__(self, marker_size, aruco_dict_type, camera_info_path, draw_markers=False):
-        with np.load(camera_info_path) as file:
-            camera_matrix, dist_coeffs = [file[i] for i in ('cameraMatrix', 'distCoeffs')]
-
+    def __init__(self, marker_size, aruco_dict_type, camera_matrix, dist_coeffs, draw_markers=False):
         self._markerSize = marker_size
         self.__cameraMatrix = camera_matrix
         self.__distCoeff = dist_coeffs
