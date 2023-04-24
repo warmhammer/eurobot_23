@@ -6,38 +6,18 @@ import numpy as np
 import cv2
 import sys
 import time
-import yaml
-from os.path import abspath
 import tf.transformations as tft
 from tf import TransformBroadcaster
 PKG_PATH = rospkg.RosPack().get_path('aruco_detection')
 sys.path.append(PKG_PATH)
-from include.camera_pose_common import get_table_pose_and_rotation_matrix
+from scrips.camera_pose_common import get_table_pose_and_rotation_matrix
+from scrips.configs_provider import ConfigsProvider
 
 
-markers_config_path = abspath(PKG_PATH + '/config/known_markers.yaml')
-camera_config_path = abspath(PKG_PATH + '/config/camera_properties.yaml')
-camera_info_path = abspath(PKG_PATH + '/../camera_calibration/camera_info/camera_info.npz')
-
-with open(markers_config_path, "r") as file:
-    known_markers = yaml.safe_load(file)
-static_markers = known_markers['static_markers']
-
-with open(camera_config_path, "r") as file:
-    camera_prop = yaml.safe_load(file)
-camera_index = camera_prop["camera_index"]
-frame_width = camera_prop["frame_width"]
-frame_height = camera_prop["frame_height"]
-
-with np.load(camera_info_path) as file:
-    camera_matrix, dist_coeffs = [file[i] for i in ('cameraMatrix', 'distCoeffs')]
-
-bridge = CvBridge()
-tb = TransformBroadcaster()
 recived_img = None
 
 
-def get_frame_from_camera():
+def get_frame_from_camera(camera_index, frame_width, frame_height):
     try:
         cap = cv2.VideoCapture(camera_index)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
@@ -56,9 +36,9 @@ def get_frame_from_camera():
         rospy.set_param('camera_pose_ok', False)
         exit()
 
-def image_callback(img_msg):
+def image_callback(img_msg, cv_bridge):
     try:
-        cv_image = bridge.imgmsg_to_cv2(img_msg, "bgr8")
+        cv_image = cv_bridge.imgmsg_to_cv2(img_msg, "bgr8")
 
     except CvBridgeError as e:
         rospy.logerr(f"CvBridge Error. Exception text:\n{e}")
@@ -69,16 +49,19 @@ def image_callback(img_msg):
 
 def main():
     rospy.init_node("camera_pose_node")
-
+    configs = ConfigsProvider()
+    cv_bridge = CvBridge()
+    tb = TransformBroadcaster()
     global recived_img
     use_camera = rospy.get_param('~use_camera', 'true')
     rate = rospy.Rate(30)
 
+    camera_index, frame_width, frame_height = configs.get_capturer_props()
     if use_camera == True:
-        recived_img = get_frame_from_camera()
+        recived_img = get_frame_from_camera(camera_index, frame_width, frame_height)
 
     else:
-        img_sub = rospy.Subscriber("/my_robot/camera1/image_raw", Image, image_callback)
+        img_sub = rospy.Subscriber("/my_robot/camera1/image_raw", Image, lambda msg: image_callback(msg, cv_bridge))
         start_time = time.time()
 
         while recived_img is None and time.time() - start_time < 1:
@@ -86,6 +69,8 @@ def main():
 
     frame = recived_img
 
+    camera_matrix, dist_coeffs = configs.get_camera_info()
+    static_markers = configs.get_markers_config()["static_markers"]
     for i in range(3):
         ret, table_pose, rmtx = get_table_pose_and_rotation_matrix(frame, static_markers, camera_matrix, dist_coeffs)
 
@@ -93,7 +78,7 @@ def main():
             break
 
         if use_camera == True:
-            frame = get_frame_from_camera()
+            frame = get_frame_from_camera(camera_index, frame_width, frame_height)
 
         else:
             recived_img = None
@@ -129,5 +114,6 @@ def main():
                         tft.quaternion_from_matrix(T_cam_world), 
                         rospy.Time.now(), "camera", "/world")
         rate.sleep()
+
 if __name__ == "__main__":
     main()
