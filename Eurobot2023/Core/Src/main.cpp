@@ -156,22 +156,22 @@ constexpr servo_description::RDS3225_Servo plunger(3, 95, 150);
 
 constexpr servo_description::PDI_6225MG_300_Servo left_limiter(4); // 55, 105
 constexpr servo_description::PDI_6225MG_300_Servo right_limiter(5); // 180, 230
-constexpr servo_description::PDI_6225MG_300_Servo cherry_spreader(6, 10, 250);
+constexpr servo_description::PDI_6225MG_300_Servo cherry_spreader(6, 10, 285);
 constexpr servo_description::PDI_6225MG_300_Servo cherry_separator(7, 115, 240);
 constexpr servo_description::PDI_6225MG_300_Servo visor(8, 10, 235);
 
 servo_interface::Servo_Interface servos(
 	{
-		left_gripper,
-		right_gripper,
-		lift,
-		plunger,
-
-		left_limiter,
-		right_limiter,
-		cherry_spreader,
-		cherry_separator,
-		visor
+//		left_gripper,
+//		right_gripper,
+//		lift,
+//		plunger,
+//
+//		left_limiter,
+//		right_limiter,
+		cherry_spreader
+//		cherry_separator,
+//		visor
 
 	},
 	node,
