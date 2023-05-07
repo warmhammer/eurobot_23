@@ -1,5 +1,5 @@
 # Coordinate frame and tf parameters
-global_frame: odom                  # default
+global_frame: map
 robot_base_frame: base_footprint
 transform_tolerance: 0.5
 

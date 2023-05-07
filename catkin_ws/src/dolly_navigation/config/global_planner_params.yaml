@@ -10,9 +10,9 @@ GlobalPlanner:
     # use_grid_path: false              # default
     # old_navfn_behavior: false         # default
 
-    # lethal_cost: 253                  # default
-    # neutral_cost: 50                  # default
-    # cost_factor: 3.0
+    lethal_cost: 253                  # default
+    neutral_cost: 66                  # default
+    cost_factor: 0.55
 
     # publish_potential: true           # default
 
