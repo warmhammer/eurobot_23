@@ -22,12 +22,30 @@ static_markers:
       x: 1.43
       y: 1.5 # 2.425
 
-dolly_markers:
-  - id: 1
-    size: *marker_size_value
-  - id: 2
-    size: *marker_size_value
-  - id: 3
-    size: *marker_size_value
-  - id: 4
-    size: *marker_size_value
+cube_markers:
+  dolly_cube_markers:
+    - id: 20
+      x: 0.05
+      y: 0
+    - id: 25
+      x: 0
+      y: 0.05
+    - id: 26
+      x: -0.05
+      y: 0
+    - id: 27
+      x: 0
+      y: -0.05
+  enemy_cube_markers:
+    - id: 21
+      x: 0.05
+      y: 0
+    - id: 29
+      x: 0
+      y: 0.05
+    - id: 30
+      x: -0.05
+      y: 0
+    - id: 31
+      x: 0
+      y: -0.05
