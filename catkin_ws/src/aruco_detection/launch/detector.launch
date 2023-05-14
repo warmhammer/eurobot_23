@@ -7,10 +7,12 @@
 
     <node pkg="aruco_detection" type="camera_pose_node.py" name="camera_pose_node" output="log" respawn="true">
         <param name="use_camera" value="$(arg camera_pose_using_camera)"/>
+        <param name="receiving_img_topic" value="/my_robot/camera1/image_raw"/>
     </node>
     <node pkg="aruco_detection" type="detector_node.py" name="detector_node" output="log" respawn="true">
         <param name="use_camera" value="$(arg detecting_using_camera)"/>
-        <param name="visualize" value="$(arg visualize)"/>
+        <param name="receiving_img_topic" value="/my_robot/camera1/image_raw"/>
+        <param name="publishing_img_topic" value="/detector_node/detector"/>
     </node>
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 </launch>
