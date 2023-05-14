@@ -101,34 +101,62 @@ def get_4x4_rotation_matrix(rvec, tvec):
     return rmat_4x4
 
 
-def get_table_rotation_matrix(frame, ordered_ids, obj_points, camera_mtx, dist_coeffs):
+def get_quadrilateral_area(points):
+    x1, y1 = points[0]
+    x2, y2 = points[1]
+    x3, y3 = points[2]
+    x4, y4 = points[3]
+    return abs((x2-x1)*(y3-y1)-(x3-x1)*(y2-y1))/2 + abs((x4-x3)*(y1-y3)-(x1-x3)*(y4-y3))/2
+
+def get_marker_obj_points(markers_dict):
+    for marker in markers_dict:
+        size = marker["size"]
+        break
+    return np.array([[-size/2, size/2, 0],
+                     [size/2, size/2, 0],
+                     [size/2, -size/2, 0],
+                     [-size/2, -size/2, 0]], dtype=np.float32)
+
+
+def get_table_rotation_matrix(frame, marker_obj_points, ordered_ids, table_obj_points, camera_mtx, dist_coeffs):
     aruco_dict = aruco.Dictionary_get(cv2.aruco.DICT_4X4_100)
     parameters = aruco.DetectorParameters_create()
     corners, ids, _ = aruco.detectMarkers(frame, aruco_dict, parameters=parameters,
                                           cameraMatrix=camera_mtx, distCoeff=dist_coeffs)
     ids = np.squeeze(ids).tolist()
-    if len(set(ids) & set(ordered_ids)) != 4:
+    ids_set = set(ids) & set(ordered_ids)
+    if len(ids_set) < 1:
         raise ValueError()
 
-    corners_dict = {}
-
-    for id in ordered_ids:
-        corners_dict[id] = corners[ids.index(id)][0]
-
-    img_points = get_img_points(ordered_ids, corners_dict)
-
-    _, rvec, tvec = cv2.solvePnP(
-        obj_points, img_points, camera_mtx, dist_coeffs)
-    rmat_4x4 = get_4x4_rotation_matrix(rvec, tvec)
-
-    return rmat_4x4
+    elif len(ids_set) == 4:
+        corners_dict = {}
+        for id in ordered_ids:
+            corners_dict[id] = corners[ids.index(id)][0]
+        img_points = get_img_points(ordered_ids, corners_dict)
+        _, rvec, tvec = cv2.solvePnP(table_obj_points, img_points, camera_mtx, dist_coeffs)
+        rmat_4x4 = get_4x4_rotation_matrix(rvec, tvec)
+        return rmat_4x4
+    else:
+        max_area = 0
+        max_area_marker_id = None
+        for id in ids_set:
+            area = get_quadrilateral_area(corners[ids.index(id)][0])
+            if area > max_area:
+                max_area = area
+                max_area_marker_id = id
+        img_points = corners[ids.index(max_area_marker_id)]
+        img_points[0] = np.roll(img_points[0], -2, axis=0)
+        _, rvec, tvec = cv2.solvePnP(marker_obj_points, img_points, camera_mtx, dist_coeffs)
+        rmat_4x4 = get_4x4_rotation_matrix(rvec, tvec)
+        return rmat_4x4
 
 
 def get_table_pose_and_rotation_matrix(frame, static_markers_dict, camera_matrix, dist_coeffs):
     try:
         markers_corners = get_static_markers_corners(static_markers_dict)
-        ordered_ids, table_pose, obj_points = get_table_obj_points(markers_corners)
-        rmtx = get_table_rotation_matrix(frame, ordered_ids, obj_points, 
+        ordered_ids, table_pose, table_obj_points = get_table_obj_points(markers_corners)
+        marker_obj_points = get_marker_obj_points(static_markers_dict)
+        rmtx = get_table_rotation_matrix(frame, marker_obj_points, ordered_ids, table_obj_points, 
                                         camera_matrix, dist_coeffs)
     except:
         return False, None, None
