@@ -17,6 +17,7 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <range_sensor/range_sensor_interface.h>
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -26,7 +27,6 @@
 #include "motors.h"
 #include "wrappers.h"
 #include "servo/servo_interface.h"
-#include "range_sensor_interface.h"
 
 /* USER CODE END Includes */
 
@@ -128,6 +128,7 @@ ros::NodeHandle node;
 //-------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------------GLOBAL OBJ---------------------------------
+
 motors::EncoderMotor left_encoder_motor (
     {dir_port_l, dir_pin_l},
     {ena_port, ena_pin},
@@ -153,6 +154,7 @@ motors::EncoderMotor right_encoder_motor (
 	"/dolly/right_wheel/cur_vel32",
 	"/dolly/right_wheel/pwd32"
 );
+
 //-----------------------------------------------------------Servos------------------------------
 
 // constexpr is used here to avoid logic error at compile time
@@ -168,18 +170,24 @@ servo_interface::Servo_Interface servos(
 	node,
 	"servo_cmd_topic"
 );
+
 //-----------------------------------------------------------Range_Sensors-----------------------
 
-VL53L0X_sensor::Range_Sensor_Interface range_sensors(
-        {
-          {XSHUT_1_GPIO_Port,XSHUT_1_Pin},
-          {XSHUT_2_GPIO_Port,XSHUT_2_Pin},
-          {XSHUT_3_GPIO_Port,XSHUT_3_Pin},
-          {XSHUT_4_GPIO_Port,XSHUT_4_Pin},
-          {XSHUT_5_GPIO_Port,XSHUT_5_Pin},
-          {XSHUT_6_GPIO_Port,XSHUT_6_Pin}
-        }, node, "range_sensors_topic");
+rs_interface::VL53L0X_Interface range_sensors (
+	{
+		{{XSHUT_1_GPIO_Port, XSHUT_1_Pin}},
+		{{XSHUT_2_GPIO_Port, XSHUT_2_Pin}},
+		{{XSHUT_3_GPIO_Port, XSHUT_3_Pin}},
+		{{XSHUT_4_GPIO_Port, XSHUT_4_Pin}},
+		{{XSHUT_5_GPIO_Port, XSHUT_5_Pin}},
+		{{XSHUT_6_GPIO_Port, XSHUT_6_Pin}}
+	},
+	node,
+	"range_sensors_topic"
+);
+
 //------------------------------------------------------------SYSTEM UART func-------------------
+
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 
     uint8_t data[1];
@@ -207,6 +215,7 @@ void UART_check(UART_HandleTypeDef *huart){
 }
 
 //------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
+
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     node.getHardware()->flush();
 }
@@ -214,7 +223,6 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     node.getHardware()->reset_rbuf();
 }
-
 
 //------------------------------------------------------------TIM SYSTEM Motors CallBack's-------------------
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
@@ -266,8 +274,6 @@ int main(void)
     //-------------------------------------------------------------ROS----------------------
 
     node.initNode();
-    range_sensors.init(&hi2c2);
-    range_sensors.start_range();
 
     while (node.connected() == false) {
         // waiting for connection
@@ -281,6 +287,8 @@ int main(void)
     right_encoder_motor.init();
 
     servos.init(&hi2c1);
+
+    range_sensors.init(&hi2c2);
 
    //-----------------------------------------------------------ROS::Init_end--------------
     node.getHardware()->flush();	// buffer flush
@@ -301,6 +309,8 @@ int main(void)
 
                 right_encoder_motor.publish();
                 left_encoder_motor.publish();
+
+                range_sensors.publish();
 
             }
         }
