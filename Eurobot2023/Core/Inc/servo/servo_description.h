@@ -27,7 +27,7 @@ namespace servo_description {
 				uint8_t pca_channel
 			) noexcept :
 				_angle_range(angle_range),
-				_pwm_koef(angle_range > 0 ? (pwm_max - pwm_min) / angle_range : 0),
+				_pwm_koef(angle_range > 0 ? static_cast<float>(pwm_max - pwm_min) / angle_range : 0),
 				_pwm_bias(pwm_min),
 				_min_angle(min_angle),
 				_max_angle(max_angle),
@@ -81,7 +81,7 @@ namespace servo_description {
 		private:
 			const uint16_t _angle_range;
 
-			const uint16_t _pwm_koef;
+			const float _pwm_koef;
 			const uint16_t _pwm_bias;
 
 			const uint16_t _min_angle;

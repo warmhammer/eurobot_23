@@ -148,14 +148,30 @@ motors::EncoderMotor right_encoder_motor (
 );
 //-----------------------------------------------------------Servos------------------------------
 
-// constexpr is used here to avoid logic error at compile time
-constexpr servo_description::PDI_6225MG_300_Servo left_gripper(0, 100, 200);
-constexpr servo_description::PDI_6225MG_300_Servo right_gripper(0, 100, 200);
+// ****** constexpr is used here to avoid logic error at compile time
+constexpr servo_description::RDS3225_Servo left_gripper(0, 60, 130);
+constexpr servo_description::RDS3225_Servo right_gripper(1, 55, 125);
+constexpr servo_description::RDS3225_Servo lift(2, 15, 210);
+constexpr servo_description::RDS3225_Servo plunger(3, 95, 150);
+
+constexpr servo_description::PDI_6225MG_300_Servo left_limiter(4); // 55, 105
+constexpr servo_description::PDI_6225MG_300_Servo right_limiter(5); // 180, 230
+constexpr servo_description::PDI_6225MG_300_Servo cherry_spreader(6, 10, 285);
+constexpr servo_description::PDI_6225MG_300_Servo cherry_separator(7, 115, 240);
+constexpr servo_description::PDI_6225MG_300_Servo visor(8, 10, 235);
 
 servo_interface::Servo_Interface servos(
 	{
 		left_gripper,
-		right_gripper
+		right_gripper,
+		lift,
+		plunger,
+
+		left_limiter,
+		right_limiter,
+		cherry_spreader,
+		cherry_separator,
+		visor
 
 	},
 	node,
