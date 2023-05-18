@@ -162,16 +162,16 @@ constexpr servo_description::PDI_6225MG_300_Servo visor(8, 10, 235);
 
 servo_interface::Servo_Interface servos(
 	{
-//		left_gripper,
-//		right_gripper,
-//		lift,
-//		plunger,
-//
-//		left_limiter,
-//		right_limiter,
-		cherry_spreader
-//		cherry_separator,
-//		visor
+		left_gripper,
+		right_gripper,
+		lift,
+		plunger,
+
+		left_limiter,
+		right_limiter,
+		cherry_spreader,
+		cherry_separator,
+		visor
 
 	},
 	node,
