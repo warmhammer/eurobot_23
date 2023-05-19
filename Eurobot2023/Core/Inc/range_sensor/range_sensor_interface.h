@@ -36,7 +36,9 @@ namespace rs_interface {
 			{}
 
             bool init(I2C_HandleTypeDef *hi2c) {
-            	_node.advertise(_scan_publisher);
+            	if (_node.advertise(_scan_publisher) == false) {
+            		_node.logwarn("Node advertise error");
+            	}
 
             	bool error = false;
 
@@ -87,7 +89,7 @@ namespace rs_interface {
             	return ranges;
             }
 
-            bool publish() {
+            void publish() {
             	auto ranges = get_data();
 
             	if (ranges.size() != 0) {
@@ -98,11 +100,6 @@ namespace rs_interface {
             		_scan_publisher.publish(&_scan);
             	}
             }
-
-
-            void start_range();
-
-            VL53L0X_DeviceError get_error();
 
         private:
             void _disable_all();

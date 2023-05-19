@@ -290,6 +290,8 @@ int main(void)
 
     range_sensors.init(&hi2c2);
 
+//    HAL_Delay(3000);
+
    //-----------------------------------------------------------ROS::Init_end--------------
     node.getHardware()->flush();	// buffer flush
 
