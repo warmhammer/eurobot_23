@@ -156,4 +156,21 @@
     <child link="back_caster" />
     <axis xyz="0 0 0" />
   </joint>
+
+  <link name="sensors">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+          <box size = "0.03 0.03 0.03" />
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="sensors_to_base" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="sensors" />
+    <axis xyz="0 0 0" />
+  </joint>
+
 </robot>

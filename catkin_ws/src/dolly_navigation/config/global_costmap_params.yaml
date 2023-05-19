@@ -6,5 +6,6 @@ global_costmap:
     rolling_window: false           # default
 
     plugins:
-        - {name: static_layer, type: "costmap_2d::StaticLayer"}
-        - {name: inflated_layer, type: "costmap_2d::InflationLayer"}
+        - {name: static_layer,      type: "costmap_2d::StaticLayer"}
+        - {name: obstacle_layer,    type: "costmap_2d::ObstacleLayer"}
+        - {name: inflated_layer,    type: "costmap_2d::InflationLayer"}

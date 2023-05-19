@@ -12,4 +12,5 @@ local_costmap:
 
     plugins:
         - {name: static_layer, type: "costmap_2d::StaticLayer"}
+        - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
         - {name: inflated_layer, type: "costmap_2d::InflationLayer"}

@@ -11,7 +11,7 @@ controller_patience: 5.0          # default 15.0
 conservative_reset_dist: 0.3      # default 3.0
 recovery_behavior_enabled: true   # default true
 clearing_rotation_allowed: false  # default true
-shutdown_costmaps: true           # default false
+shutdown_costmaps: false          # default false
 oscillation_timeout: 3.0          # default 0.0 
 oscillation_distance: 0.01        # default 0.5 
 planner_frequency: 0.0            # default 0.0
