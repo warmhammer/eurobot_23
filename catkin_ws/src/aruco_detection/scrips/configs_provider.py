@@ -11,7 +11,7 @@ class ConfigsProvider:
         camera_info_path = abspath(this_dir + '/../../camera_calibration/camera_info/camera_info.npz')
         markers_config_path = abspath(this_dir + '/../config/known_markers.yaml')
 
-        with open(capturer_config, "r") as file:
+        with open(capturer_config_path, "r") as file:
             capturer_config = yaml.safe_load(file)
         self.__camera_index = capturer_config["camera_index"]
         self.__frame_width = capturer_config["frame_width"]
