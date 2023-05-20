@@ -26,6 +26,9 @@
 #include "motors.h"
 #include "wrappers.h"
 #include "servo/servo_interface.h"
+#include "range_sensor/range_sensor_interface.h"
+
+#include "utils/start_button.h"
 
 /* USER CODE END Includes */
 
@@ -87,13 +90,16 @@ DMA_HandleTypeDef hdma_usart2_tx;
 #define speed_timer_r 			&htim4
 #define speed_timer_chanel2_r  	TIM_CHANNEL_2
 
-//#define speed_timer_r 			&htim8
-//#define speed_timer_chanel2_r  	TIM_CHANNEL_1
-
 #define pwm_timer_r				&htim12
 #define pwm_timer_chanel1_r  	TIM_CHANNEL_1
 
 //------------------------------------------------define EncoderMotors perif END--------------------
+
+//------------------------------------------------define Range_Sensors perif BEGIN------------------
+
+//------------------------------------------------define Range_Sensors perif END--------------------
+
+
 
 /* USER CODE END PV */
 
@@ -124,6 +130,7 @@ ros::NodeHandle node;
 //-------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------------GLOBAL OBJ---------------------------------
+
 motors::EncoderMotor left_encoder_motor (
     {dir_port_l, dir_pin_l},
     {ena_port, ena_pin},
@@ -149,18 +156,65 @@ motors::EncoderMotor right_encoder_motor (
 	"/dolly/right_wheel/cur_vel32",
 	"/dolly/right_wheel/pwd32"
 );
+
 //-----------------------------------------------------------Servos------------------------------
 
+// ****** constexpr is used here to avoid logic error at compile time
+constexpr servo_description::RDS3225_Servo left_gripper(0, 60, 130);
+constexpr servo_description::RDS3225_Servo right_gripper(1, 55, 125);
+constexpr servo_description::RDS3225_Servo lift(2, 15, 210);
+constexpr servo_description::RDS3225_Servo plunger(3, 95, 150);
+
+constexpr servo_description::PDI_6225MG_300_Servo left_limiter(4); // 55, 105
+constexpr servo_description::PDI_6225MG_300_Servo right_limiter(5); // 180, 230
+constexpr servo_description::PDI_6225MG_300_Servo cherry_spreader(6, 10, 285);
+constexpr servo_description::PDI_6225MG_300_Servo cherry_separator(7, 115, 240);
+constexpr servo_description::PDI_6225MG_300_Servo visor(8, 10, 235);
+
 servo_interface::Servo_Interface servos(
-		{
-			servo_description::PDI_6225MG_300_Servo(0),
-			servo_description::RDS3225_Servo(1),
-		},
-		node,
-		"servo_cmd_topic"
+	{
+		left_gripper,
+		right_gripper,
+		lift,
+		plunger,
+
+		left_limiter,
+		right_limiter,
+		cherry_spreader,
+		cherry_separator,
+		visor
+
+	},
+	node,
+	"servo_cmd_topic"
+);
+
+//-----------------------------------------------------------Range_Sensors-----------------------
+
+rs_interface::VL53L0X_Interface range_sensors (
+	{
+		{{XSHUT_1_GPIO_Port, XSHUT_1_Pin}},
+		{{XSHUT_2_GPIO_Port, XSHUT_2_Pin}},
+		{{XSHUT_3_GPIO_Port, XSHUT_3_Pin}},
+		{{XSHUT_4_GPIO_Port, XSHUT_4_Pin}},
+		{{XSHUT_5_GPIO_Port, XSHUT_5_Pin}},
+		{{XSHUT_6_GPIO_Port, XSHUT_6_Pin}},
+		{{XSHUT_7_GPIO_Port, XSHUT_7_Pin}}
+	},
+	node,
+	"range_sensors_topic"
+);
+
+//-----------------------------------------------------------Utils-------------------------------
+
+utils::StartButton start_button(
+	{START_BUTTON_GPIO_Port, START_BUTTON_Pin},
+	node,
+	"start_topic"
 );
 
 //------------------------------------------------------------SYSTEM UART func-------------------
+
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 
     uint8_t data[1];
@@ -177,18 +231,18 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 
 void UART_check(UART_HandleTypeDef *huart){
     if (__HAL_UART_GET_FLAG(huart, UART_FLAG_ORE) != RESET){
+		__HAL_UART_CLEAR_OREFLAG(huart);
+		__HAL_UART_ENABLE_IT(huart,UART_IT_ERR);
 
-              __HAL_UART_CLEAR_OREFLAG(huart);
-              __HAL_UART_ENABLE_IT(huart,UART_IT_ERR);
-
-              if (__HAL_UART_GET_FLAG(huart,UART_FLAG_RXNE) == SET){
-                  huart->Instance->CR3 |= 1 << 6;
-                  huart->Instance->CR3 |= 1 << 7;
-              }
-          }
+		if (__HAL_UART_GET_FLAG(huart,UART_FLAG_RXNE) == SET){
+			huart->Instance->CR3 |= 1 << 6;
+			huart->Instance->CR3 |= 1 << 7;
+		}
+	}
 }
 
 //------------------------------------------------------------SYSTEM Transmit CallBack's-------------------
+
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     node.getHardware()->flush();
 }
@@ -197,11 +251,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     node.getHardware()->reset_rbuf();
 }
 
-
 //------------------------------------------------------------TIM SYSTEM Motors CallBack's-------------------
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
-	  left_encoder_motor.__set_velocity_to_null__(htim);
-	  right_encoder_motor.__set_velocity_to_null__(htim);
+	left_encoder_motor.__set_velocity_to_null__(htim);
+	right_encoder_motor.__set_velocity_to_null__(htim);
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -215,7 +268,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -224,16 +276,12 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
-
-
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -267,6 +315,12 @@ int main(void)
 
     servos.init(&hi2c1);
 
+    range_sensors.init(&hi2c2);
+
+    start_button.init();
+
+//    HAL_Delay(3000);
+
    //-----------------------------------------------------------ROS::Init_end--------------
     node.getHardware()->flush();	// buffer flush
 
@@ -278,7 +332,6 @@ int main(void)
     auto prev = HAL_GetTick();
 
     while (1) {
-
         if (node.connected() == true) {
             auto now = HAL_GetTick();
 
@@ -288,8 +341,11 @@ int main(void)
                 right_encoder_motor.publish();
                 left_encoder_motor.publish();
 
+                range_sensors.publish();
+
+                start_button.publish();
+
             }
-        } else {
         }
 
         UART_check(&huart2);
@@ -400,7 +456,7 @@ static void MX_I2C2_Init(void)
 
   /* USER CODE END I2C2_Init 1 */
   hi2c2.Instance = I2C2;
-  hi2c2.Init.ClockSpeed = 400000;
+  hi2c2.Init.ClockSpeed = 100000;
   hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c2.Init.OwnAddress1 = 0;
   hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -832,12 +888,40 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, XSHUT_1_Pin|XSHUT_2_Pin|XSHUT_3_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, XSHUT_4_Pin|XSHUT_5_Pin|XSHUT_6_Pin|XSHUT_7_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, DIR_L_Pin|DIR_R_Pin|ENA_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : XSHUT_1_Pin XSHUT_2_Pin XSHUT_3_Pin */
+  GPIO_InitStruct.Pin = XSHUT_1_Pin|XSHUT_2_Pin|XSHUT_3_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : XSHUT_4_Pin XSHUT_5_Pin XSHUT_6_Pin */
+  GPIO_InitStruct.Pin = XSHUT_4_Pin|XSHUT_5_Pin|XSHUT_6_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : XSHUT_7_Pin */
+  GPIO_InitStruct.Pin = XSHUT_7_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(XSHUT_7_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : DIR_L_Pin DIR_R_Pin */
   GPIO_InitStruct.Pin = DIR_L_Pin|DIR_R_Pin;
@@ -853,9 +937,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(ENA_GPIO_Port, &GPIO_InitStruct);
 
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+  /*Configure GPIO pin : START_BUTTON_Pin */
+  GPIO_InitStruct.Pin = START_BUTTON_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(START_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
 }
 

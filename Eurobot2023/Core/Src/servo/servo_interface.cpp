@@ -9,8 +9,6 @@
 #include "servo/servo_interface.h"
 #include "servo/pca9685.h"
 
-#include <string>
-
 namespace servo_interface {
 	Servo_Interface::Servo_Interface (
 		std::initializer_list<servo_description::Servo> servos_list,
@@ -30,10 +28,6 @@ namespace servo_interface {
 		_node.subscribe(_pos_topic_subscriber);
 
 		PCA9685_Init(hi2c);
-
-		for (auto& servo : _servos) {
-			servo.init();
-		}
 	}
 
 	bool Servo_Interface::_write(const std_msgs::Float32MultiArray& msg){
@@ -46,7 +40,7 @@ namespace servo_interface {
 		bool return_flag = false;
 
 		for (uint8_t i = 0; i < _servos.size(); i++) {
-			float angle = msg.data[i];
+			uint16_t angle = static_cast<uint16_t>(msg.data[i]);
 
 			if (_servos[i].set_angle(angle) != PCA9685_OK) {
 				_node.logwarn("Servo_Interface: pca9685 error");
