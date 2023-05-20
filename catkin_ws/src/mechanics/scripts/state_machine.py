@@ -267,11 +267,11 @@ def main():
         goal.target_pose.header.frame_id = "map"
         goal.target_pose.pose.position.x = 0.55
         goal.target_pose.pose.position.y = 0
-        goal.target_pose.pose.orientation.w = 0.0
+        goal.target_pose.pose.orientation.w = 1.0
         smach.StateMachine.add (
             'MOVE', 
             smach_ros.SimpleActionState('move_base', MoveBaseAction, goal=goal),
-            transitions={'succeeded' : 'Close Gripper', 'preempted' : 'MOVE', 'aborted' : 'MOVE'})
+            transitions={'succeeded' : 'Close Gripper', 'preempted' : 'aborted', 'aborted' : 'aborted'})
                 
         smach.StateMachine.add(
             'Close Gripper',
@@ -287,11 +287,11 @@ def main():
         goal.target_pose.header.frame_id = "map"
         goal.target_pose.pose.position.x = 0
         goal.target_pose.pose.position.y = 0
-        goal.target_pose.pose.orientation.w = 0.0
+        goal.target_pose.pose.orientation.w = 1.0
         smach.StateMachine.add (
             'MOVE_1', 
             smach_ros.SimpleActionState('move_base', MoveBaseAction, goal=goal),
-            transitions={'succeeded' : 'succeed', 'preempted' : 'MOVE_1', 'aborted' : 'MOVE_1'})
+            transitions={'succeeded' : 'succeed', 'preempted' : 'aborted', 'aborted' : 'aborted'})
         
         
         # smach.StateMachine.add(
