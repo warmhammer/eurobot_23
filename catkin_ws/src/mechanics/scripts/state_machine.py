@@ -5,6 +5,8 @@ import smach
 import smach_ros
 from std_msgs import msg
 
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+
 from collections import OrderedDict
 import typing
 
@@ -102,7 +104,7 @@ class SleepState(smach.State):
 class StartWaiter(smach.State):
     def __init__(self, topic_name):
         smach.State.__init__(self, outcomes=['succeed'])
-        
+
         self.is_started = False
 
         rospy.Subscriber(topic_name, msg.Bool, self.callback)
@@ -203,11 +205,11 @@ def main():
                             'left_gripper' : 'opened', 
                             'right_gripper' : 'opened', 
                             'lift' : 'down',
-                            'plunger' : 'out',
+                            'plunger' : 'in',
 
                             'left_limiter' : 'off',
                             'right_limiter' : 'off',
-                            'cherry_spreader' : 'up',
+                            'cherry_spreader' : 'down',
                             'cherry_separator' : 'middle',
 
                             'visor' : 'down'
@@ -215,6 +217,7 @@ def main():
                         },
                     sleep_duration=5
                 ),
+
             transitions = {'succeed' : 'Waiting start', 'aborted' : 'aborted'})
 
 
@@ -247,18 +250,28 @@ def main():
         smach.StateMachine.add(
             'Waiting start',
             StartWaiter('start_topic'),
-            transitions = {'succeed' : 'Open Gripper'}
+            transitions = {'succeed' : 'MOVE'}
         )
 
-        smach.StateMachine.add(
-            'Open Gripper',
-            Servos
-                (
-                    servo_bridge,
-                    {'left_gripper' : 'opened', 'right_gripper' : 'opened', 'lift' : 'down'},
-                    sleep_duration=3
-                ),
-            transitions = {'succeed' : 'Close Gripper', 'aborted' : 'aborted'})
+        # smach.StateMachine.add(
+        #     'Open Gripper',
+        #     Servos
+        #         (
+        #             servo_bridge,
+        #             {'left_gripper' : 'opened', 'right_gripper' : 'opened', 'lift' : 'down'},
+        #             sleep_duration=3
+        #         ),
+        #     transitions = {'succeed' : 'Close Gripper', 'aborted' : 'aborted'})
+
+        goal = MoveBaseGoal()
+        goal.target_pose.header.frame_id = "map"
+        goal.target_pose.pose.position.x = 0.55
+        goal.target_pose.pose.position.y = 0
+        goal.target_pose.pose.orientation.w = 0.0
+        smach.StateMachine.add (
+            'MOVE', 
+            smach_ros.SimpleActionState('move_base', MoveBaseAction, goal=goal),
+            transitions={'succeeded' : 'Close Gripper', 'preempted' : 'MOVE', 'aborted' : 'MOVE'})
                 
         smach.StateMachine.add(
             'Close Gripper',
@@ -266,9 +279,19 @@ def main():
                 (
                     servo_bridge,
                     {'left_gripper' : 'closed', 'right_gripper' : 'closed'},
-                    sleep_duration=2
+                    sleep_duration=1
                 ),
-            transitions = {'succeed' : 'succeed', 'aborted' : 'aborted'})
+            transitions = {'succeed' : 'MOVE_1', 'aborted' : 'aborted'})
+        
+        goal = MoveBaseGoal()
+        goal.target_pose.header.frame_id = "map"
+        goal.target_pose.pose.position.x = 0
+        goal.target_pose.pose.position.y = 0
+        goal.target_pose.pose.orientation.w = 0.0
+        smach.StateMachine.add (
+            'MOVE_1', 
+            smach_ros.SimpleActionState('move_base', MoveBaseAction, goal=goal),
+            transitions={'succeeded' : 'succeed', 'preempted' : 'MOVE_1', 'aborted' : 'MOVE_1'})
         
         
         # smach.StateMachine.add(
