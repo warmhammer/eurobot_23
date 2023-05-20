@@ -71,12 +71,16 @@ void Error_Handler(void);
 #define XSHUT_5_GPIO_Port GPIOE
 #define XSHUT_6_Pin GPIO_PIN_11
 #define XSHUT_6_GPIO_Port GPIOE
+#define XSHUT_7_Pin GPIO_PIN_14
+#define XSHUT_7_GPIO_Port GPIOE
 #define DIR_L_Pin GPIO_PIN_8
 #define DIR_L_GPIO_Port GPIOA
 #define DIR_R_Pin GPIO_PIN_9
 #define DIR_R_GPIO_Port GPIOA
 #define ENA_Pin GPIO_PIN_10
 #define ENA_GPIO_Port GPIOA
+#define START_BUTTON_Pin GPIO_PIN_0
+#define START_BUTTON_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

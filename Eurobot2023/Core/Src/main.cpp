@@ -17,7 +17,6 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <range_sensor/range_sensor_interface.h>
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -27,6 +26,9 @@
 #include "motors.h"
 #include "wrappers.h"
 #include "servo/servo_interface.h"
+#include "range_sensor/range_sensor_interface.h"
+
+#include "utils/start_button.h"
 
 /* USER CODE END Includes */
 
@@ -175,15 +177,24 @@ servo_interface::Servo_Interface servos(
 
 rs_interface::VL53L0X_Interface range_sensors (
 	{
-//		{{XSHUT_1_GPIO_Port, XSHUT_1_Pin}},
-//		{{XSHUT_2_GPIO_Port, XSHUT_2_Pin}}
-//		{{XSHUT_3_GPIO_Port, XSHUT_3_Pin}}
-		{{XSHUT_4_GPIO_Port, XSHUT_4_Pin}}
+		{{XSHUT_1_GPIO_Port, XSHUT_1_Pin}},
+		{{XSHUT_2_GPIO_Port, XSHUT_2_Pin}},
+		{{XSHUT_3_GPIO_Port, XSHUT_3_Pin}},
+		{{XSHUT_4_GPIO_Port, XSHUT_4_Pin}},
 //		{{XSHUT_5_GPIO_Port, XSHUT_5_Pin}}
 //		{{XSHUT_6_GPIO_Port, XSHUT_6_Pin}}
+		{{XSHUT_7_GPIO_Port, XSHUT_7_Pin}}
 	},
 	node,
 	"range_sensors_topic"
+);
+
+//-----------------------------------------------------------Utils-------------------------------
+
+utils::StartButton start_button(
+	{START_BUTTON_GPIO_Port, START_BUTTON_Pin},
+	node,
+	"start_topic"
 );
 
 //------------------------------------------------------------SYSTEM UART func-------------------
@@ -290,6 +301,8 @@ int main(void)
 
     range_sensors.init(&hi2c2);
 
+    start_button.init();
+
 //    HAL_Delay(3000);
 
    //-----------------------------------------------------------ROS::Init_end--------------
@@ -313,6 +326,8 @@ int main(void)
                 left_encoder_motor.publish();
 
                 range_sensors.publish();
+
+                start_button.publish();
 
             }
         }
@@ -866,7 +881,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, XSHUT_1_Pin|XSHUT_2_Pin|XSHUT_3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, XSHUT_4_Pin|XSHUT_5_Pin|XSHUT_6_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, XSHUT_4_Pin|XSHUT_5_Pin|XSHUT_6_Pin|XSHUT_7_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, DIR_L_Pin|DIR_R_Pin|ENA_Pin, GPIO_PIN_RESET);
@@ -885,6 +900,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : XSHUT_7_Pin */
+  GPIO_InitStruct.Pin = XSHUT_7_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(XSHUT_7_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pins : DIR_L_Pin DIR_R_Pin */
   GPIO_InitStruct.Pin = DIR_L_Pin|DIR_R_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -898,6 +920,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(ENA_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : START_BUTTON_Pin */
+  GPIO_InitStruct.Pin = START_BUTTON_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(START_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
 }
 
