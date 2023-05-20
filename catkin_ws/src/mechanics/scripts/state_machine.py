@@ -98,6 +98,26 @@ class SleepState(smach.State):
 
         return 'succeed'
 
+
+class StartWaiter(smach.State):
+    def __init__(self, topic_name):
+        smach.State.__init__(self, outcomes=['succeed'])
+        
+        self.is_started = False
+
+        rospy.Subscriber(topic_name, msg.Bool, self.callback)
+
+    def callback(self, status: msg.Bool):
+        if status.data:
+            self.is_started = True
+    
+    def execute(self, userdata: smach.UserData):
+        while not self.is_started:
+            rospy.sleep(0.05)
+
+        return 'succeed'
+
+
 def get_push_cakes_sm(servo_bridge):
     push_cake_sm = smach.StateMachine(outcomes=['succeed', 'aborted'])
 
@@ -141,6 +161,8 @@ def get_push_cakes_sm(servo_bridge):
         #             sleep_duration=0.5
         #         ),
         #     transitions = {'succeed' : 'succeed', 'aborted' : 'aborted'})
+
+
 
 def main():
     rospy.init_node('state_machine')
@@ -193,7 +215,7 @@ def main():
                         },
                     sleep_duration=5
                 ),
-            transitions = {'succeed' : 'Open Gripper', 'aborted' : 'aborted'})
+            transitions = {'succeed' : 'Waiting start', 'aborted' : 'aborted'})
 
 
         # smach.StateMachine.add(
@@ -223,6 +245,12 @@ def main():
         #     transitions = {'succeed' : 'succeed', 'aborted' : 'aborted'})
 
         smach.StateMachine.add(
+            'Waiting start',
+            StartWaiter('start_topic'),
+            transitions = {'succeed' : 'Open Gripper'}
+        )
+
+        smach.StateMachine.add(
             'Open Gripper',
             Servos
                 (
@@ -240,57 +268,58 @@ def main():
                     {'left_gripper' : 'closed', 'right_gripper' : 'closed'},
                     sleep_duration=2
                 ),
-            transitions = {'succeed' : 'PreClose Gripper', 'aborted' : 'aborted'})
-        
-        smach.StateMachine.add(
-            'PreClose Gripper',
-            Servos
-                (
-                    servo_bridge,
-                    {'left_gripper' : 'preclosed', 'right_gripper' : 'preclosed'},
-                    sleep_duration=1
-                ),
-            transitions = {'succeed' : 'Lift Up', 'aborted' : 'aborted'})
-        
-        smach.StateMachine.add(
-            'Lift Up',
-            Servos
-                (
-                    servo_bridge,
-                    {'lift' : 'up'},
-                    sleep_duration=3
-                ),
-            transitions = {'succeed' : 'Left Limiter On', 'aborted' : 'aborted'})
-        
-        smach.StateMachine.add(
-            'Left Limiter On',
-            Servos
-                (
-                    servo_bridge,
-                    {'left_limiter' : 'on', 'right_limiter' : 'off', 'visor' : 'down'},
-                    sleep_duration=1
-                ),
-            transitions = {'succeed' : 'Plunger In', 'aborted' : 'aborted'})
-        
-        smach.StateMachine.add(
-            'Plunger In',
-            Servos
-                (
-                    servo_bridge,
-                    {'plunger' : 'in'},
-                    sleep_duration=3
-                ),
-            transitions = {'succeed' : 'Plunger Out', 'aborted' : 'aborted'})
-        
-        smach.StateMachine.add(
-            'Plunger Out',
-            Servos
-                (
-                    servo_bridge,
-                    {'plunger' : 'out'},
-                    sleep_duration=3
-                ),
             transitions = {'succeed' : 'succeed', 'aborted' : 'aborted'})
+        
+        
+        # smach.StateMachine.add(
+        #     'PreClose Gripper',
+        #     Servos
+        #         (
+        #             servo_bridge,
+        #             {'left_gripper' : 'preclosed', 'right_gripper' : 'preclosed'},
+        #             sleep_duration=1
+        #         ),
+        #     transitions = {'succeed' : 'Lift Up', 'aborted' : 'aborted'})
+        
+        # smach.StateMachine.add(
+        #     'Lift Up',
+        #     Servos
+        #         (
+        #             servo_bridge,
+        #             {'lift' : 'up'},
+        #             sleep_duration=3
+        #         ),
+        #     transitions = {'succeed' : 'Left Limiter On', 'aborted' : 'aborted'})
+        
+        # smach.StateMachine.add(
+        #     'Left Limiter On',
+        #     Servos
+        #         (
+        #             servo_bridge,
+        #             {'left_limiter' : 'on', 'right_limiter' : 'off', 'visor' : 'down'},
+        #             sleep_duration=1
+        #         ),
+        #     transitions = {'succeed' : 'Plunger In', 'aborted' : 'aborted'})
+        
+        # smach.StateMachine.add(
+        #     'Plunger In',
+        #     Servos
+        #         (
+        #             servo_bridge,
+        #             {'plunger' : 'in'},
+        #             sleep_duration=3
+        #         ),
+        #     transitions = {'succeed' : 'Plunger Out', 'aborted' : 'aborted'})
+        
+        # smach.StateMachine.add(
+        #     'Plunger Out',
+        #     Servos
+        #         (
+        #             servo_bridge,
+        #             {'plunger' : 'out'},
+        #             sleep_duration=3
+        #         ),
+        #     transitions = {'succeed' : 'succeed', 'aborted' : 'aborted'})
             
 
     sis = smach_ros.IntrospectionServer('server', state_machine, 'SM_ROOT')
