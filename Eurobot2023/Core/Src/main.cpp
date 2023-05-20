@@ -175,12 +175,12 @@ servo_interface::Servo_Interface servos(
 
 rs_interface::VL53L0X_Interface range_sensors (
 	{
-		{{XSHUT_1_GPIO_Port, XSHUT_1_Pin}},
-		{{XSHUT_2_GPIO_Port, XSHUT_2_Pin}},
-		{{XSHUT_3_GPIO_Port, XSHUT_3_Pin}},
-		{{XSHUT_4_GPIO_Port, XSHUT_4_Pin}},
-		{{XSHUT_5_GPIO_Port, XSHUT_5_Pin}},
-		{{XSHUT_6_GPIO_Port, XSHUT_6_Pin}}
+//		{{XSHUT_1_GPIO_Port, XSHUT_1_Pin}},
+//		{{XSHUT_2_GPIO_Port, XSHUT_2_Pin}}
+//		{{XSHUT_3_GPIO_Port, XSHUT_3_Pin}}
+		{{XSHUT_4_GPIO_Port, XSHUT_4_Pin}}
+//		{{XSHUT_5_GPIO_Port, XSHUT_5_Pin}}
+//		{{XSHUT_6_GPIO_Port, XSHUT_6_Pin}}
 	},
 	node,
 	"range_sensors_topic"

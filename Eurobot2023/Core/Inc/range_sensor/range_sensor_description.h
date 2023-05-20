@@ -24,35 +24,58 @@ namespace rs_description {
 				_disable();
 			}
 
-			bool init(I2C_HandleTypeDef *hi2c, uint8_t device_num) {
+			VL53L0X_Error init(I2C_HandleTypeDef *hi2c, uint8_t device_num) {
 				_enable();
 
-				HAL_Delay(3);	// boot delay
-
-				bool status = false;
+				HAL_Delay(50);	// boot delay
 
 				_device.I2cHandle = hi2c;
 				_device.I2cDevAddr = 0x52;
 
-				status |= (VL53L0X_DataInit(&_device) != VL53L0X_ERROR_NONE);
-				status |= (VL53L0X_StaticInit(&_device) != VL53L0X_ERROR_NONE);
+				VL53L0X_Error error = 0;
 
-				status |= _calibrate();
 
-				status |= (VL53L0X_SetDeviceAddress(&_device, 0x52 + 4 * device_num + 2) != VL53L0X_ERROR_NONE);
+				error = VL53L0X_DataInit(&_device);
+				if (error) {
+					return error;
+				}
+
+				error = VL53L0X_StaticInit(&_device);
+				if(error) {
+					return error;
+				}
+
+				error = VL53L0X_StaticInit(&_device);
+				if (error) {
+					return error;
+				}
+
+				error = _calibrate();
+				if (error) {
+					return error;
+				}
+
+				error = VL53L0X_SetDeviceAddress(&_device, 0x52 + 4 * device_num + 2);
+				if (error) {
+					return error;
+				}
 
 				_device.I2cDevAddr = 0x52 + 4 * device_num + 2;
 
-				status |= (VL53L0X_SetDeviceMode(&_device, VL53L0X_DEVICEMODE_SINGLE_RANGING) != VL53L0X_ERROR_NONE);
-				status |= (VL53L0X_SetGpioConfig (
-						&_device,
-						0,
-						VL53L0X_DEVICEMODE_SINGLE_RANGING,
-						VL53L0X_GPIOFUNCTIONALITY_OFF,
-						VL53L0X_INTERRUPTPOLARITY_LOW
-				) != VL53L0X_ERROR_NONE);
+				if (
+						VL53L0X_SetDeviceMode(&_device, VL53L0X_DEVICEMODE_SINGLE_RANGING) != VL53L0X_ERROR_NONE 	||
+						VL53L0X_SetGpioConfig (
+							&_device,
+							0,
+							VL53L0X_DEVICEMODE_SINGLE_RANGING,
+							VL53L0X_GPIOFUNCTIONALITY_OFF,
+							VL53L0X_INTERRUPTPOLARITY_LOW
+						) != VL53L0X_ERROR_NONE
+				) {
+					return true;
+				}
 
-				return status;
+				return false;
 			}
 
 			bool start_measurement() {
@@ -69,6 +92,14 @@ namespace rs_description {
 				}
 
 				return !status;
+			}
+
+			VL53L0X_DeviceError get_error() {
+				VL53L0X_DeviceError error = 0;
+
+				VL53L0X_GetDeviceErrorStatus(&_device, &error);
+
+				return error;
 			}
 
 		private:

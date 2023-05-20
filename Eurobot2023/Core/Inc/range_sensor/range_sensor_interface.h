@@ -32,7 +32,8 @@ namespace rs_interface {
             ) :
 				_sensors (sensors_list),
 				_node(node),
-            	_scan_publisher(scan_topic_name, &_scan)
+            	_scan_publisher(scan_topic_name, &_scan),
+				restart_measurement(true)
 			{}
 
             bool init(I2C_HandleTypeDef *hi2c) {
@@ -43,11 +44,18 @@ namespace rs_interface {
             	bool error = false;
 
             	for (size_t i = 0; i < _sensors.size(); i++) {
-            		if (_sensors[i].init(hi2c, i) == true) {
+            		VL53L0X_Error status = _sensors[i].init(hi2c, i);
+
+            		if (status) {
             			error = true;
 
             			_node.logwarn(
-            				("Range sensors init error: number " + std::to_string(i)).data()
+            				(
+								"Range sensor "
+								+ std::to_string(i)
+								+ " init error: number "
+								+ std::to_string(status)
+							).data()
 						);
             		}
             	}
@@ -78,6 +86,10 @@ namespace rs_interface {
             		VL53L0X_RangingMeasurementData_t data;
 
             		if (_sensors[i].get_data(data) == true) {
+//            			_node.logwarn (
+//            					("Range sensors get_data error: number " + std::to_string(i)).data()
+//						);
+
             			return {};
             		} else if (data.RangeMilliMeter >= data.RangeDMaxMilliMeter || data.RangeStatus != 0) {
             			ranges.push_back(-1);
@@ -90,10 +102,17 @@ namespace rs_interface {
             }
 
             void publish() {
+            	if (restart_measurement == true) {
+            		restart_measurement = start_measurement();
+
+            		return;
+            	}
+
             	auto ranges = get_data();
 
             	if (ranges.size() != 0) {
-            		start_measurement();
+            		restart_measurement = start_measurement();
+
             		_scan.data = ranges.data();
             		_scan.data_length = ranges.size();
 
@@ -111,6 +130,8 @@ namespace rs_interface {
             ros::Publisher _scan_publisher;
 
             std_msgs::UInt16MultiArray _scan;
+
+            bool restart_measurement;
     };
 }
 
