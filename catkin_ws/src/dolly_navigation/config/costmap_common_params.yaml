@@ -20,7 +20,7 @@ static_layer:
     unknown_cost_value: -1          # default
     lethal_cost_threshold: 100      # default
     map_topic: map                  # default
-    first_map_only: false           # defaultw
+    first_map_only: false           # default
     subscribe_to_updates: false     # default
     track_unknown_space: false
     use_maximum: false              # default
@@ -32,11 +32,9 @@ obstacle_layer:
     # enabled: true
     # obstacle_range: 3.0
     # raytrace_range: 5.0
-    # max_obstacle_height:    20.0            # 2.0 m set to higher than flight height
-    # min_obstacle_height:    -20.0            # set just below flight height
-    # inflation_radius: 0.7
+    max_obstacle_height:    0.4           # 2.0 m set to higher than flight height
+    min_obstacle_height:    0            # set just below flight height
     # track_unknown_space: true
-    combination_method: 99
 
     observation_sources: laser_scan
     laser_scan: {topic: laser_scan, sensor_frame: sensors, data_type: PointCloud,  marking: true, clearing: false}
@@ -46,15 +44,3 @@ obstacle_layer:
 inflated_layer:
     inflation_radius: 0.2
     cost_scaling_factor: 10         # default
-
-
-# obstacle_range: 2.5
-# raytrace_range: 3.0
-
-# map_type: costmap
-
-# observation_sources: laser_scan_sensor point_cloud_sensor
-
-# laser_scan_sensor: {sensor_frame: frame_name, data_type: LaserScan, topic: topic_name, marking: true, clearing: true}
-
-# point_cloud_sensor: {sensor_frame: frame_name, data_type: PointCloud, topic: topic_name, marking: true, clearing: true}
