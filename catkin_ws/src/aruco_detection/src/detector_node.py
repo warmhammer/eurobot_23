@@ -42,10 +42,10 @@ def detect_and_broadcast(cv_bridge, detector, t_broadcaster, publisher, cv_image
     for id, T_marker_to_camera in rotation_matrices.items():
         T_marker_to_world = T_camera_to_world @ T_marker_to_camera
         T_marker_to_world[2, 3] = 0
-        t_broadcaster.sendTransform(tft.translation_from_matrix(T_marker_to_world),
-                                    tft.quaternion_from_matrix(T_marker_to_world),
-                                    rospy.Time.now(),
-                                    f'marker_id_{id}', '/world')
+        # t_broadcaster.sendTransform(tft.translation_from_matrix(T_marker_to_world),
+        #                             tft.quaternion_from_matrix(T_marker_to_world),
+        #                             rospy.Time.now(),
+        #                             f'marker_id_{id}', '/world')
         if id in dolly_mtxs:
             T_cube_to_marker = dolly_mtxs[id]
             T_cube_to_world = T_marker_to_world @ T_cube_to_marker
@@ -101,17 +101,17 @@ def main():
     known_markers = configs.get_markers_config()
     cube_markers = known_markers["cube_markers"]
     cube_to_marker_mtxs = get_cube_to_marker_mtxs(cube_markers)
-    marker_size = known_markers["marker_size"]
+    marker_size = known_markers["cube_markers_size"]
     camera_mtx, dist_coeffs = configs.get_camera_info()
     detector = Detector(marker_size, cv2.aruco.DICT_4X4_100, camera_mtx, dist_coeffs, True)
     bridge = CvBridge()
     tb = TransformBroadcaster()
 
-    use_camera = rospy.get_param('~use_camera', True)
+    use_camera = rospy.get_param('~use_camera', False)
     if use_camera:
         detecting_using_camera(publisher, configs, detector, bridge, tb)
     else:
-        topic_name = rospy.get_param("~receiving_img_topic", "/my_robot/camera1/image_raw")
+        topic_name = rospy.get_param("~receiving_img_topic", "/usb_cam/image_raw")
         rospy.Subscriber(topic_name, Image,
                          lambda msg: image_callback(msg, bridge, detector, tb, publisher, cube_to_marker_mtxs))
     rate = rospy.Rate(60)
