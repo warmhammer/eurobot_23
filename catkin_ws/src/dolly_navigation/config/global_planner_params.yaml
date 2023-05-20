@@ -16,7 +16,7 @@ GlobalPlanner:
 
     # publish_potential: true           # default
 
-    orientation_mode: 0                 # default
+    orientation_mode: 1                 # default
     # orientation_window_size: 1        # default
 
     # outline_map: true                 # default
