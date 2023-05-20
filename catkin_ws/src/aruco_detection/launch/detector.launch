@@ -1,17 +1,16 @@
 <launch>
     <arg name="camera_pose_using_camera" default="false"/>
     <arg name="detecting_using_camera" default="false"/>
-    <arg name="visualize" default="true"/>
     <arg name="rvizconfig" default="$(find aruco_detection)/rviz/detector.rviz" />
     <param name="camera_pose_ok" value="false"/>
 
     <node pkg="aruco_detection" type="camera_pose_node.py" name="camera_pose_node" output="log" respawn="true">
         <param name="use_camera" value="$(arg camera_pose_using_camera)"/>
-        <param name="receiving_img_topic" value="/my_robot/camera1/image_raw"/>
+        <param name="receiving_img_topic" value="/usb_cam/image_raw"/>
     </node>
     <node pkg="aruco_detection" type="detector_node.py" name="detector_node" output="log" respawn="true">
         <param name="use_camera" value="$(arg detecting_using_camera)"/>
-        <param name="receiving_img_topic" value="/my_robot/camera1/image_raw"/>
+        <param name="receiving_img_topic" value="/usb_cam/image_raw"/>
         <param name="publishing_img_topic" value="/detector_node/detector"/>
     </node>
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
