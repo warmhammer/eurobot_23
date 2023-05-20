@@ -56,13 +56,11 @@ if __name__ == '__main__':
 
     laser_set = LaserSet(
         [
-            Laser(0, 0, 0, 0),
-            # Laser(0, 0, 60, 0),
-            # Laser(0, 0, 120, 0),
-
-            # Laser(0, 0, 180, 0),
-            # Laser(0, 0, 240, 0),
-            # Laser(0, 0, 300, 0)
+            Laser(150, 25, 25, 0),
+            Laser(130, -100, -60, 0),
+            Laser(150, -25, -25, 0),
+            Laser(-100, 100, 180, 0),
+            Laser(130, 100, 60, 0),
         ],
         'sensors',
         # 'base_footprint',
