@@ -123,7 +123,7 @@ def get_table_rotation_matrix(frame, marker_obj_points, ordered_ids, table_obj_p
     parameters = aruco.DetectorParameters_create()
     corners, ids, _ = aruco.detectMarkers(frame, aruco_dict, parameters=parameters,
                                           cameraMatrix=camera_mtx, distCoeff=dist_coeffs)
-    ids = np.squeeze(ids).tolist()
+    ids = np.ravel(ids).tolist()
     ids_set = set(ids) & set(ordered_ids)
     if len(ids_set) < 1:
         raise ValueError()
