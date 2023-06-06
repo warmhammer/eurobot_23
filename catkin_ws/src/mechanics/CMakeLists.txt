@@ -163,6 +163,7 @@ catkin_install_python(PROGRAMS
   scripts/servo_test.py
   scripts/state_machine.py
   scripts/test.py
+  scripts/analisys.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
