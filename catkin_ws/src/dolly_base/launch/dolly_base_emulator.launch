@@ -1,0 +1,5 @@
+<launch>
+	<node name="dolly_base_node" pkg="dolly_base" type="dolly_base_node" output="screen" />
+
+	<node name="hardware_emulator_node" pkg="dolly_base" type="hardware_emulator_node" output="screen" />
+</launch>

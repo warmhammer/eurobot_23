@@ -1,0 +1,46 @@
+# Coordinate frame and tf parameters
+global_frame: map
+robot_base_frame: base_footprint
+transform_tolerance: 0.5
+
+# Rate parameters
+# update_frequency: 1.0
+# publish_frequency: 2.0
+
+# Map management parameters
+# rolling_window: false               # default
+always_send_full_costmap: false     # default
+
+# Footprint
+# footprint: [[0.17, 0.15], [0.17, -0.15], [-0.17, -0.15], [-0.17, 0.15]]   # polygon
+robot_radius: 0.15  # circle
+
+# Layers' parameters
+static_layer:
+    unknown_cost_value: -1          # default
+    lethal_cost_threshold: 100      # default
+    map_topic: map                  # default
+    first_map_only: false           # default
+    subscribe_to_updates: false     # default
+    track_unknown_space: false
+    use_maximum: false              # default
+    trinary_costmap: true           # default
+
+obstacle_layer:
+    # map_type: costmap
+
+    # enabled: true
+    # obstacle_range: 3.0
+    # raytrace_range: 5.0
+    max_obstacle_height:    0.4           # 2.0 m set to higher than flight height
+    min_obstacle_height:    0            # set just below flight height
+    # track_unknown_space: true
+
+    observation_sources: laser_scan
+    laser_scan: {topic: laser_scan, sensor_frame: sensors, data_type: PointCloud,  marking: true, clearing: false}
+
+    combination_method: 1
+
+inflated_layer:
+    inflation_radius: 0.2
+    cost_scaling_factor: 10         # default

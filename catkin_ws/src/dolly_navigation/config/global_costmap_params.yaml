@@ -1,0 +1,11 @@
+global_costmap:   
+    update_frequency: 1.0
+    publish_frequency: 0.5
+    # transform_tolerance: 0.5
+
+    rolling_window: false           # default
+
+    plugins:
+        - {name: static_layer,      type: "costmap_2d::StaticLayer"}
+        - {name: obstacle_layer,    type: "costmap_2d::ObstacleLayer"}
+        - {name: inflated_layer,    type: "costmap_2d::InflationLayer"}

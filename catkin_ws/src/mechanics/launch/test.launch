@@ -1,0 +1,10 @@
+<launch>
+    <!-- <node name="servo_test" pkg="mechanics" type="servo_test.py">
+		<param 
+            name="test" 
+            value="[[0, 0], [1, 1]]" />
+    </node> -->
+
+    <node name="smach_viewer" pkg="smach_viewer" type="smach_viewer.py" />
+    <node name="state_machine" pkg="mechanics" type="state_machine.py" />
+</launch>

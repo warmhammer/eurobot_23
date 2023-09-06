@@ -1,0 +1,7 @@
+<launch>
+	<param name="robot_description" textfile="$(find dolly_description)/urdf/dolly_description.urdf" />
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+	<include file="$(find dolly_base)/launch/dolly_base_emulator.launch" />
+	<include file="$(find dolly_control)/launch/dolly_control.launch" />
+</launch>

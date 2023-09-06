@@ -1,0 +1,12 @@
+<launch>
+	<node name="serial_node" pkg="rosserial_python" type="serial_node.py">
+		<param name="port" value="/dev/ttyS4"/>
+		<param name="baud" value="921600" />
+	</node>
+
+	<param name="robot_description" textfile="$(find dolly_description)/urdf/dolly_description.urdf" />
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+	<include file="$(find dolly_base)/launch/dolly_base.launch" />
+	<include file="$(find dolly_control)/launch/dolly_control.launch" />
+</launch>

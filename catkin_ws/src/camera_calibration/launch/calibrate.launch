@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <arg name="takeImagesFirst" default="false"/>
+    <arg name="cameraIndex" default="0"/>
+    <arg name="frameWidth" default="1280"/>
+    <arg name="frameHeight" default="720"/>
+    <arg name="chessboardCornersCountX" default="9"/>
+    <arg name="chessboardCornersCountY" default="6"/>
+    <arg name="sizeOfSquareSide" default="24"/>
+    
+    <group if="$(arg takeImagesFirst)">
+        <param name="images_taken" command="$(find camera_calibration)/scripts/take_images.py
+    --cameraIndex $(arg cameraIndex)
+    --frameWidth $(arg frameWidth)
+    --frameHeight $(arg frameHeight)"/>
+    </group>
+    
+    <param name="camera_calibrated" command="$(find camera_calibration)/scripts/calibrate_camera.py
+    --chessboardCornersCountX $(arg chessboardCornersCountX)
+    --chessboardCornersCountY $(arg chessboardCornersCountY)
+    --sizeOfSquareSide $(arg sizeOfSquareSide)
+    --frameWidth $(arg frameWidth)
+    --frameHeight $(arg frameHeight)"/>
+</launch>

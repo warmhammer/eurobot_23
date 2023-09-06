@@ -1,0 +1,25 @@
+<launch>
+	<!-- <node
+		name="joint_state_publisher"
+		pkg="joint_state_publisher"
+		type="joint_state_publisher" /> -->
+
+	<param name="robot_description" textfile="$(find dolly_description)/urdf/dolly_description.urdf" />
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+	<include file="$(find dolly_base)/launch/dolly_base.launch" />
+	<include file="$(find dolly_control)/launch/dolly_control.launch" />
+	<!-- <include file="$(find dolly_description)/launch/dolly_description.launch" /> -->
+	<!-- <include file="$(find abot_driver)/launch/abot_drivers.launch" /> -->
+	<node
+		name="rqt_robot_steering"
+		pkg="rqt_robot_steering"
+		type="rqt_robot_steering">
+
+		<param name="default_topic" value="/mobile_base_controller/cmd_vel"/>
+		<param name="default_vx_max" value="2" />
+		<param name="default_vx_min" value="-2" />
+		<param name="default_vw_max" value="4" />
+		<param name="default_vw_min" value="-4" />
+	</node>
+</launch>
