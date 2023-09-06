@@ -24,7 +24,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <box size="${aruco_l + 2*white_border * aruco_l} ${aruco_l + 2*white_border * aruco_l} ${0.01 * aruco_l/0.09}"/>
+          <box size="${aruco_l} ${aruco_l} ${aruco_l}"/>
         </geometry>
       </collision>
       <!--<visual>
@@ -38,7 +38,7 @@
         <geometry>
           <!-- <box size="0.09 0.09 0.01"/> -->
           <!-- <mesh filename="package://aruco_description/meshes/${aruco_dictionary}/${aruco_dictionary}_id${aruco_id}.dae" scale="${aruco_l/0.09} ${aruco_l/0.09} ${aruco_l/0.09}"/> -->
-          <mesh filename="${meshes_directory}/${aruco_dictionary}/${aruco_dictionary}_id${aruco_id}.dae" scale="${aruco_l/0.09} ${aruco_l/0.09} ${aruco_l*0/0.09}"/>
+          <mesh filename="${meshes_directory}/${aruco_dictionary}/${aruco_dictionary}_id${aruco_id}.dae" scale="${aruco_l/0.09} ${aruco_l/0.09} ${aruco_l*0/0.01}"/>
         </geometry>
       </visual>
     </link>

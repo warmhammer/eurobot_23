@@ -160,6 +160,7 @@ include_directories(
 catkin_install_python(PROGRAMS
   scripts/take_images.py
   scripts/calibrate_camera.py
+  src/take_images_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

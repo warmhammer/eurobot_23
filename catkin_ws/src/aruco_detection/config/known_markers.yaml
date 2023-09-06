@@ -1,0 +1,52 @@
+static_markers_size: &marker_size_value 0.1
+cube_markers_size: 0.07
+
+static_markers:
+  - id: 21
+    size: *marker_size_value
+    coordinates:
+      x: 0.57
+      y: 0.575
+  - id: 23
+    size: *marker_size_value
+    coordinates:
+      x: 0.57
+      y: 2.425  # 1.5
+  - id: 20
+    size: *marker_size_value
+    coordinates:
+      x: 1.43
+      y: 0.575
+  - id: 22
+    size: *marker_size_value
+    coordinates:
+      x: 1.43
+      y: 2.425  # 1.5
+
+cube_markers:
+  dolly_cube_markers:
+    - id: 51
+      x: 0.05
+      y: 0
+    - id: 52
+      x: 0
+      y: 0.05
+    - id: 53
+      x: -0.05
+      y: 0
+    - id: 54
+      x: 0
+      y: -0.05
+  enemy_cube_markers:
+    - id: 61
+      x: 0.05
+      y: 0
+    - id: 62
+      x: 0
+      y: 0.05
+    - id: 63
+      x: -0.05
+      y: 0
+    - id: 64
+      x: 0
+      y: -0.05

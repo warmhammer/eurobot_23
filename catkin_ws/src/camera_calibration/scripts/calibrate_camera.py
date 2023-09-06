@@ -117,6 +117,8 @@ def calibrate_camera(frame_size, chessboard_size, size_of_square_side, images_pa
 
     ret_val, camera_matrix, dist_coeffs, _, _ = cv2.calibrateCamera(obj_points, img_points, frame_size, None, None)
 
+    camera_matrix, _ = cv2.getOptimalNewCameraMatrix(camera_matrix, dist_coeffs, frame_size, 1, frame_size)
+
     return ret_val, camera_matrix, dist_coeffs
 
 

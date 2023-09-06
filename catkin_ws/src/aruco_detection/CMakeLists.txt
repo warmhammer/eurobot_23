@@ -158,8 +158,9 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
-  include/aruco_detector/__init__.py
-  include/aruco_detector/detector.py
+  # include/aruco_detector/detector.py
+  src/detector_node.py
+  src/camera_pose_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
