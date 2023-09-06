@@ -1,8 +1,8 @@
 # Репозиторий команды Defective Pie на Eurobot Open 2023
 ## Разработку вели:
-* [Попов Максим](github.com/warmhammer) (Tech Lead)
-* [Данилов Валерий](github.com/ArcherBTD) (Embedded / STM32)
-* [Норматов Музаффар](github.com/mnormatov2001) (Computer Vision)
+* [Попов Максим](https://github.com/warmhammer) (Tech Lead)
+* [Данилов Валерий](https://github.com/ArcherBTD) (Embedded / STM32)
+* [Норматов Музаффар](https://github.com/mnormatov2001) (Computer Vision)
 
 ### По мотивам разработки мы защищали дипломы бакалавра:
 * [Планирование движений робота в соревнованиях “Евробот”](https://docs.google.com/presentation/d/1fr5g8CXUArKWf3GTjmxWFYFV9tfaEbzRI8hKjw0zdxc/edit?usp=sharing)
